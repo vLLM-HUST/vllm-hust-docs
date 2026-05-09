@@ -6,6 +6,7 @@
 
 - `vllm-hust-introduction.tex`：主 slides 源文件
 - `Makefile`：基于 `tectonic` 的构建入口
+- `sources/`：归档的历史申报材料源文件，仅用于内容追溯，不参与构建
 
 ## 构建
 
@@ -34,7 +35,7 @@ build/vllm-hust-introduction.pdf
 
 - `vllm-hust` README 与代码结构
 - `vllm-hust-docs/architecture/*`
-- `课题4-课题实施方案_0319.pptx/.md`
+- `sources/课题4-课题实施方案_0319.pptx/.md`
 - `vllm-hust-workstation` README 与阶段汇报 deck
 - `vllm-hust-website` README
 - `ascend-runtime-manager` README
