@@ -16,6 +16,7 @@ This repository contains vllm-hust documentation, sync notes, and fork-specific 
 
 ## Suggested Layout
 
+- `presentations/` — reusable introduction decks, overview slides, and externally reusable presentation assets.
 - `meetings/` — internal meeting materials, decks, talk tracks, and action lists.
 - `sync-notes/` — upstream sync notes and merge records.
 - `operations/` — deployment, runtime, and hardware operation guides.

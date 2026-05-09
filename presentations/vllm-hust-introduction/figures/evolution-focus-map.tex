@@ -1,0 +1,29 @@
+\definecolor{FocusBlue}{HTML}{E6F0FA}
+\definecolor{FocusGreen}{HTML}{E9F5EE}
+\definecolor{FocusOrange}{HTML}{FCEFE3}
+\definecolor{FocusGray}{HTML}{F2F3F5}
+\definecolor{FocusRed}{HTML}{F7E6E6}
+\begin{tikzpicture}[
+    node distance=16mm and 20mm,
+    scale=1.05,
+    transform shape,
+    block/.style={draw=black!70, line width=0.85pt, rounded corners=2.4pt, minimum width=33mm, minimum height=11mm, align=center, font=\normalsize\sffamily, inner sep=4.5pt},
+    centerblock/.style={draw=black!70, line width=0.9pt, rounded corners=3pt, minimum width=42mm, minimum height=13mm, align=center, font=\normalsize\sffamily\bfseries, inner sep=5pt},
+    note/.style={font=\small\sffamily, align=center, fill=white, inner sep=1.6pt, text=black!75},
+    flow/.style={-{Latex[length=3.0mm,width=2.0mm]}, line width=0.9pt, draw=black!75}
+]
+\node[centerblock, fill=FocusGray] (goal) {\textbf{vLLM-HUST 持续演进的}\\\textbf{推理底座}};
+
+\node[block, fill=FocusBlue, above left=18mm and 26mm of goal] (plugin) {\textbf{平台插件化}\\抽象边界/注册表/可合并优化};
+\node[block, fill=FocusGreen, above right=18mm and 26mm of goal] (runtime) {\textbf{调度与状态治理}\\SLO/KV Cache/迁移/回退};
+\node[block, fill=FocusOrange, below left=18mm and 26mm of goal] (eval) {\textbf{统一评测闭环}\\近真实负载/成本/稳定性指标};
+\node[block, fill=FocusRed, below right=18mm and 26mm of goal] (model) {\textbf{复杂场景承载}\\多模态/工具调用/reasoning};
+
+\draw[flow] (plugin.south east) -- (goal.north west);
+\draw[flow] (runtime.south west) -- (goal.north east);
+\draw[flow] (eval.north east) -- (goal.south west);
+\draw[flow] (model.north west) -- (goal.south east);
+
+\node[note, text width=7.6cm, above=6mm of goal] {真正可持续的优势，不来自单点优化，而来自多条能力线同步推进。};
+\node[note, text width=7.6cm, below=6mm of goal] {目标是让系统同时具备可合并、可验证、可交付和可持续优化能力。};
+\end{tikzpicture}
