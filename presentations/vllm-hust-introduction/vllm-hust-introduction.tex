@@ -406,21 +406,36 @@
 \begin{frame}{benchmark 榜单快照}
   \small
   \begin{columns}[T,onlytextwidth]
-    \column{0.76\textwidth}
-    \centering
-    \includegraphics[width=\linewidth,height=0.76\textheight,keepaspectratio]{assets/website-leaderboard.jpg}
-
-    \column{0.22\textwidth}
-    \begin{block}{同一 workload 版本对比}
+    \column{0.63\textwidth}
+    \begin{block}{完整指标样本：Qwen2.5-14B-Instruct / 1 x 910B3 / random-online}
       \scriptsize
-      这一页不再混放不同 workload，而是收敛到同模型、同硬件、同 workload 的公开提交结果。
+      当前页改用同模型、同硬件、同 workload 且 \alert{TTFT / TBT / Tokens/s 均完整} 的公开结果，避免口径不一致造成误读。
 
-      当前本地快照中，可直接对比的 sharegpt-online 单机单卡样本共有 2 条。
-
-      可点击提交：\\
-      \href{https://github.com/vLLM-HUST/vllm-hust/commit/289b51ab21d6f27abc043fd5917761b62c039871}{289b51ab}\\
-      \href{https://github.com/vLLM-HUST/vllm-ascend-hust/commit/7f888566e7209ff8fe417f79c3a691354301ac9f}{7f888566}
+      \vspace{0.6em}
+      \centering
+      \begin{tabular}{|p{0.46\linewidth}|c|c|c|}
+        \hline
+        \textbf{引擎 / 版本 / commit} & \textbf{TTFT} & \textbf{TBT} & \textbf{Tokens/s} \\
+        \hline
+        \shortstack[l]{vllm-ascend\\0.11.0\\\href{https://github.com/vllm-project/vllm-ascend/commit/2f1aed98ccdb0fcbe1ff4fd0abab225bfd8d0367}{2f1aed98}} & 271.1 & 72.8 & 227.1 \\
+        \hline
+        \shortstack[l]{vllm-hust\\0.17.2.post2.dev1076+g383b3c7ac\\\href{https://github.com/vLLM-HUST/vllm-hust/commit/383b3c7acb08654da445c0048fc3f3eed9c4bb19}{383b3c7a}} & 281.5 & 98.2 & 227.7 \\
+        \hline
+      \end{tabular}
     \end{block}
+
+    \vspace{0.35em}
+    {\scriptsize 该样本来自当前本地 leaderboard 快照，输入长度 1024、输出长度 256，用于说明公开 benchmark 结果的可比性与可追溯性。}
+
+    \column{0.33\textwidth}
+    \begin{alertblock}{为何不再用 sharegpt-online}
+      \scriptsize
+      之前那组 sharegpt-online 公开记录里，\href{https://github.com/vLLM-HUST/vllm-hust/commit/289b51ab21d6f27abc043fd5917761b62c039871}{289b51ab} 只导出了 TTFT 和 Tokens/s，没有导出 TBT。
+
+      因而页面上会出现“TTFT 和 Tokens/s 看起来一样，但一条有 TBT、一条没有”的假象，不适合作为严格性能对比样本。
+
+      sharegpt-online 那两条记录仍可用于版本 provenance 展示，但不再作为这一页的主对比样本。
+    \end{alertblock}
   \end{columns}
 
 \end{frame}
