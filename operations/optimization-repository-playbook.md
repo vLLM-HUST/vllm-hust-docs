@@ -152,6 +152,71 @@ Never make the parent repository depend on `/home/<user>/<dependency>` or any
 other external checkout. If a useful change exists outside the submodule, port
 it manually into the submodule branch.
 
+## Graduating Optimization Results
+
+When an optimization project becomes mature enough to merge back into long-term
+runtime repositories, do not copy the whole parent repository into a runtime
+stack. Treat the parent optimization repository as the reproducibility and
+evidence layer, then graduate only the maintainable runtime pieces into their
+proper homes.
+
+Use this three-layer model:
+
+1. The parent optimization repository keeps the full research record:
+   experiment scripts, paper figures, result aggregation, run manifests,
+   workload definitions, and submodule pointers.
+2. Submodule feature branches carry runtime changes while the design is still
+   evolving.
+3. Long-term repositories such as `vllm-hust`, `vllm-ascend-hust`,
+   `triton-ascend-hust`, `dev-hub`, or benchmark repositories receive small,
+   reviewable, tested slices after the ownership boundary is clear.
+
+Classify every change before moving it:
+
+- generic bug fixes belong in the upstream project or in the corresponding
+  long-term vLLM-HUST runtime repository;
+- generic performance improvements should move with a benchmark, a compatibility
+  story, and usually a guarded/default-off integration path first;
+- project-specific mechanisms should remain on the optimization feature branch
+  until the design and evidence are stable;
+- experimental hooks should stay in the optimization repository or submodule
+  feature branch unless they have a clear production interface;
+- experiment harnesses, workload generation, aggregation, and paper-reproduction
+  code usually remain in the parent repository, benchmark repository, or
+  `dev-hub`, not in the serving engine.
+
+For code that was first written directly in the parent optimization repository,
+decide ownership before moving it:
+
+- serving-engine scheduling, cache, request lifecycle, or policy logic belongs
+  in `vllm-hust`;
+- Ascend backend behavior belongs in `vllm-ascend-hust`;
+- compiler, kernel, or Triton runtime behavior belongs in `triton-ascend-hust`;
+- launch orchestration and managed experiment entry points belong in `dev-hub`
+  or the parent repository;
+- paper reproduction, ablations, and result processing stay in the optimization
+  parent repository.
+
+Prefer a library-first migration. Add a small internal module or extension point
+in the target repository, move the reusable logic there, then update the parent
+optimization repository to call that implementation through its submodule
+pointer. Avoid one large "optimization merge" PR.
+
+Split graduation into reviewable pull requests such as:
+
+- base interfaces and metadata;
+- tracing or instrumentation needed to validate behavior;
+- runtime policy implementation behind a flag;
+- cache or lifecycle integration;
+- benchmark workloads and regression tests;
+- default-off integration;
+- default-on enablement only after evidence supports it.
+
+After graduation, the parent repository should still reproduce the paper or
+optimization result, but its submodule pointers should reference the integrated
+branches, merged commits, or released versions instead of carrying duplicate
+logic.
+
 ## Runtime And Container Rules
 
 Runtime launch scripts must resolve all dependency paths from the parent
