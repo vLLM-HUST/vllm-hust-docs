@@ -25,6 +25,7 @@ This repository contains vllm-hust documentation, sync notes, and fork-specific 
 ## Key Documents
 
 - `operations/optimization-repository-playbook.md` — a reusable playbook for optimization repositories that pin runtime dependencies with submodules, manage feature branches, preserve experiment provenance, and decide when upstream PRs are appropriate.
+- `operations/monthly-contribution/README.md` — the monthly engineering, weekly reporting, and evidence-retention workflow used for contribution self-review.
 - `architecture/vllm-hust-source-deconstruction.md` — a layered source walkthrough of the `vllm-hust` fork, including request flow, engine structure, execution path, and fork-specific extension surfaces.
 - `architecture/vllm-hust-engine-execution-chain.md` — a deeper walkthrough of the request-to-engine-to-worker execution path.
 - `architecture/vllm-hust-platform-plugin-chain.md` — a focused breakdown of platform detection, plugin activation, and fork-safe hardware extension points.
