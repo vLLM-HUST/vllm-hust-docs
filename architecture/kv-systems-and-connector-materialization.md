@@ -175,8 +175,19 @@ the caller's whole process group. Every prefiller, decoder, and proxy is started
 in its own retained process group; cleanup sends `TERM` only to those groups,
 waits for a bounded grace period, and escalates only those still alive. Static
 safety tests and shell syntax validation cover this invariant. The example is
-now safe enough to serve as the basis for a future preflight/real-run harness,
+now the process-ownership basis for a topology-aware preflight/real-run gate,
 but it still does not constitute a Mooncake real-system run.
+
+The Mooncake gate supports `direct`, embedded/standalone store, and combined
+topologies. It verifies the selected virtual environment, Mooncake Transfer
+Engine minimum version, exact direct/store bundle roles, topology-specific JSON
+invariants and service executables, model, accelerator inventory, ports, fresh
+evidence directory, and core revision without launching a service. Host 112
+preflights on 2026-08-29 passed the model, eight-NPU inventory, requested ports,
+bundle, config, and revision checks. Direct correctly blocked because
+`mooncake.engine` and `mooncake-transfer-engine>=0.3.8` were absent;
+store-embedded additionally blocked because `mooncake_master` was unavailable.
+These are environment-readiness records, not connector or performance results.
 
 ## 5. Migration order
 
