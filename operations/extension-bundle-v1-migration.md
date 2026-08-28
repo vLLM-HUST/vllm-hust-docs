@@ -92,10 +92,12 @@ Permissions are auditable capability requests, not claims that a sandbox exists.
 The known vocabulary is `device_access`, `filesystem_read`, `filesystem_write`,
 `ipc`, `network_egress`, `shared_memory`, and `subprocess`.
 
-The configured startup path currently grants no non-empty permission by
-default. A non-empty request fails admission unless a host call supplies an
-explicit permission policy. `trusted_in_process` still has the ambient authority
-of the host process; its declaration is not enforcement.
+The configured startup path grants no non-empty permission by default. Operators
+may supply the strict `VLLM_EXTENSION_ALLOWED_PERMISSIONS` allowlist; blank,
+duplicate, aliased, or unknown values fail startup, and every admitted component
+request must be a subset of that allowlist. This is admission policy only:
+`trusted_in_process` still has the ambient authority of the host process, so its
+permission declaration is auditable intent rather than OS enforcement.
 
 Only `trusted_in_process` is currently admitted by the configured startup path.
 `process_isolated` and `sandboxed_process` are schema identities reserved for a

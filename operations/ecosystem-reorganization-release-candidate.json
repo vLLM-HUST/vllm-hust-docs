@@ -9,14 +9,14 @@
       "name": "vllm-hust",
       "url": "https://github.com/vLLM-HUST/vllm-hust",
       "branch": "codex/ecosystem-architecture-reorganization-20260828",
-      "commit": "f985d7db2a3e16299961d3e8d79fea27af654d7b",
+      "commit": "ed47d1bdf3e7e9d161223616f331d8cf747c4771",
       "role": "runtime_core"
     },
     {
       "name": "vllm-hust-docs",
       "url": "https://github.com/vLLM-HUST/vllm-hust-docs",
       "branch": "codex/ecosystem-architecture-reorganization",
-      "commit": "dba8defbdde6e26bee419396a42469e43f8137be",
+      "commit": "989bb13118be5c885ddb83b5a5fba61b58f7800d",
       "role": "documentation_source"
     },
     {
@@ -37,7 +37,7 @@
       "name": "pegaflow-hust",
       "url": "https://github.com/vLLM-HUST/pegaflow-hust",
       "branch": "feat/ecosystem-role-metadata",
-      "commit": "80056c5a9c50746a296cf98a339505d54820f7e7",
+      "commit": "e285a55edd2ef66d04e1f3e0509183064772758b",
       "role": "external_kv_subsystem_and_connectors"
     },
     {
@@ -147,6 +147,7 @@
         {"id": "dependency-free-smoke", "status": "passed", "evidence": "Manifest admission, immutable snapshot, typed materialization, and BidKV manifest parsing passed."},
         {"id": "extension-core-pytest", "status": "passed", "evidence": "43 manifest, admission, startup snapshot, KV selection/capability, and scheduler-policy compatibility tests passed in the repository-managed Python 3.12 environment."},
         {"id": "extension-core-hooks", "status": "passed", "evidence": "All pre-commit hooks for the new KV selection files passed, including Ruff, formatting, mypy, forbidden imports, SPDX, and configuration checks."},
+        {"id": "extension-permission-policy", "status": "passed", "evidence": "Configured startup defaults to no non-empty permissions and accepts only an explicit strict host allowlist; blank, duplicate, aliased, unknown, and undeclared permissions fail closed. All 48 affected Bundle and KV tests passed with relevant pre-commit hooks."},
         {"id": "bidkv-unit", "status": "passed", "evidence": "396 BidKV tests passed and 1 environment-dependent test skipped against the editable core environment."},
         {"id": "full-core-ci", "status": "not_run", "evidence": "The complete vLLM CPU test matrix has not been run; current evidence covers the extension and affected KV domains."},
         {"id": "legacy-typed-equivalence", "status": "not_run", "evidence": "Matched BidKV scheduler traces and hardware behavior are still required."}
@@ -167,7 +168,8 @@
       "repository_refs": ["vllm-hust", "vllm-hust-docs", "vllm-hust-website", "pegaflow-hust", "LMCache-Ascend", "vllm-ascend-kvcompress-hust"],
       "validations": [
         {"id": "catalog-separation", "status": "passed", "evidence": "Mooncake, LMCache, PegaFlow, and LMCache-Ascend systems/providers are separate from their connector bridges."},
-        {"id": "pegaflow-real-run-readiness", "status": "passed", "evidence": "The PegaFlow runner now forbids global name-based process killing, tracks and terminates only child process groups it created, refuses reused output directories, records preflight provenance, and cannot launch when imports, model, executable, ports, or eight-device memory checks fail. Three safety tests passed. A host-112 preflight was labeled preflight-only: model, ports, and eight idle 910B2 devices passed, while the controlled runtime imports and PegaFlow server binary failed, so no service was launched and no hardware equivalence is claimed."},
+        {"id": "pegaflow-typed-bundle", "status": "passed", "evidence": "PegaFlow publishes split scheduler, worker, and API telemetry Bundle v1 components with explicit device, IPC, and egress permissions. Its lazy package facade preserves the legacy module export while API telemetry imports no worker facade. Typed and legacy config builders, manifest admission, safety logic, and connector regressions passed all 74 focused tests."},
+        {"id": "pegaflow-real-run-readiness", "status": "passed", "evidence": "The PegaFlow runner forbids global name-based process killing, tracks and terminates only child process groups it created, refuses reused output directories, records preflight provenance, and cannot launch when imports, model, executable, ports, or eight-device memory checks fail. A host-112 typed preflight was labeled preflight-only: manifest, model, ports, and eight idle 910B2 devices passed, while the controlled runtime imports and PegaFlow server binary failed, so no service was launched and no hardware equivalence is claimed."},
         {"id": "kv-selection-topology", "status": "passed", "evidence": "Closed single/ordered-multi schema and immutable-snapshot resolver preserve explicit order, validate exact scheduler/worker/API-telemetry providers plus declared HMA, piecewise, and cache-layout capabilities, reject role crossing, conflicting layouts, and unknown fields, and import no implementation."},
         {"id": "kv-split-role-contracts", "status": "passed", "evidence": "The API-plane vllm.kv_connector.telemetry.v1 contract prevents logger-side code from depending on worker imports; 54 affected extension and KVTransferConfig tests passed with all relevant pre-commit hooks."},
         {"id": "kv-transfer-config", "status": "passed", "evidence": "Typed selection dictionaries normalize into immutable profiles, are mutually exclusive with legacy connector names/module paths, and participate in transfer-instance role flags; all 17 affected config tests passed."},
@@ -182,7 +184,7 @@
         {"id": "kvcompress-pytest", "status": "passed", "evidence": "All 44 KVCompress tests passed against the editable core after typed single/ordered factory changes."}
       ],
       "blockers": [
-        "Typed single and ordered_multi paths lack matched real Mooncake, LMCache, PegaFlow, and LMCache-Ascend behavior and rollback evidence. PegaFlow now has a safe preflight gate, but host 112 lacks an invoking-user-accessible controlled runtime and built server binary.",
+        "Typed single and ordered_multi paths lack matched real Mooncake, LMCache, PegaFlow, and LMCache-Ascend behavior and rollback evidence. PegaFlow now has a typed split-role bundle, tested legacy/typed configuration compatibility, and a safe preflight gate, but host 112 lacks an invoking-user-accessible controlled runtime and built server binary.",
         "Configuration-level external module-path rollback is verified, but real connector behavior and failure equivalence are still pending."
       ],
       "rollback": [
@@ -211,7 +213,7 @@
         "Only the read-only health-probe contract is defined; no general or mutating runtime action exists.",
         "The local socket host provides same-UID message authentication only; external RIDE connectivity, remote peer identity, TLS/mTLS, and production key provisioning/distribution/audit remain undefined.",
         "The fixed core worker and local socket do not provide OS capability confinement for future non-core bridge code.",
-        "Generic Bundle v1 startup still rejects process isolation and non-empty permissions; the explicit local host can materialize only the fixed core health-probe descriptor and cannot run bundle-supplied bridge code."
+        "Generic Bundle v1 startup still rejects process isolation. Non-empty permissions require an explicit host allowlist but remain admission metadata rather than OS confinement; the explicit local host can materialize only the fixed core health-probe descriptor and cannot run bundle-supplied bridge code."
       ],
       "rollback": [
         "Keep the bridge unconfigured; default runtime behavior remains independent of the external control plane."
@@ -232,7 +234,7 @@
     "All listed branches exist on GitHub, but no pull request is merged and no registry tag is published.",
     "One MultiConnector consistency test requires authenticated access to the gated meta-llama/Llama-3.2-1B-Instruct model and was not run.",
     "Typed single and ordered_multi KV materialization are experimental; real-system equivalence is not claimed, and the local same-UID control transport is not a production remote RIDE bridge.",
-    "No real NPU, GPU, or Apple Silicon execution was performed for this draft.",
+    "No real serving workload was executed on NPU, GPU, or Apple Silicon for this draft; the only accelerator interaction was a read-only PegaFlow readiness probe.",
     "This draft authorizes no legacy entry-point deprecation or removal."
   ]
 }

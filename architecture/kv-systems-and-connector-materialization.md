@@ -160,10 +160,19 @@ not by itself materialize the typed topology.
 8. Publish an exact core/connector/system/platform release record and rollback
    configuration before recommending the typed path.
 
-PegaFlow now has a safe real-run preflight and runbook. The runner labels
-preflight separately from `real-online`, requires a fresh output directory,
-records exact command/environment/model/hardware/revision inputs, and stops only
-process groups it created. The 2026-08-29 host-112 preflight verified the model,
+PegaFlow now publishes a Bundle v1 manifest with separate scheduler, worker, and
+API telemetry components. The package initializer is a lazy compatibility facade:
+legacy `pegaflow.connector.PegaKVConnector` and the typed facade resolve to the
+same class, while importing the telemetry component does not import Torch or the
+worker facade. The benchmark runner can emit either the legacy module-path config
+or the typed selection, and typed mode declares its bundle and the explicit
+`device_access`, `ipc`, and `network_egress` host permission allowlist. This proves
+configuration and import compatibility only.
+
+The same runner has a safe real-run preflight and runbook. It labels preflight
+separately from `real-online`, requires a fresh output directory, records exact
+command/environment/model/hardware/revision inputs, and stops only process groups
+it created. The 2026-08-29 host-112 typed preflight verified the manifest, model,
 ports, and eight idle 910B2 devices, then correctly refused to launch because the
 invoking user could not access a controlled runtime environment or built server
 binary. This is readiness evidence, not connector equivalence or a negative
@@ -179,7 +188,8 @@ KV bundle materialization is blocked until all of these are testable:
 - explicit ambiguity errors name the qualified candidates for that plane;
 - `MultiConnector` order is explicit and deterministic;
 - external module-path connectors remain supported during the migration
-  window;
+  window; PegaFlow has static and unit-test evidence for this gate, while matched
+  real-run evidence remains pending;
 - HMA capability checks run for typed and legacy paths identically;
 - implementation import occurs after admission and in the owning process only;
 - ordered children cannot require conflicting KV cache layouts;
