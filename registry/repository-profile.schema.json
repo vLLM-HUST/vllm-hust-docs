@@ -15,8 +15,27 @@
       "const": "https://github.com/vLLM-HUST/vllm-hust-docs/tree/codex/ecosystem-architecture-reorganization/registry"
     },
     "repository": {"type": "string", "format": "uri"},
-    "repository_role": {"type": "string", "minLength": 1},
-    "relation_to_runtime": {"type": "string", "minLength": 1},
+    "repository_role": {
+      "enum": [
+        "runtime_core", "platform_profile", "sibling_runtime",
+        "external_subsystem", "integration_provider", "runtime_component",
+        "runtime_substrate", "benchmark_tool", "analysis_tool",
+        "development_tool", "operations_tool", "documentation_source",
+        "public_application", "organization_governance", "application",
+        "research_publication", "sandbox", "archive"
+      ]
+    },
+    "relation_to_runtime": {
+      "enum": [
+        "owns_core_contracts", "implements_core_contracts",
+        "integrates_external_system", "provides_external_subsystem",
+        "extends_runtime_behavior", "provides_runtime_substrate",
+        "sibling_runtime", "supports_runtime_delivery",
+        "produces_runtime_evidence", "documents_runtime",
+        "presents_canonical_registry", "organization_wide",
+        "adjacent_research", "historical_only"
+      ]
+    },
     "lifecycle": {
       "enum": [
         "core", "supported", "certified_external", "incubating",
@@ -35,13 +54,38 @@
         ],
         "properties": {
           "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
-          "artifact_type": {"type": "string", "minLength": 1},
-          "system_role": {"type": "string", "minLength": 1},
-          "delivery_model": {"type": "string", "minLength": 1},
+          "artifact_type": {
+            "enum": [
+              "runtime_core", "platform_profile", "runtime_component",
+              "external_system", "bridge", "tool", "application"
+            ]
+          },
+          "system_role": {
+            "enum": [
+              "inference_runtime", "platform_backend", "scheduler_policy",
+              "decoding_mechanism", "operator_runtime", "kv_state_manager",
+              "kv_store", "transport", "kv_integration", "control_plane",
+              "control_plane_bridge", "compiler_kernel",
+              "deployment_operations", "benchmark_evidence",
+              "profiling_analysis", "documentation_catalog", "product_ui"
+            ]
+          },
+          "delivery_model": {
+            "enum": [
+              "core_release", "platform_distribution", "plugin_bundle",
+              "python_distribution", "native_distribution",
+              "container_service", "external_service", "source_repository"
+            ]
+          },
           "execution_planes": {
             "type": "array",
             "minItems": 1,
-            "items": {"type": "string"},
+            "items": {
+              "enum": [
+                "api", "scheduler", "worker", "native", "device",
+                "external_service", "cluster_control", "offline"
+              ]
+            },
             "uniqueItems": true
           },
           "integration_contracts": {
