@@ -9,7 +9,7 @@
       "name": "vllm-hust",
       "url": "https://github.com/vLLM-HUST/vllm-hust",
       "branch": "codex/ecosystem-architecture-reorganization-20260828",
-      "commit": "e15cbd9ef446df13fe9b07f74034867beecc9ee3",
+      "commit": "b43e514bcb2622fb597264b0e4865c9000b7a5e1",
       "role": "runtime_core"
     },
     {
@@ -196,11 +196,13 @@
       "repository_refs": ["vllm-hust", "vllm-hust-docs", "vllm-hust-website"],
       "validations": [
         {"id": "catalog-separation", "status": "passed", "evidence": "External RIDE control plane and local runtime bridge are separate catalog components."},
-        {"id": "wire-contracts", "status": "passed", "evidence": "Closed packaged action/receipt schemas, strict read-only health-probe parsing, and side-effect-free target, issuer-policy, scope, expiry, epoch, precondition, duplicate, and idempotency decisions passed 28 focused tests."},
-        {"id": "bridge-executor", "status": "blocked", "evidence": "No process-isolated executor, permission enforcement, cryptographic authentication, persistent replay ledger, transport, or runtime operation API exists."}
+        {"id": "wire-contracts", "status": "passed", "evidence": "Closed packaged action/receipt schemas, strict read-only health-probe parsing, and side-effect-free target, issuer-policy, scope, expiry, epoch, precondition, duplicate, and idempotency decisions remain covered."},
+        {"id": "authentication-replay-foundation", "status": "passed", "evidence": "Exact-wire-byte HMAC-SHA256 verification precedes strict parsing; a mode-0600 SQLite ledger binds idempotency key, action ID, and semantic fingerprint, restores in-progress actions and immutable correlated terminal receipts after restart, and rejects tampering, conflicts, nonterminal completion, and receipt identity mismatches. All 42 focused control-bridge tests and relevant pre-commit hooks passed."},
+        {"id": "bridge-executor", "status": "blocked", "evidence": "No process-isolated executor, permission enforcement, authenticated transport, host key provisioning/rotation, mutating runtime operation API, or lifecycle integration exists."}
       ],
       "blockers": [
-        "Only the read-only health-probe wire contract and pure admission gate exist; no mutating runtime action is defined.",
+        "Only the read-only health-probe contract, pure admission gate, local HMAC primitive, and durable replay ledger exist; no mutating runtime action is defined.",
+        "Authentication is not connected to a transport and no production key provisioning, rotation, revocation, or secret-storage policy exists.",
         "Configured Bundle v1 admission rejects the required process isolation and non-empty permission requests."
       ],
       "rollback": [
@@ -221,7 +223,7 @@
     "The documentation repository revision records the parent snapshot because a release record cannot contain the hash of the commit that contains itself; the published branch head is the authoritative record revision.",
     "All listed branches exist on GitHub, but no pull request is merged and no registry tag is published.",
     "One MultiConnector consistency test requires authenticated access to the gated meta-llama/Llama-3.2-1B-Instruct model and was not run.",
-    "Typed single and ordered_multi KV materialization are experimental; real-system equivalence and the control-plane bridge are not claimed.",
+    "Typed single and ordered_multi KV materialization are experimental; real-system equivalence is not claimed, and the control-plane authentication/replay foundation is not a runnable bridge.",
     "No real NPU, GPU, or Apple Silicon execution was performed for this draft.",
     "This draft authorizes no legacy entry-point deprecation or removal."
   ]

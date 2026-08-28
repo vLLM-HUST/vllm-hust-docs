@@ -33,17 +33,29 @@ action and receipt schemas plus side-effect-free parsing/admission code under
 epoch, trusted-issuer policy input, granted scope, expiry, state precondition,
 and idempotency-ledger input without executing or mutating anything.
 
+The core now also provides two local security foundations. First, it verifies
+an issuer-selected HMAC-SHA256 signature over the exact bounded UTF-8 JSON wire
+bytes before strict contract parsing; duplicate JSON fields, unknown issuers,
+short keys, malformed signatures, and payload tampering fail closed. Second, a
+mode-`0600` SQLite ledger atomically binds each idempotency key, action ID, and
+semantic action fingerprint. It distinguishes first reservation, in-progress
+duplicate, terminal duplicate, and conflict; persists the validated action and
+one immutable terminal receipt; and restores both after process restart.
+Receipt completion must correlate with the reserved action's runtime, trace,
+and causation identities. An `accepted` admission receipt cannot close the
+terminal record.
+
 The configured startup path still:
 
 - grants no non-empty permission requests;
 - admits only `trusted_in_process` isolation;
 - has no process-isolated bridge executor;
-- has no cryptographic authentication or persistent replay ledger;
+- has no authenticated transport or host key provisioning/rotation mechanism;
 - has no runtime operation executor, health transport, drain, or shutdown path.
 
-Consequently the bridge remains non-runnable. The contract and admission layer
-MUST NOT be described as a process-isolated, authenticated, supported, or
-secure bridge.
+Consequently the bridge remains non-runnable end to end. The contract,
+authentication primitive, and replay ledger MUST NOT be described as a
+process-isolated, transport-authenticated, supported, or complete secure bridge.
 
 ## 3. Required action contract
 
@@ -113,10 +125,15 @@ operation API.
 ## 7. Blocking acceptance gates
 
 Control-plane bridge materialization is blocked until all of these pass. The
-first schema and pure-admission gate is complete; the remaining gates are not:
+schema, pure-admission, exact-byte authentication, and durable replay
+foundations are complete; the remaining end-to-end gates are not:
 
-- closed action and receipt schemas with compatibility tests;
-- authentication, authorization, expiry, epoch, replay, and idempotency tests;
+- closed action and receipt schemas with compatibility tests — complete;
+- exact-byte HMAC authentication and persistent replay/idempotency recovery
+  primitives — complete;
+- transport authentication, key provisioning, rotation, and revocation;
+- authorization, expiry, epoch, replay, and idempotency integration tests
+  across the real transport and executor;
 - process-isolated executor with enforced permission policy;
 - atomic rejection and no-partial-mutation tests;
 - restart, reconnect, duplicate-delivery, drain, and shutdown tests;
@@ -128,5 +145,6 @@ first schema and pure-admission gate is complete; the remaining gates are not:
   separate components and evidence levels.
 
 Until these gates pass, RIDE is a concept-level external system and its runtime
-bridge is a concept-level integration with a tested wire-contract layer, not a
-supported Bundle v1 plugin.
+bridge is a concept-level integration with tested wire-contract,
+authentication-primitive, and durable-replay foundations, not a supported
+Bundle v1 plugin.
