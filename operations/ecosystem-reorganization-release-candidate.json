@@ -9,21 +9,21 @@
       "name": "vllm-hust",
       "url": "https://github.com/vLLM-HUST/vllm-hust",
       "branch": "codex/ecosystem-architecture-reorganization-20260828",
-      "commit": "6aa49326b1d6bc2edd145d72d3e3f9cd574b289e",
+      "commit": "503bf279e32908f866ea3624330642aff1b798c6",
       "role": "runtime_core"
     },
     {
       "name": "vllm-hust-docs",
       "url": "https://github.com/vLLM-HUST/vllm-hust-docs",
       "branch": "codex/ecosystem-architecture-reorganization",
-      "commit": "eb938d6d9c25fa1e23e5555c9d2229412e732fe1",
+      "commit": "6fcce512b441467dd2aa603cbad39c55d6117fa9",
       "role": "documentation_source"
     },
     {
       "name": "vllm-hust-website",
       "url": "https://github.com/vLLM-HUST/vllm-hust-website",
       "branch": "codex/ecosystem-architecture-reorganization-20260828",
-      "commit": "d07a0b4ac54feaba8e977566fb6b1520060c6ed7",
+      "commit": "13a0f94c6ec2c02847c50d55a0dbc6a8aaea8f6d",
       "role": "public_registry_renderer"
     },
     {
@@ -171,12 +171,14 @@
         {"id": "kv-split-role-contracts", "status": "passed", "evidence": "The API-plane vllm.kv_connector.telemetry.v1 contract prevents logger-side code from depending on worker imports; 54 affected extension and KVTransferConfig tests passed with all relevant pre-commit hooks."},
         {"id": "kv-transfer-config", "status": "passed", "evidence": "Typed selection dictionaries normalize into immutable profiles, are mutually exclusive with legacy connector names/module paths, and participate in transfer-instance role flags; all 17 affected config tests passed."},
         {"id": "multi-connector-lifecycle", "status": "passed", "evidence": "MultiConnector now delegates recovery requeue, first-compute observation, and reclaimable-block collection; 22 non-gated tests passed and 1 conditional test skipped."},
-        {"id": "kv-materializer", "status": "blocked", "evidence": "Split-role telemetry and cache-layout declarations are implemented, but the factory-owned adapter, in-process declaration verification, connector configuration/secrets, and rollback execution are not yet implemented."},
+        {"id": "kv-single-materializer", "status": "passed", "evidence": "Typed single selection materializes scheduler, worker, and API telemetry classes only in their owning process; configuration-time HMA, piecewise, and cache-layout checks import no implementation; declaration mismatch fails closed."},
+        {"id": "kv-affected-regression", "status": "passed", "evidence": "90 affected extension, config, HMA, cache-layout, typed factory, and non-gated MultiConnector tests passed; 1 conditional test skipped and 1 gated-model test deselected."},
+        {"id": "kv-ordered-materializer", "status": "blocked", "evidence": "Typed ordered_multi construction and telemetry composition are explicitly rejected until a domain-owned child configuration and telemetry adapter are implemented."},
         {"id": "kvcompress-static-validation", "status": "passed", "evidence": "KVCompress source and test modules compile, and its repository profile validates against the organization schema."},
         {"id": "kvcompress-pytest", "status": "passed", "evidence": "All 44 KVCompress tests passed against the editable core environment with PyTorch available."}
       ],
       "blockers": [
-        "The KV selection topology is mapped into KVTransferConfig but is not yet consumed by KVConnectorFactory.",
+        "KVConnectorFactory consumes typed single selections, but typed ordered_multi is still explicitly rejected.",
         "No typed connector path has matched the built-in names or external module-path compatibility behavior."
       ],
       "rollback": [
@@ -215,7 +217,7 @@
     "The documentation repository revision records the parent snapshot because a release record cannot contain the hash of the commit that contains itself; the published branch head is the authoritative record revision.",
     "All listed branches exist on GitHub, but no pull request is merged and no registry tag is published.",
     "One MultiConnector consistency test requires authenticated access to the gated meta-llama/Llama-3.2-1B-Instruct model and was not run.",
-    "KV selection topology resolution is implemented, but no new KV connector or control-plane bridge materializer is claimed.",
+    "Typed single KV materialization is implemented experimentally; typed ordered_multi and the control-plane bridge are not claimed.",
     "No real NPU, GPU, or Apple Silicon execution was performed for this draft.",
     "This draft authorizes no legacy entry-point deprecation or removal."
   ]

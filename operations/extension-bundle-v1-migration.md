@@ -158,7 +158,7 @@ during migration. They are separate from `VLLM_EXTENSION_MANIFESTS` and
 | model registry / out-of-tree model | model descriptor plus implementation registration | dedicated contract missing |
 | reasoning and tool parsers | explicit API-plane parser selection | dedicated contract missing |
 | LoRA resolvers | artifact/model resolution | dedicated contract missing |
-| KV connectors | scheduler/worker integration with an external state system | scheduler, worker, and API-plane telemetry contracts; closed ordered selection topology; HMA, piecewise, and cache-layout declarations; and `KVTransferConfig` mapping implemented; factory adapter remains blocked on the [KV domain design gate](../architecture/kv-systems-and-connector-materialization.md) |
+| KV connectors | scheduler/worker integration with an external state system | scheduler, worker, and API-plane telemetry contracts; closed ordered selection topology; HMA, piecewise, and cache-layout declarations; `KVTransferConfig` mapping; and fail-closed typed `single` factory materialization implemented; typed `ordered_multi` and release equivalence remain blocked on the [KV domain design gate](../architecture/kv-systems-and-connector-materialization.md) |
 | weight-transfer connectors | data-path integration | dedicated contract missing |
 | scheduler/victim selector | scheduler-local policy | typed materializer implemented; experimental until BidKV equivalence gates pass |
 | platform/operator/model runner | coordinated platform/runtime components | descriptor contracts implemented; materializers pending |
@@ -210,9 +210,12 @@ equivalence and rollback gates below pass.
 Implementation status: steps 1 and 2 are complete. Step 3 is active. The
 scheduler/victim-selector materializer is implemented, and the KV domain now
 has a closed three-role selection-topology parser/resolver, cache-layout
-compatibility checks, plus mutually exclusive `KVTransferConfig` mapping that
-deliberately stops before factory
-materialization. Steps 4 through 8 remain required; implementing a
+compatibility checks, mutually exclusive `KVTransferConfig` mapping, and a
+typed `single` factory adapter. Configuration-time checks read declarations
+without implementation imports; scheduler, worker, and API/logger processes
+import only their selected role and verify declarations locally. Typed
+`ordered_multi` remains fail-closed. Steps 4 through 8 remain required;
+implementing a
 materializer does not by itself make the typed path recommended or deprecate
 its legacy surface.
 
