@@ -79,9 +79,10 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["sequence", "gate", "repository_refs"],
+        "required": ["sequence", "status", "gate", "repository_refs"],
         "properties": {
           "sequence": {"type": "integer", "minimum": 1},
+          "status": {"enum": ["passed", "pending", "blocked"]},
           "gate": {"type": "string", "minLength": 1},
           "repository_refs": {
             "type": "array",

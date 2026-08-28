@@ -118,7 +118,8 @@
         {"id": "registry", "status": "passed", "evidence": "20 ecosystem components and 32 organization repositories validated"},
         {"id": "repository-profiles", "status": "passed", "evidence": "13 repository profiles validated against the closed schema"},
         {"id": "website-tests", "status": "passed", "evidence": "146 targeted tests passed"},
-        {"id": "browser-desktop-mobile", "status": "passed", "evidence": "20 cards rendered at 1440px and 390px; zero horizontal overflow and zero console errors"}
+        {"id": "browser-desktop-mobile", "status": "passed", "evidence": "20 cards rendered at 1440px and 390px; zero horizontal overflow and zero console errors"},
+        {"id": "remote-branches", "status": "passed", "evidence": "All 13 isolated worktree branches were created on their canonical GitHub repositories without overwriting an existing branch."}
       ],
       "blockers": [
         "Canonical registry URLs still point to architecture branches rather than a tagged registry release.",
@@ -185,16 +186,16 @@
     }
   ],
   "publication_order": [
-    {"sequence": 1, "gate": "Publish opt-in core admission and scheduler materializer branches without changing default runtime behavior.", "repository_refs": ["vllm-hust"]},
-    {"sequence": 2, "gate": "Publish architecture, schemas, registries, design gates, and this draft record.", "repository_refs": ["vllm-hust-docs"]},
-    {"sequence": 3, "gate": "Publish BidKV manifest and repository-local profiles; do not mark the typed path recommended.", "repository_refs": ["vllm-hust-bidkv", "pegaflow-hust", "LMCache-Ascend", "vllm-ascend-hust", "vllm-metal-hust", "vllm-ascend-hust-diffspec", "vllm-ascend-hust-LatchMoE", "vllm-hust-benchmark", "vllm-hust-dev-hub", "llm-serving-workloads"]},
-    {"sequence": 4, "gate": "Publish the website mirror only from the exact docs registry and keep all experimental labels.", "repository_refs": ["vllm-hust-website"]},
-    {"sequence": 5, "gate": "Run full CPU CI and matched BidKV legacy/typed tests in a complete core environment.", "repository_refs": ["vllm-hust", "vllm-hust-bidkv"]},
-    {"sequence": 6, "gate": "Run real platform/hardware gates and update this record from draft to candidate only when evidence is attached.", "repository_refs": ["vllm-hust", "vllm-ascend-hust", "LMCache-Ascend", "pegaflow-hust"]},
-    {"sequence": 7, "gate": "Tag the canonical docs registry, replace branch URLs in repository profiles, and then consider supported labels.", "repository_refs": ["vllm-hust-docs", "vllm-hust-website"]}
+    {"sequence": 1, "status": "passed", "gate": "Publish opt-in core admission and scheduler materializer branches without changing default runtime behavior.", "repository_refs": ["vllm-hust"]},
+    {"sequence": 2, "status": "passed", "gate": "Publish architecture, schemas, registries, design gates, and this draft record.", "repository_refs": ["vllm-hust-docs"]},
+    {"sequence": 3, "status": "passed", "gate": "Publish BidKV manifest and repository-local profiles; do not mark the typed path recommended.", "repository_refs": ["vllm-hust-bidkv", "pegaflow-hust", "LMCache-Ascend", "vllm-ascend-hust", "vllm-metal-hust", "vllm-ascend-hust-diffspec", "vllm-ascend-hust-LatchMoE", "vllm-hust-benchmark", "vllm-hust-dev-hub", "llm-serving-workloads"]},
+    {"sequence": 4, "status": "passed", "gate": "Publish the website mirror only from the exact docs registry and keep all experimental labels.", "repository_refs": ["vllm-hust-website"]},
+    {"sequence": 5, "status": "blocked", "gate": "Run full CPU CI and matched BidKV legacy/typed tests in a complete core environment.", "repository_refs": ["vllm-hust", "vllm-hust-bidkv"]},
+    {"sequence": 6, "status": "blocked", "gate": "Run real platform/hardware gates and update this record from draft to candidate only when evidence is attached.", "repository_refs": ["vllm-hust", "vllm-ascend-hust", "LMCache-Ascend", "pegaflow-hust"]},
+    {"sequence": 7, "status": "pending", "gate": "Tag the canonical docs registry, replace branch URLs in repository profiles, and then consider supported labels.", "repository_refs": ["vllm-hust-docs", "vllm-hust-website"]}
   ],
   "known_limitations": [
-    "All listed commits are isolated worktree commits and may not yet exist on GitHub branches.",
+    "All listed branches exist on GitHub, but no pull request is merged and no registry tag is published.",
     "The vllm-ascend-kvcompress-hust repository was not available locally and has no profile commit in this record.",
     "No new KV connector or control-plane bridge materializer is claimed.",
     "No real NPU, GPU, or Apple Silicon execution was performed for this draft.",

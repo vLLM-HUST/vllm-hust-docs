@@ -42,6 +42,7 @@ def main() -> None:
     sequences = [item["sequence"] for item in record["publication_order"]]
     assert sequences == list(range(1, len(sequences) + 1))
     for item in record["publication_order"]:
+        assert item["status"] in {"passed", "pending", "blocked"}
         unknown = set(item["repository_refs"]) - known
         assert not unknown, f"publication step {item['sequence']}: {unknown}"
 
