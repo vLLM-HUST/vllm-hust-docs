@@ -55,10 +55,15 @@ shutdown timeouts, fail/terminate behavior, drain/stop states, and explicit
 restart. Runtime, epoch, state precondition, and receipt correlation are
 rechecked at the boundary.
 
-The worker is not connected to a runtime-owned health data source yet. A probe
-therefore returns terminal `failed` / `RUNTIME_HEALTH_UNAVAILABLE` while proving
-only that the bridge worker responded. Reporting the runtime as healthy from
-IPC liveness alone is prohibited.
+The host now exposes a narrow health observation adapter over the same
+`EngineClient.check_health()` operation used by the canonical `/health` route.
+It distinguishes healthy, `EngineDeadError`, and unavailable checks without
+copying exception details into the bridge. The isolated worker receives only a
+closed observation containing state, timestamp, and the fixed
+`engine_client.check_health` source. Observations from the future or older than
+five seconds fail before IPC and are checked again in the child. With no valid
+observation, a probe remains terminal `failed` /
+`RUNTIME_HEALTH_UNAVAILABLE`; IPC liveness is never reported as runtime health.
 
 A transport-agnostic local service now composes authentication, admission,
 durable lookup/reservation, and the executor. Authenticated durable bindings
@@ -76,7 +81,7 @@ The configured startup path still:
 - has no authenticated transport or host key provisioning/rotation mechanism;
 - does not wire the local orchestration service to any transport or concurrent
   request host;
-- has no runtime operation API, real health source, or external transport.
+- has no general or mutating runtime operation API or external transport.
 
 Consequently the external bridge remains non-runnable end to end. The fixed
 child is a tested process-isolation and lifecycle foundation, but the overall
@@ -166,7 +171,8 @@ foundations are complete; the remaining end-to-end gates are not:
 - authorization, expiry, epoch, replay, and idempotency integration tests
   across the real transport and executor;
 - fixed core-only process executor, IPC-only manifest policy, bounded slot,
-  lifecycle, and fail-closed unavailable-health result — complete;
+  lifecycle, authoritative health observation, freshness checks, and
+  fail-closed missing-health result — complete;
 - OS-enforced capability confinement for any future non-core bridge code;
 - atomic rejection and no-partial-mutation tests;
 - restart, reconnect, duplicate-delivery, drain, and shutdown tests;
