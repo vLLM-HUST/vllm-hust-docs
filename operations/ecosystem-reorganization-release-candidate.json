@@ -44,7 +44,7 @@
       "name": "LMCache-Ascend",
       "url": "https://github.com/vLLM-HUST/LMCache-Ascend",
       "branch": "feat/ecosystem-role-metadata",
-      "commit": "62a410f176205c8e2ee34baae08e9cb1ae09c83f",
+      "commit": "1f314e01543c15512df712aed71c474ca5d4b1f9",
       "role": "lmcache_ascend_provider_and_adapter"
     },
     {
@@ -170,6 +170,7 @@
         {"id": "catalog-separation", "status": "passed", "evidence": "Mooncake, LMCache, PegaFlow, and LMCache-Ascend systems/providers are separate from their connector bridges."},
         {"id": "pegaflow-typed-bundle", "status": "passed", "evidence": "PegaFlow publishes split scheduler, worker, and API telemetry Bundle v1 components with explicit device, IPC, and egress permissions. Its lazy package facade preserves the legacy module export while API telemetry imports no worker facade. Typed and legacy config builders, manifest admission, safety logic, and connector regressions passed all 74 focused tests."},
         {"id": "pegaflow-real-run-readiness", "status": "passed", "evidence": "The PegaFlow runner forbids global name-based process killing, tracks and terminates only child process groups it created, refuses reused output directories, records preflight provenance, and cannot launch when imports, model, executable, ports, or eight-device memory checks fail. A host-112 typed preflight was labeled preflight-only: manifest, model, ports, and eight idle 910B2 devices passed, while the controlled runtime imports and PegaFlow server binary failed, so no service was launched and no hardware equivalence is claimed."},
+        {"id": "lmcache-ascend-typed-bundle", "status": "passed", "evidence": "LMCache-Ascend publishes a wheel-carried split scheduler, worker, and lightweight API telemetry Bundle v1 manifest with explicit trusted-process permissions. Its dynamic adapter now accepts the host kv_cache_config constructor argument while remaining compatible with legacy two-argument callers. Six manifest, admission, packaging, constructor, and import-boundary tests passed with Ruff and format checks; the repository profile passed the closed organization schema."},
         {"id": "kv-selection-topology", "status": "passed", "evidence": "Closed single/ordered-multi schema and immutable-snapshot resolver preserve explicit order, validate exact scheduler/worker/API-telemetry providers plus declared HMA, piecewise, and cache-layout capabilities, reject role crossing, conflicting layouts, and unknown fields, and import no implementation."},
         {"id": "kv-split-role-contracts", "status": "passed", "evidence": "The API-plane vllm.kv_connector.telemetry.v1 contract prevents logger-side code from depending on worker imports; 54 affected extension and KVTransferConfig tests passed with all relevant pre-commit hooks."},
         {"id": "kv-transfer-config", "status": "passed", "evidence": "Typed selection dictionaries normalize into immutable profiles, are mutually exclusive with legacy connector names/module paths, and participate in transfer-instance role flags; all 17 affected config tests passed."},
@@ -184,7 +185,7 @@
         {"id": "kvcompress-pytest", "status": "passed", "evidence": "All 44 KVCompress tests passed against the editable core after typed single/ordered factory changes."}
       ],
       "blockers": [
-        "Typed single and ordered_multi paths lack matched real Mooncake, LMCache, PegaFlow, and LMCache-Ascend behavior and rollback evidence. PegaFlow now has a typed split-role bundle, tested legacy/typed configuration compatibility, and a safe preflight gate, but host 112 lacks an invoking-user-accessible controlled runtime and built server binary.",
+        "Typed single and ordered_multi paths lack matched real Mooncake, LMCache, PegaFlow, and LMCache-Ascend behavior and rollback evidence. PegaFlow and LMCache-Ascend now have typed split-role bundles and static compatibility evidence; PegaFlow's real run remains blocked by the controlled runtime and server binary, while LMCache-Ascend still requires matched monkey-patch, failure, shutdown, and Ascend hardware runs.",
         "Configuration-level external module-path rollback is verified, but real connector behavior and failure equivalence are still pending."
       ],
       "rollback": [

@@ -178,6 +178,17 @@ invoking user could not access a controlled runtime environment or built server
 binary. This is readiness evidence, not connector equivalence or a negative
 performance result.
 
+LMCache-Ascend now publishes a wheel-carried Bundle v1 manifest for a separate
+scheduler component, worker/device component, and lightweight API telemetry
+provider. The adapter constructor accepts both its historical two-argument call
+and the host's three-argument `kv_cache_config` contract. The telemetry package
+does not import the heavy `lmcache_ascend` initializer, whose monkey patches and
+device/runtime dependencies remain confined to connector materialization. The
+bundle explicitly requests its broad trusted-process filesystem, IPC, network,
+shared-memory, subprocess, and worker device permissions. These six static and
+admission tests establish packaging and contract compatibility, not matched
+LMCache behavior or Ascend hardware equivalence.
+
 ## 6. Blocking acceptance gates
 
 KV bundle materialization is blocked until all of these are testable:
@@ -188,8 +199,8 @@ KV bundle materialization is blocked until all of these are testable:
 - explicit ambiguity errors name the qualified candidates for that plane;
 - `MultiConnector` order is explicit and deterministic;
 - external module-path connectors remain supported during the migration
-  window; PegaFlow has static and unit-test evidence for this gate, while matched
-  real-run evidence remains pending;
+  window; PegaFlow and LMCache-Ascend have static and unit-test evidence for this
+  gate, while matched real-run evidence remains pending;
 - HMA capability checks run for typed and legacy paths identically;
 - implementation import occurs after admission and in the owning process only;
 - ordered children cannot require conflicting KV cache layouts;
