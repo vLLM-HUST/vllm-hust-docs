@@ -9,21 +9,21 @@
       "name": "vllm-hust",
       "url": "https://github.com/vLLM-HUST/vllm-hust",
       "branch": "codex/ecosystem-architecture-reorganization-20260828",
-      "commit": "ce41f7445d067aa85929ee3d69663d5887d3c6ea",
+      "commit": "e15cbd9ef446df13fe9b07f74034867beecc9ee3",
       "role": "runtime_core"
     },
     {
       "name": "vllm-hust-docs",
       "url": "https://github.com/vLLM-HUST/vllm-hust-docs",
       "branch": "codex/ecosystem-architecture-reorganization",
-      "commit": "30fd96e8ed84a0291110c86f63239d042a8bb35e",
+      "commit": "e51d07d9aaca43787e20a8e7d566ad3b938726e8",
       "role": "documentation_source"
     },
     {
       "name": "vllm-hust-website",
       "url": "https://github.com/vLLM-HUST/vllm-hust-website",
       "branch": "codex/ecosystem-architecture-reorganization-20260828",
-      "commit": "660f46fd37108fe4d1361e56a68a88b99534ae14",
+      "commit": "dbe348020b47bb8b7d73d7aba01b4a89598d6343",
       "role": "public_registry_renderer"
     },
     {
@@ -182,7 +182,7 @@
       ],
       "blockers": [
         "Typed single and ordered_multi paths lack matched real Mooncake, LMCache, PegaFlow, and LMCache-Ascend behavior and rollback evidence.",
-        "No typed connector path has matched the built-in names or external module-path compatibility behavior."
+        "Configuration-level external module-path rollback is verified, but real connector behavior and failure equivalence are still pending."
       ],
       "rollback": [
         "Continue using KVTransferConfig with current built-in connector names or kv_connector_module_path.",
@@ -196,10 +196,11 @@
       "repository_refs": ["vllm-hust", "vllm-hust-docs", "vllm-hust-website"],
       "validations": [
         {"id": "catalog-separation", "status": "passed", "evidence": "External RIDE control plane and local runtime bridge are separate catalog components."},
-        {"id": "bridge-executor", "status": "blocked", "evidence": "No process-isolated executor, action/receipt envelope, permission enforcement, authentication, or replay protection exists."}
+        {"id": "wire-contracts", "status": "passed", "evidence": "Closed packaged action/receipt schemas, strict read-only health-probe parsing, and side-effect-free target, issuer-policy, scope, expiry, epoch, precondition, duplicate, and idempotency decisions passed 28 focused tests."},
+        {"id": "bridge-executor", "status": "blocked", "evidence": "No process-isolated executor, permission enforcement, cryptographic authentication, persistent replay ledger, transport, or runtime operation API exists."}
       ],
       "blockers": [
-        "Action and receipt schemas are identities only.",
+        "Only the read-only health-probe wire contract and pure admission gate exist; no mutating runtime action is defined.",
         "Configured Bundle v1 admission rejects the required process isolation and non-empty permission requests."
       ],
       "rollback": [

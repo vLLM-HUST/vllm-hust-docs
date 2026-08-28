@@ -26,22 +26,28 @@ plane.
 ## 2. Current implementation status
 
 `vllm/plugins/contracts.py` defines versioned action and receipt identities and
-the `bridge` execution plane. The Bundle v1 manifest schema can describe such a
-component, but the configured startup path currently:
+the `bridge` execution plane. The core now also packages closed Draft 2020-12
+action and receipt schemas plus side-effect-free parsing/admission code under
+`vllm/control_bridge/`. The first action vocabulary contains only
+`runtime.health_probe` with `runtime.read` scope. It validates target runtime,
+epoch, trusted-issuer policy input, granted scope, expiry, state precondition,
+and idempotency-ledger input without executing or mutating anything.
+
+The configured startup path still:
 
 - grants no non-empty permission requests;
 - admits only `trusted_in_process` isolation;
 - has no process-isolated bridge executor;
-- has no action or receipt envelope implementation;
-- has no authentication, replay protection, health, drain, or shutdown path.
+- has no cryptographic authentication or persistent replay ledger;
+- has no runtime operation executor, health transport, drain, or shutdown path.
 
-Consequently the bridge is descriptor-only. It MUST NOT be marked runnable,
-supported, or secure merely because its manifest validates.
+Consequently the bridge remains non-runnable. The contract and admission layer
+MUST NOT be described as a process-isolated, authenticated, supported, or
+secure bridge.
 
 ## 3. Required action contract
 
-Before `vllm.control.action.v1` can materialize, the runtime-owned envelope MUST
-define and test at least:
+The runtime-owned v1 envelope now defines and tests:
 
 - contract version and action type;
 - unique action ID and idempotency key;
@@ -54,8 +60,10 @@ define and test at least:
 - trace and causality identifiers.
 
 Unknown action types, fields, versions, targets, expired actions, stale epochs,
-and failed authorization MUST be rejected without partially mutating runtime
-state.
+failed policy authorization, precondition failures, duplicates, and
+idempotency conflicts are rejected by a pure function with
+`mutation_occurred=false`. Mutating action payloads remain undefined and are
+therefore rejected.
 
 ## 4. Required receipt contract
 
@@ -104,7 +112,8 @@ operation API.
 
 ## 7. Blocking acceptance gates
 
-Control-plane bridge materialization is blocked until all of these pass:
+Control-plane bridge materialization is blocked until all of these pass. The
+first schema and pure-admission gate is complete; the remaining gates are not:
 
 - closed action and receipt schemas with compatibility tests;
 - authentication, authorization, expiry, epoch, replay, and idempotency tests;
@@ -119,4 +128,5 @@ Control-plane bridge materialization is blocked until all of these pass:
   separate components and evidence levels.
 
 Until these gates pass, RIDE is a concept-level external system and its runtime
-bridge is a concept-level descriptor, not a supported Bundle v1 plugin.
+bridge is a concept-level integration with a tested wire-contract layer, not a
+supported Bundle v1 plugin.
