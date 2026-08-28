@@ -9,7 +9,7 @@
       "name": "vllm-hust",
       "url": "https://github.com/vLLM-HUST/vllm-hust",
       "branch": "codex/ecosystem-architecture-reorganization-20260828",
-      "commit": "98ca601e57eeb79db3a873eb254a7a5fcd801fd5",
+      "commit": "fec843b00110171b9efa59eb48b1288b7ab28648",
       "role": "runtime_core"
     },
     {
@@ -23,7 +23,7 @@
       "name": "vllm-hust-website",
       "url": "https://github.com/vLLM-HUST/vllm-hust-website",
       "branch": "codex/ecosystem-architecture-reorganization-20260828",
-      "commit": "d0d2b10c729e110c3b777050fc4d0d8953fac444",
+      "commit": "aa8b60c3f7afe093a769a84eb49f46913bffc04b",
       "role": "public_registry_renderer"
     },
     {
@@ -145,7 +145,7 @@
       "validations": [
         {"id": "compile", "status": "passed", "evidence": "Core extension, scheduler-policy, and KV selection modules compile in the repository-managed Python 3.12 environment."},
         {"id": "dependency-free-smoke", "status": "passed", "evidence": "Manifest admission, immutable snapshot, typed materialization, and BidKV manifest parsing passed."},
-        {"id": "extension-core-pytest", "status": "passed", "evidence": "42 manifest, admission, startup snapshot, KV selection, and scheduler-policy compatibility tests passed in the repository-managed Python 3.12 environment."},
+        {"id": "extension-core-pytest", "status": "passed", "evidence": "43 manifest, admission, startup snapshot, KV selection/capability, and scheduler-policy compatibility tests passed in the repository-managed Python 3.12 environment."},
         {"id": "extension-core-hooks", "status": "passed", "evidence": "All pre-commit hooks for the new KV selection files passed, including Ruff, formatting, mypy, forbidden imports, SPDX, and configuration checks."},
         {"id": "bidkv-unit", "status": "passed", "evidence": "396 BidKV tests passed and 1 environment-dependent test skipped against the editable core environment."},
         {"id": "full-core-ci", "status": "not_run", "evidence": "The complete vLLM CPU test matrix has not been run; current evidence covers the extension and affected KV domains."},
@@ -167,9 +167,9 @@
       "repository_refs": ["vllm-hust", "vllm-hust-docs", "vllm-hust-website", "pegaflow-hust", "LMCache-Ascend", "vllm-ascend-kvcompress-hust"],
       "validations": [
         {"id": "catalog-separation", "status": "passed", "evidence": "Mooncake, LMCache, PegaFlow, and LMCache-Ascend systems/providers are separate from their connector bridges."},
-        {"id": "kv-selection-topology", "status": "passed", "evidence": "Closed single/ordered-multi schema and immutable-snapshot resolver preserve explicit order, validate exact scheduler/worker providers, reject role crossing and unknown fields, and import no implementation."},
+        {"id": "kv-selection-topology", "status": "passed", "evidence": "Closed single/ordered-multi schema and immutable-snapshot resolver preserve explicit order, validate exact scheduler/worker providers and declared HMA/piecewise capabilities, reject role crossing and unknown fields, and import no implementation."},
         {"id": "multi-connector-lifecycle", "status": "passed", "evidence": "MultiConnector now delegates recovery requeue, first-compute observation, and reclaimable-block collection; 22 non-gated tests passed and 1 conditional test skipped."},
-        {"id": "kv-materializer", "status": "blocked", "evidence": "The factory-owned adapter, KVTransferConfig mapping, HMA parity, connector configuration/secrets, lifecycle, and rollback execution are not yet implemented."},
+        {"id": "kv-materializer", "status": "blocked", "evidence": "The factory-owned adapter, KVTransferConfig mapping, in-process capability verification, connector configuration/secrets, lifecycle, and rollback execution are not yet implemented."},
         {"id": "kvcompress-static-validation", "status": "passed", "evidence": "KVCompress source and test modules compile, and its repository profile validates against the organization schema."},
         {"id": "kvcompress-pytest", "status": "passed", "evidence": "All 44 KVCompress tests passed against the editable core environment with PyTorch available."}
       ],

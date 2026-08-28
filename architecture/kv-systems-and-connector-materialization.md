@@ -93,6 +93,9 @@ domain decisions that are safe before factory integration:
 - every logical connector names an exact qualified scheduler component and an
   exact qualified worker component;
 - a component may implement both roles, or the roles may be separate;
+- each role declares HMA support, while the worker also declares whether it
+  requires piecewise CUDA Graph mode, so configuration checks do not import a
+  worker implementation in the wrong process;
 - resolution rejects role crossing, missing admission, wrong execution plane,
   duplicate logical connectors, duplicate component pairs, and unknown fields;
 - resolution reads the immutable startup snapshot and never imports a connector
@@ -104,6 +107,11 @@ does not mutate `KVTransferConfig`, and does not register anything with
 `KVConnectorFactory`. The factory-owned adapter, configuration/secret schema,
 external-system handshake, lifecycle, and rollback implementation remain
 required before a typed connector can be instantiated.
+
+Capability declarations are admission inputs, not trusted implementation
+facts. A future factory adapter MUST verify `SupportsHMA` and piecewise-mode
+requirements against the imported role implementation inside its owning
+process and fail closed on any declaration mismatch.
 
 The existing `MultiConnector` compatibility path has also been hardened to
 delegate KV-recovery requeue observations, worker first-compute observations,
