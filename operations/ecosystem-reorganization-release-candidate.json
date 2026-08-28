@@ -16,14 +16,14 @@
       "name": "vllm-hust-docs",
       "url": "https://github.com/vLLM-HUST/vllm-hust-docs",
       "branch": "codex/ecosystem-architecture-reorganization",
-      "commit": "180df6d6a82e5f8b5c6200064aefdce673495aaf",
+      "commit": "d25abb1535a2717e68562ca121addb960fbd110a",
       "role": "documentation_source"
     },
     {
       "name": "vllm-hust-website",
       "url": "https://github.com/vLLM-HUST/vllm-hust-website",
       "branch": "codex/ecosystem-architecture-reorganization-20260828",
-      "commit": "1a01219f5edb5256e5518055bc98bffdfc7bc791",
+      "commit": "290aba66f9c4622d68bf12be0be1d7d4e49c3ea6",
       "role": "public_registry_renderer"
     },
     {
@@ -44,7 +44,7 @@
       "name": "LMCache-Ascend",
       "url": "https://github.com/vLLM-HUST/LMCache-Ascend",
       "branch": "feat/ecosystem-role-metadata",
-      "commit": "1f314e01543c15512df712aed71c474ca5d4b1f9",
+      "commit": "e6339f6520aacdca7b3440f53a6320d8eba4f2a4",
       "role": "lmcache_ascend_provider_and_adapter"
     },
     {
@@ -173,6 +173,7 @@
         {"id": "pegaflow-typed-bundle", "status": "passed", "evidence": "PegaFlow publishes split scheduler, worker, and API telemetry Bundle v1 components with explicit device, IPC, and egress permissions. Its lazy package facade preserves the legacy module export while API telemetry imports no worker facade. Typed and legacy config builders, manifest admission, safety logic, and connector regressions passed all 74 focused tests."},
         {"id": "pegaflow-real-run-readiness", "status": "passed", "evidence": "The PegaFlow runner forbids global name-based process killing, tracks and terminates only child process groups it created, refuses reused output directories, records preflight provenance, and cannot launch when imports, model, executable, ports, or eight-device memory checks fail. A host-112 typed preflight was labeled preflight-only: manifest, model, ports, and eight idle 910B2 devices passed, while the controlled runtime imports and PegaFlow server binary failed, so no service was launched and no hardware equivalence is claimed."},
         {"id": "lmcache-ascend-typed-bundle", "status": "passed", "evidence": "LMCache-Ascend publishes a wheel-carried split scheduler, worker, and lightweight API telemetry Bundle v1 manifest with explicit trusted-process permissions. Its dynamic adapter now accepts the host kv_cache_config constructor argument while remaining compatible with legacy two-argument callers. Six manifest, admission, packaging, constructor, and import-boundary tests passed with Ruff and format checks; the repository profile passed the closed organization schema."},
+        {"id": "lmcache-ascend-real-run-readiness", "status": "passed", "evidence": "LMCache-Ascend revision e6339f6520aacdca7b3440f53a6320d8eba4f2a4 adds a fail-closed preflight-only command and matched legacy/typed/fresh-process-rollback runbook. Five safety tests plus the six existing bundle tests passed with all pre-commit hooks. A host-112 preflight launched no service: model, ports, eight NPUs, bundle roles, and exact core/provider revisions passed; the controlled import and LMCache 0.4.4 version gates failed because lmcache, lmcache_ascend, and torch_npu were absent, so no real-online or hardware result is claimed."},
         {"id": "kv-selection-topology", "status": "passed", "evidence": "Closed single/ordered-multi schema and immutable-snapshot resolver preserve explicit order, validate exact scheduler/worker/API-telemetry providers plus declared HMA, piecewise, and cache-layout capabilities, reject role crossing, conflicting layouts, and unknown fields, and import no implementation."},
         {"id": "kv-split-role-contracts", "status": "passed", "evidence": "The API-plane vllm.kv_connector.telemetry.v1 contract prevents logger-side code from depending on worker imports; 54 affected extension and KVTransferConfig tests passed with all relevant pre-commit hooks."},
         {"id": "kv-transfer-config", "status": "passed", "evidence": "Typed selection dictionaries normalize into immutable profiles, are mutually exclusive with legacy connector names/module paths, and participate in transfer-instance role flags; all 17 affected config tests passed."},
@@ -187,7 +188,7 @@
         {"id": "kvcompress-pytest", "status": "passed", "evidence": "All 44 KVCompress tests passed against the editable core after typed single/ordered factory changes."}
       ],
       "blockers": [
-        "Typed single and ordered_multi paths still lack matched real Mooncake, LMCache, PegaFlow, and LMCache-Ascend service behavior, failure recovery, shutdown, and accelerator evidence. The four built-in names now have factory-level class, role, codec, rollback-name, and missing-dependency equivalence; PegaFlow and LMCache-Ascend have typed split-role bundles and static compatibility evidence. PegaFlow's real run remains blocked by the controlled runtime and server binary, while LMCache-Ascend still requires matched monkey-patch, failure, shutdown, and Ascend hardware runs.",
+        "Typed single and ordered_multi paths still lack matched real Mooncake, LMCache, PegaFlow, and LMCache-Ascend service behavior, failure recovery, shutdown, and accelerator evidence. The four built-in names now have factory-level class, role, codec, rollback-name, and missing-dependency equivalence; PegaFlow and LMCache-Ascend have typed split-role bundles and safe preflight evidence. PegaFlow's real run remains blocked by the controlled runtime and server binary. LMCache-Ascend's real run is blocked before launch because the isolated environment lacks lmcache 0.4.4, lmcache_ascend, and torch_npu; matched monkey-patch, failure, shutdown, and Ascend hardware runs remain required.",
         "Configuration-level external module-path rollback and built-in next-start name rollback are verified, but rollback during matched real connector failure and restart scenarios is still pending."
       ],
       "rollback": [

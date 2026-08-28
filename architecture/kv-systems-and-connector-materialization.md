@@ -221,6 +221,16 @@ shared-memory, subprocess, and worker device permissions. These six static and
 admission tests establish packaging and contract compatibility, not matched
 LMCache behavior or Ascend hardware equivalence.
 
+LMCache-Ascend also has a fail-closed `preflight-only` command and real-run
+runbook. It preserves the selected virtual-environment interpreter, requires a
+fresh evidence directory, and records exact imports and dependency versions,
+bundle roles, model, ports, NPU inventory, and both Git revisions without
+starting or terminating a service. The 2026-08-29 host-112 preflight passed the
+model, two requested ports, eight-device inventory, split-role manifest, and
+core/provider revision checks. It correctly blocked because `lmcache` 0.4.4,
+`lmcache_ascend`, and `torch_npu` were unavailable in the isolated core
+environment. That record is environment-readiness evidence only.
+
 ## 6. Blocking acceptance gates
 
 The built-in materialization gate above is complete. It does not satisfy the
