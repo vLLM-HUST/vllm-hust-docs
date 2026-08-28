@@ -92,6 +92,11 @@
             "type": "array",
             "items": {"type": "string"},
             "uniqueItems": true
+          },
+          "integration_surfaces": {
+            "type": "array",
+            "items": {"type": "string"},
+            "uniqueItems": true
           }
         }
       }

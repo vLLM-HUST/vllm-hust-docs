@@ -26,8 +26,9 @@ Every supported or incubating component MUST declare these axes:
 |---|---|---|
 | `artifact_type` | The kind of deliverable | runtime core, platform profile, runtime component, external system, bridge, tool |
 | `system_role` | The responsibility in the serving system | scheduler policy, KV state manager, store, transport, control plane, benchmark |
-| `integration_contracts` | Typed contracts used to integrate | KV connector, platform interface, operator ABI, action/receipt bridge |
-| `execution_planes` | Where behavior executes | API, scheduler, worker, native, device, external service, cluster control |
+| `integration_contracts` | Versioned typed contracts owned by a stable domain | `vllm.kv_connector.worker.v1`, `vllm.platform.v1`, `vllm.control.action.v1` |
+| `integration_surfaces` | Existing or external extension surfaces not yet promoted to a typed contract | model-loader registration, LMCache storage backend, KV lifecycle hook |
+| `execution_planes` | Where behavior executes | API, scheduler, worker, native, device, bridge, external service, cluster control |
 | `deployment_topology` | Process and service topology | built-in, in-process, sidecar, daemon, distributed service, separate application |
 | `delivery_model` | Installation and upgrade mechanism | core release, platform distribution, plugin bundle, package, container, external service |
 | `ownership` | Maintenance responsibility | HUST-owned, upstream-owned, jointly maintained, certified third-party |
@@ -36,6 +37,11 @@ Every supported or incubating component MUST declare these axes:
 A repository MAY contain multiple components. A component MUST NOT be assigned
 only a repository-wide `plugin` label when its runtime and service artifacts
 have different roles or execution planes.
+
+An implementation surface MUST NOT be listed as an `integration_contract`
+until its identity and compatibility semantics are versioned in the owning
+domain. Moving a string into `integration_surfaces` does not deprecate the
+feature; it prevents the catalog from overstating API stability.
 
 ## 3. System layers
 

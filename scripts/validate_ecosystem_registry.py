@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 
@@ -48,6 +49,16 @@ def main() -> None:
         assert len(component["integration_contracts"]) == len(
             set(component["integration_contracts"])
         )
+        surfaces = component.get("integration_surfaces", [])
+        assert len(surfaces) == len(set(surfaces))
+        overlap = set(component["integration_contracts"]) & set(surfaces)
+        assert not overlap, f"{component['id']}: contract/surface overlap {overlap}"
+        for contract in component["integration_contracts"]:
+            if contract.startswith("vllm."):
+                assert re.search(r"\.v[1-9]\d*$", contract), (
+                    f"{component['id']}: unversioned vLLM contract {contract!r}; "
+                    "classify existing hooks under integration_surfaces"
+                )
 
     portfolio = json.loads(PORTFOLIO.read_text(encoding="utf-8"))
     assert portfolio["schema_version"] == "1.0"

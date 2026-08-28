@@ -38,6 +38,11 @@
           "items": {"type": "string"},
           "uniqueItems": true
         },
+        "integration_surfaces": {
+          "type": "array",
+          "items": {"type": "string"},
+          "uniqueItems": true
+        },
         "execution_planes": {
           "type": "array",
           "minItems": 1,
