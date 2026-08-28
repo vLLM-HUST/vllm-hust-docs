@@ -241,13 +241,17 @@ or the typed selection, and typed mode declares its bundle and the explicit
 `device_access`, `ipc`, and `network_egress` host permission allowlist. This proves
 configuration and import compatibility only.
 
-The same runner has a safe real-run preflight and runbook. It labels preflight
-separately from `real-online`, requires a fresh output directory, records exact
-command/environment/model/hardware/revision inputs, and stops only process groups
-it created. The 2026-08-29 host-112 typed preflight verified the manifest, model,
-ports, and eight idle 910B2 devices, then correctly refused to launch because the
-invoking user could not access a controlled runtime environment or built server
-binary. This is readiness evidence, not connector equivalence or a negative
+The same runner has a safe real-run preflight and runbook. At revision
+`bb39b7fb28f46a919ab1dae3efd78b938531da75`, one explicit controlled
+interpreter and core checkout are used by both preflight and every later vLLM
+process; the root-owned hard-coded Conda activation has been removed. It labels
+preflight separately from `real-online`, requires a fresh output directory,
+records exact command/environment/model/hardware/core/provider revision inputs,
+and stops only process groups it created. The 2026-08-29 host-112 typed rerun
+verified exact vLLM source and engine imports, exact PegaFlow and connector
+source, the runnable vLLM CLI, manifest, model, ports, and eight idle 910B2
+devices. It correctly refused to launch only because `pegaflow-server` was not
+built. This is readiness evidence, not connector equivalence or a negative
 performance result.
 
 LMCache-Ascend now publishes a wheel-carried Bundle v1 manifest for a separate
