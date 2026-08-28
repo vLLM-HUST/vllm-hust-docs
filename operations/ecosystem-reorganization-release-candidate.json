@@ -1,0 +1,203 @@
+{
+  "$schema": "../registry/release-record.schema.json",
+  "schema_version": "1.0",
+  "record_id": "ecosystem-reorganization-2026-08-28",
+  "status": "draft",
+  "record_date": "2026-08-28",
+  "repositories": [
+    {
+      "name": "vllm-hust",
+      "url": "https://github.com/vLLM-HUST/vllm-hust",
+      "branch": "codex/ecosystem-architecture-reorganization-20260828",
+      "commit": "3f301b72342852fe3ae4a14abfe5820784dddf26",
+      "role": "runtime_core"
+    },
+    {
+      "name": "vllm-hust-docs",
+      "url": "https://github.com/vLLM-HUST/vllm-hust-docs",
+      "branch": "codex/ecosystem-architecture-reorganization",
+      "commit": "0f222f6d552aef625ca0a9aba1dac1c8ace6047e",
+      "role": "documentation_source"
+    },
+    {
+      "name": "vllm-hust-website",
+      "url": "https://github.com/vLLM-HUST/vllm-hust-website",
+      "branch": "codex/ecosystem-architecture-reorganization-20260828",
+      "commit": "0ea3f067555785b5dc1d057281288d9d8fa81d29",
+      "role": "public_registry_renderer"
+    },
+    {
+      "name": "vllm-hust-bidkv",
+      "url": "https://github.com/vLLM-HUST/vllm-hust-bidkv",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "0da3cd4bfd457efd6448f8cb67a860157c2eae8d",
+      "role": "scheduler_policy"
+    },
+    {
+      "name": "pegaflow-hust",
+      "url": "https://github.com/vLLM-HUST/pegaflow-hust",
+      "branch": "feat/ecosystem-role-metadata",
+      "commit": "f90ece3b52a14ecc3e7282d9e09c4612d5727b46",
+      "role": "external_kv_subsystem_and_connectors"
+    },
+    {
+      "name": "LMCache-Ascend",
+      "url": "https://github.com/vLLM-HUST/LMCache-Ascend",
+      "branch": "feat/ecosystem-role-metadata",
+      "commit": "62a410f176205c8e2ee34baae08e9cb1ae09c83f",
+      "role": "lmcache_ascend_provider_and_adapter"
+    },
+    {
+      "name": "vllm-ascend-hust",
+      "url": "https://github.com/vLLM-HUST/vllm-ascend-hust",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "a2d58a62f82c676f29779e597e692d3ad4603d6a",
+      "role": "platform_profile"
+    },
+    {
+      "name": "vllm-metal-hust",
+      "url": "https://github.com/vLLM-HUST/vllm-metal-hust",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "ffa27f1aa98dcfd338a9ca0488c3700bf65c148e",
+      "role": "platform_profile"
+    },
+    {
+      "name": "vllm-ascend-hust-diffspec",
+      "url": "https://github.com/vLLM-HUST/vllm-ascend-hust-diffspec",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "8a32ea35e70448fef165493c8accc767f5161c22",
+      "role": "decoding_runtime_component"
+    },
+    {
+      "name": "vllm-ascend-hust-LatchMoE",
+      "url": "https://github.com/vLLM-HUST/vllm-ascend-hust-LatchMoE",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "6f70b69ab06be5b90d5e156dca1f15f27473c834",
+      "role": "operator_runtime_component"
+    },
+    {
+      "name": "vllm-hust-benchmark",
+      "url": "https://github.com/vLLM-HUST/vllm-hust-benchmark",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "d740c6e43f16f5673f9e9f0d2b6e4d5dbbbf8436",
+      "role": "benchmark_evidence_tool"
+    },
+    {
+      "name": "vllm-hust-dev-hub",
+      "url": "https://github.com/vLLM-HUST/vllm-hust-dev-hub",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "67b8d389521f3d17f963f980d48a9d09cda13bb2",
+      "role": "development_operations_tool"
+    },
+    {
+      "name": "llm-serving-workloads",
+      "url": "https://github.com/vLLM-HUST/llm-serving-workloads",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "cb515fad213bb34b8a0d98a71dadf32d3e9f12c2",
+      "role": "workload_evidence_tool"
+    }
+  ],
+  "compatibility_sets": [
+    {
+      "id": "organization-catalog",
+      "maturity": "candidate",
+      "repository_refs": [
+        "vllm-hust-docs",
+        "vllm-hust-website",
+        "pegaflow-hust",
+        "LMCache-Ascend",
+        "vllm-ascend-hust",
+        "vllm-metal-hust",
+        "vllm-ascend-hust-diffspec",
+        "vllm-ascend-hust-LatchMoE",
+        "vllm-hust-benchmark",
+        "vllm-hust-dev-hub",
+        "llm-serving-workloads"
+      ],
+      "validations": [
+        {"id": "registry", "status": "passed", "evidence": "20 ecosystem components and 32 organization repositories validated"},
+        {"id": "repository-profiles", "status": "passed", "evidence": "13 repository profiles validated against the closed schema"},
+        {"id": "website-tests", "status": "passed", "evidence": "146 targeted tests passed"},
+        {"id": "browser-desktop-mobile", "status": "passed", "evidence": "20 cards rendered at 1440px and 390px; zero horizontal overflow and zero console errors"}
+      ],
+      "blockers": [
+        "Canonical registry URLs still point to architecture branches rather than a tagged registry release.",
+        "Not every active organization repository publishes a local profile yet."
+      ],
+      "rollback": [
+        "Restore the previous website registry mirror and asset version.",
+        "Keep repository README/profile commits isolated from runtime behavior."
+      ]
+    },
+    {
+      "id": "typed-scheduler-policy",
+      "maturity": "experimental",
+      "repository_refs": ["vllm-hust", "vllm-hust-bidkv", "vllm-hust-docs", "vllm-hust-website"],
+      "validations": [
+        {"id": "compile", "status": "passed", "evidence": "Core plugin and victim-selector modules compile with the existing vllm-hust virtual environment."},
+        {"id": "dependency-free-smoke", "status": "passed", "evidence": "Manifest admission, immutable snapshot, typed materialization, and BidKV manifest parsing passed."},
+        {"id": "bidkv-unit", "status": "passed", "evidence": "8 focused BidKV plugin/manifest tests passed with PYTHONPATH=src."},
+        {"id": "core-pytest", "status": "not_run", "evidence": "Existing core virtual environment does not contain pytest or torch."},
+        {"id": "legacy-typed-equivalence", "status": "not_run", "evidence": "Matched BidKV scheduler traces and hardware behavior are still required."}
+      ],
+      "blockers": [
+        "Full core pytest is unavailable in the existing environment.",
+        "BidKV legacy-versus-typed victim choices, metrics, failures, and rollback are not yet matched on real scheduler traces.",
+        "Wheel-content verification could not run because the available system build backend is too old for the project metadata."
+      ],
+      "rollback": [
+        "Unset VLLM_EXTENSION_MANIFESTS and VLLM_EXTENSION_BUNDLES, then restart to use the legacy vllm.victim_selector entry point.",
+        "Set additional_config.victim_selector_plugin_disabled=true and restart to bypass typed and legacy providers with NoOpVictimSelector."
+      ]
+    },
+    {
+      "id": "kv-system-boundaries",
+      "maturity": "concept",
+      "repository_refs": ["vllm-hust", "vllm-hust-docs", "vllm-hust-website", "pegaflow-hust", "LMCache-Ascend"],
+      "validations": [
+        {"id": "catalog-separation", "status": "passed", "evidence": "Mooncake, LMCache, PegaFlow, and LMCache-Ascend systems/providers are separate from their connector bridges."},
+        {"id": "kv-materializer", "status": "blocked", "evidence": "Factory-owned role, HMA, MultiConnector, configuration, and rollback semantics are not yet encoded."}
+      ],
+      "blockers": [
+        "KV-specific selection and composition schema is not implemented.",
+        "No typed connector path has matched the built-in names or external module-path compatibility behavior."
+      ],
+      "rollback": [
+        "Continue using KVTransferConfig with current built-in connector names or kv_connector_module_path.",
+        "Do not configure typed KV bundle providers until the domain design gate passes."
+      ]
+    },
+    {
+      "id": "external-control-plane-bridge",
+      "maturity": "concept",
+      "repository_refs": ["vllm-hust", "vllm-hust-docs", "vllm-hust-website"],
+      "validations": [
+        {"id": "catalog-separation", "status": "passed", "evidence": "External RIDE control plane and local runtime bridge are separate catalog components."},
+        {"id": "bridge-executor", "status": "blocked", "evidence": "No process-isolated executor, action/receipt envelope, permission enforcement, authentication, or replay protection exists."}
+      ],
+      "blockers": [
+        "Action and receipt schemas are identities only.",
+        "Configured Bundle v1 admission rejects the required process isolation and non-empty permission requests."
+      ],
+      "rollback": [
+        "Keep the bridge unconfigured; default runtime behavior remains independent of the external control plane."
+      ]
+    }
+  ],
+  "publication_order": [
+    {"sequence": 1, "gate": "Publish opt-in core admission and scheduler materializer branches without changing default runtime behavior.", "repository_refs": ["vllm-hust"]},
+    {"sequence": 2, "gate": "Publish architecture, schemas, registries, design gates, and this draft record.", "repository_refs": ["vllm-hust-docs"]},
+    {"sequence": 3, "gate": "Publish BidKV manifest and repository-local profiles; do not mark the typed path recommended.", "repository_refs": ["vllm-hust-bidkv", "pegaflow-hust", "LMCache-Ascend", "vllm-ascend-hust", "vllm-metal-hust", "vllm-ascend-hust-diffspec", "vllm-ascend-hust-LatchMoE", "vllm-hust-benchmark", "vllm-hust-dev-hub", "llm-serving-workloads"]},
+    {"sequence": 4, "gate": "Publish the website mirror only from the exact docs registry and keep all experimental labels.", "repository_refs": ["vllm-hust-website"]},
+    {"sequence": 5, "gate": "Run full CPU CI and matched BidKV legacy/typed tests in a complete core environment.", "repository_refs": ["vllm-hust", "vllm-hust-bidkv"]},
+    {"sequence": 6, "gate": "Run real platform/hardware gates and update this record from draft to candidate only when evidence is attached.", "repository_refs": ["vllm-hust", "vllm-ascend-hust", "LMCache-Ascend", "pegaflow-hust"]},
+    {"sequence": 7, "gate": "Tag the canonical docs registry, replace branch URLs in repository profiles, and then consider supported labels.", "repository_refs": ["vllm-hust-docs", "vllm-hust-website"]}
+  ],
+  "known_limitations": [
+    "All listed commits are isolated worktree commits and may not yet exist on GitHub branches.",
+    "The vllm-ascend-kvcompress-hust repository was not available locally and has no profile commit in this record.",
+    "No new KV connector or control-plane bridge materializer is claimed.",
+    "No real NPU, GPU, or Apple Silicon execution was performed for this draft.",
+    "This draft authorizes no legacy entry-point deprecation or removal."
+  ]
+}

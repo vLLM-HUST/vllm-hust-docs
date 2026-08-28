@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vllm-hust.sage.org.ai/schemas/ecosystem-release-record-v1.schema.json",
+  "title": "vLLM-HUST cross-repository release record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "record_id",
+    "status",
+    "record_date",
+    "repositories",
+    "compatibility_sets",
+    "publication_order",
+    "known_limitations"
+  ],
+  "properties": {
+    "$schema": {"type": "string"},
+    "schema_version": {"const": "1.0"},
+    "record_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9.-]*$"},
+    "status": {"enum": ["draft", "candidate", "released", "withdrawn"]},
+    "record_date": {"type": "string", "format": "date"},
+    "repositories": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "url", "branch", "commit", "role"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "url": {"type": "string", "format": "uri"},
+          "branch": {"type": "string", "minLength": 1},
+          "commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+          "role": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "compatibility_sets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id", "maturity", "repository_refs", "validations", "blockers",
+          "rollback"
+        ],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9.-]*$"},
+          "maturity": {"enum": ["concept", "experimental", "candidate", "supported"]},
+          "repository_refs": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "string"},
+            "uniqueItems": true
+          },
+          "validations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["id", "status", "evidence"],
+              "properties": {
+                "id": {"type": "string"},
+                "status": {"enum": ["passed", "not_run", "blocked"]},
+                "evidence": {"type": "string"}
+              }
+            }
+          },
+          "blockers": {"type": "array", "items": {"type": "string"}},
+          "rollback": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+        }
+      }
+    },
+    "publication_order": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["sequence", "gate", "repository_refs"],
+        "properties": {
+          "sequence": {"type": "integer", "minimum": 1},
+          "gate": {"type": "string", "minLength": 1},
+          "repository_refs": {
+            "type": "array",
+            "items": {"type": "string"},
+            "uniqueItems": true
+          }
+        }
+      }
+    },
+    "known_limitations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string"}
+    }
+  }
+}
