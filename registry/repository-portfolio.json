@@ -232,7 +232,7 @@
       "relation_to_runtime": "owns_core_contracts",
       "lifecycle": "core",
       "canonical_artifacts": ["inference runtime", "stable domain contracts", "default implementations", "core-delivered Mooncake and LMCache bridges"],
-      "component_ids": ["vllm-hust-runtime", "vllm-local-control-host", "mooncake-vllm-connectors", "lmcache-vllm-connectors"],
+      "component_ids": ["vllm-hust-runtime", "vllm-local-control-host", "ride-runtime-bridge", "mooncake-vllm-connectors", "lmcache-vllm-connectors"],
       "public_surface": true
     },
     {

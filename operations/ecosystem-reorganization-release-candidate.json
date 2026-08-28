@@ -9,7 +9,7 @@
       "name": "vllm-hust",
       "url": "https://github.com/vLLM-HUST/vllm-hust",
       "branch": "codex/ecosystem-architecture-reorganization-20260828",
-      "commit": "e42a9e77b1678ac171e28539a5b1f284d2c2abe8",
+      "commit": "953cfdb57f8ff3bdeb27c766b74af9fb704ed733",
       "role": "runtime_core"
     },
     {
@@ -200,7 +200,7 @@
       "maturity": "concept",
       "repository_refs": ["vllm-hust", "vllm-hust-docs", "vllm-hust-website"],
       "validations": [
-        {"id": "catalog-separation", "status": "passed", "evidence": "External RIDE control plane, unimplemented remote runtime sidecar, and core-delivered local control host are three separate catalog components with independent topology, ownership, maturity, repository, and evidence fields."},
+        {"id": "catalog-separation", "status": "passed", "evidence": "External RIDE control plane, separately built remote runtime sidecar, and core-delivered local control host are three separate catalog components with independent topology, lifecycle, and authority."},
         {"id": "wire-contracts", "status": "passed", "evidence": "Closed packaged action/receipt schemas, strict read-only health-probe parsing, and side-effect-free target, issuer-policy, scope, expiry, epoch, precondition, duplicate, and idempotency decisions remain covered."},
         {"id": "authentication-replay-foundation", "status": "passed", "evidence": "Exact-wire-byte HMAC-SHA256 verification precedes strict parsing; a mode-0600 SQLite ledger binds idempotency key, action ID, and semantic fingerprint, restores in-progress actions and immutable correlated terminal receipts after restart, and rejects tampering, conflicts, nonterminal completion, and receipt identity mismatches. All 42 focused control-bridge tests and relevant pre-commit hooks passed."},
         {"id": "fixed-process-executor", "status": "passed", "evidence": "A core-owned spawn worker materializes only for exact action/receipt v1, bridge-plane, process-isolated, IPC-only descriptors; it imports no bundle code and implements ready handshake, a single bounded request slot, timeout/failure cleanup, drain/stop, explicit restart, and runtime/epoch/state/receipt rechecks."},
@@ -209,11 +209,12 @@
         {"id": "versioned-key-lifecycle", "status": "passed", "evidence": "Canonical v1 signatures select exact issuer/key IDs from immutable monotonic generations with activation, expiry, revocation, overlap, atomic replacement, and rollback prevention. Versioned mode rejects unknown IDs and legacy downgrade; explicit legacy mappings remain compatible. The same action re-signed by a new key restores its terminal receipt after the old key is removed without re-execution. All 32 affected key, security, and service tests plus relevant pre-commit hooks passed."},
         {"id": "local-authenticated-transport", "status": "passed", "evidence": "A Linux same-UID Unix-domain-socket host uses SO_PEERCRED, mode-0600 sockets, secure pre-existing parent ownership, exact bounded frames, HMAC message authentication, bounded concurrent ingress, one serialized authority lane, generic error envelopes, timeout-to-pending recovery, and inode-safe cleanup. A timed-out operation retains its slot until durable completion, preventing an unbounded executor queue. All 31 affected transport, security, and service tests plus relevant pre-commit hooks passed."},
         {"id": "opt-in-runtime-lifecycle", "status": "passed", "evidence": "The OpenAI server accepts an absolute --control-bridge-config only when explicitly supplied. Its closed v1 configuration references separate host-owned mode-private base64 key files, grants exactly runtime.read, bounds all limits, rejects multi-API-process ambiguity, and lets FastAPI lifespan own startup and reverse-order cleanup of the fixed executor, ledger, service, health adapter, and socket. All 51 combined control-bridge tests and 38 existing CLI/server-lifecycle tests passed with relevant pre-commit hooks."},
-        {"id": "bridge-integration", "status": "blocked", "evidence": "The opt-in same-host socket is now runtime-lifecycle managed but is not a production remote/TLS/mTLS transport. Production secret provisioning/distribution/audit, a general or mutating runtime operation API, and OS capability confinement for non-core code remain absent."}
+        {"id": "remote-mtls-sidecar", "status": "passed", "evidence": "A separately built pure-Python sidecar terminates TLS 1.3 with mandatory client certificates, enforces an exact certificate SHA-256 allowlist, preserves bounded VLCB1 frames, and forwards them to the same-UID local host without parsing actions or importing vLLM. Seven tests include a real ephemeral-CA mTLS-to-UDS round trip; Ruff, formatting, mypy, SPDX, markdown, and relevant pre-commit hooks passed."},
+        {"id": "bridge-integration", "status": "blocked", "evidence": "The fixed read-only action is now runnable through an experimental local mTLS-to-UDS path. Production certificate issuance/rotation/revocation, secret backend and audit integration, high availability/reconnect policy, a general or mutating runtime operation API, and OS capability confinement for non-core code remain absent."}
       ],
       "blockers": [
         "Only the read-only health-probe contract is defined; no general or mutating runtime action exists.",
-        "The local socket host provides same-UID message authentication only; external RIDE connectivity, remote peer identity, TLS/mTLS, and production key provisioning/distribution/audit remain undefined.",
+        "The experimental sidecar provides TLS 1.3 mutual authentication and certificate-fingerprint admission, but production certificate issuance, rotation, revocation, secret distribution, audit, high availability, and reconnect policy remain undefined.",
         "The fixed core worker and local socket do not provide OS capability confinement for future non-core bridge code.",
         "Generic Bundle v1 startup still rejects process isolation. Non-empty permissions require an explicit host allowlist but remain admission metadata rather than OS confinement; the explicit local host can materialize only the fixed core health-probe descriptor and cannot run bundle-supplied bridge code."
       ],

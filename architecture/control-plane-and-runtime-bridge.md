@@ -12,9 +12,10 @@ plane, a remote runtime sidecar, and the core-delivered local control host.
 
 - The control plane owns cross-request, cross-instance, or cross-cluster
   admission, placement, routing, capacity, workflow, and global KV decisions.
-- The remote sidecar owns remote peer identity, TLS/mTLS termination, reconnect,
-  delivery policy, and forwarding. It is currently a concept with no canonical
-  repository or implementation evidence.
+- The remote sidecar owns remote peer identity, TLS/mTLS termination, delivery
+  bounds, and forwarding. A separately built Python distribution now lives under
+  `integrations/ride_runtime_sidecar` in `vllm-hust`; it does not import the
+  runtime package or own action authorization.
 - The local host is a narrowly scoped, default-off core adapter that
   authenticates and validates same-host actions, applies only runtime-owned
   operations, and emits receipts. It is implemented in `vllm-hust` and has
@@ -25,7 +26,7 @@ plane, a remote runtime sidecar, and the core-delivered local control host.
   the external control plane.
 
 The canonical registry therefore gives the external control plane no vLLM
-integration contract. It records the unimplemented remote sidecar and the local
+integration contract. It records the remote sidecar and the local
 core host independently; they share action/receipt contracts but not topology,
 delivery, ownership, maturity, repository, or evidence.
 
@@ -110,9 +111,20 @@ unbounded executor queue. Peer, framing, authentication, parsing, pending, busy,
 and internal failures expose stable generic transport codes without exception
 details. SQLite access is serialized across the transport and lifecycle threads.
 
-This is same-host message authentication, not a remote control-plane transport:
-it provides neither TLS/mTLS nor production secret provisioning, distribution,
-storage, or audit. It is also not an OS sandbox.
+The separately built remote sidecar terminates TLS 1.3 with mandatory client
+certificates, verifies the exact client certificate SHA-256 fingerprint against
+an operator allowlist, preserves the bounded `VLCB1` request bytes, and forwards
+one request to the same-UID Unix host. Its closed configuration requires absolute
+certificate, private-key, CA, and socket paths; the private key cannot grant
+group/world access. Bounded ingress, read/connect/response timeouts, generic
+errors, and a real ephemeral-CA mTLS-to-UDS integration test cover the transport.
+The sidecar never parses or re-signs actions, so core HMAC, authorization, replay,
+execution, and receipt checks remain authoritative.
+
+This is an experimental remote transport, not a complete production control
+plane. Certificate issuance, rotation orchestration, revocation publication,
+secret-backend integration, audit export, high availability, and reconnect
+policy remain deployment and release gates. Neither transport is an OS sandbox.
 
 The OpenAI-compatible server now has one explicit opt-in lifecycle path through
 `--control-bridge-config`. Absence of that option preserves the prior startup
@@ -132,17 +144,18 @@ bundle-supplied bridge code.
 
 The generic Bundle v1 startup path still:
 
-- grants no non-empty permission requests;
+- grants non-empty permissions only through an explicit strict host allowlist,
+  without OS enforcement;
 - admits only `trusted_in_process` isolation;
 - does not automatically materialize or start the fixed bridge;
-- has no production remote transport, TLS/mTLS identity, secret backend, or key
-  distribution/audit integration;
+- does not materialize the separately packaged remote sidecar and has no secret
+  backend or certificate distribution/audit integration;
 - has no general or mutating runtime operation API or external transport.
 
-Consequently the external RIDE-to-runtime bridge remains non-runnable end to
-end. The fixed child and same-UID socket host form a tested local
-message-authenticated foundation, but the overall system MUST NOT be described
-as remotely authenticated, sandboxed, supported, or a complete secure bridge.
+Consequently the external RIDE-to-runtime path is now runnable for the fixed
+read-only health action through an experimental mTLS transport, but it MUST NOT
+be described as production-ready, sandboxed, supported, or a complete control
+plane integration.
 
 ## 3. Required action contract
 
@@ -233,8 +246,9 @@ foundations are complete; the remaining end-to-end gates are not:
 - closed opt-in host configuration, protected separate key files, single-API
   guard, FastAPI lifecycle ownership, startup cleanup, shutdown cleanup, and
   default-disabled behavior — complete;
-- production remote transport, TLS/mTLS peer identity, and production secret
-  provisioning, distribution, storage, and audit integration;
+- TLS 1.3/mTLS transport and peer fingerprint admission — complete locally;
+- production certificate/secret provisioning, rotation, revocation, storage,
+  high availability, and audit integration;
 - authorization, expiry, epoch, replay, and idempotency integration tests
   across the real transport and executor;
 - fixed core-only process executor, IPC-only manifest policy, bounded slot,
@@ -243,8 +257,8 @@ foundations are complete; the remaining end-to-end gates are not:
 - OS-enforced capability confinement for any future non-core bridge code;
 - atomic rejection and no-partial-mutation tests;
 - local restart/retry, duplicate-delivery, bounded backpressure, drain, and
-  shutdown behavior — complete for the same-host socket; remote reconnect and
-  control-plane-absence behavior remain open;
+  shutdown behavior — complete for the same-host socket; remote reconnect,
+  high-availability, and control-plane-absence behavior remain open;
 - default runtime behavior remains usable with no bridge configured — complete;
 - rollback removes bridge configuration without uninstalling the runtime —
   complete for the local host;

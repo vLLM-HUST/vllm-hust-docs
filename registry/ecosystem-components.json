@@ -306,14 +306,14 @@
       "integration_contracts": ["vllm.control.action.v1", "vllm.control.receipt.v1"],
       "execution_planes": ["bridge"],
       "deployment_topology": "sidecar",
-      "delivery_model": "external_service",
-      "ownership": "community_integration",
-      "maturity": "concept",
-      "canonical_repository": null,
+      "delivery_model": "python_distribution",
+      "ownership": "core_owned",
+      "maturity": "experimental",
+      "canonical_repository": "https://github.com/vLLM-HUST/vllm-hust",
       "upstream_repository": null,
-      "summary_en": "Unimplemented sidecar boundary for remote RIDE peer identity, reconnect, and forwarding into the separate vLLM local control host.",
-      "summary_zh": "尚未实现的 sidecar 边界：负责远程 RIDE 对端身份、重连，并转发到独立的 vLLM 本地控制宿主。",
-      "evidence_level": "descriptor_only"
+      "summary_en": "Separately built TLS 1.3 mutual-authentication sidecar that allowlists remote certificate fingerprints and transparently forwards bounded signed frames into the vLLM local control host.",
+      "summary_zh": "独立构建的 TLS 1.3 双向认证 sidecar：按证书指纹允许远程身份，并将有界签名帧透明转发到 vLLM 本地控制宿主。",
+      "evidence_level": "integration_tested"
     },
     {
       "id": "vllm-hust-benchmark",
