@@ -7,21 +7,27 @@ Scope: external decision systems, local runtime bridges, and
 
 ## 1. Decision
 
-An external control plane and its local runtime bridge are separate systems.
+The control path has three separately governed components: the external control
+plane, a remote runtime sidecar, and the core-delivered local control host.
 
 - The control plane owns cross-request, cross-instance, or cross-cluster
   admission, placement, routing, capacity, workflow, and global KV decisions.
-- The bridge is a narrowly scoped local adapter that authenticates and
-  validates actions, applies only runtime-owned operations, and emits receipts.
+- The remote sidecar owns remote peer identity, TLS/mTLS termination, reconnect,
+  delivery policy, and forwarding. It is currently a concept with no canonical
+  repository or implementation evidence.
+- The local host is a narrowly scoped, default-off core adapter that
+  authenticates and validates same-host actions, applies only runtime-owned
+  operations, and emits receipts. It is implemented in `vllm-hust` and has
+  integration-test evidence.
 - The vLLM process does not import the external control-plane application as a
   plugin implementation.
 - A bundle may eventually deliver the bridge, but it does not deliver or own
   the external control plane.
 
 The canonical registry therefore gives the external control plane no vLLM
-integration contract. The separate bridge component implements
-`vllm.control.action.v1` and `vllm.control.receipt.v1` in the `bridge` execution
-plane.
+integration contract. It records the unimplemented remote sidecar and the local
+core host independently; they share action/receipt contracts but not topology,
+delivery, ownership, maturity, repository, or evidence.
 
 ## 2. Current implementation status
 
@@ -196,8 +202,10 @@ component cannot provide a security boundary against a remote control plane.
 
 ```text
 external control plane
-  -> authenticated versioned action
-  -> process-isolated local bridge
+  -> remote-authenticated versioned action
+  -> remote runtime sidecar
+  -> same-UID authenticated local action
+  -> core local host and process-isolated executor
   -> runtime-owned operation API
   -> versioned receipt
   -> external control plane

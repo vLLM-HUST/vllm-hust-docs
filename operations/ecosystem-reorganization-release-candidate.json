@@ -123,7 +123,7 @@
         "llm-serving-workloads"
       ],
       "validations": [
-        {"id": "registry", "status": "passed", "evidence": "20 ecosystem components and 32 organization repositories validated"},
+        {"id": "registry", "status": "passed", "evidence": "21 ecosystem components and 32 organization repositories validated"},
         {"id": "repository-profiles", "status": "passed", "evidence": "14 repository profiles validated against the closed schema"},
         {"id": "website-tests", "status": "passed", "evidence": "272 website tests passed; 3 environment-dependent tests were skipped"},
         {"id": "browser-desktop-mobile", "status": "passed", "evidence": "20 cards rendered at 1440px and 390px; zero horizontal overflow and zero console errors"},
@@ -195,7 +195,7 @@
       "maturity": "concept",
       "repository_refs": ["vllm-hust", "vllm-hust-docs", "vllm-hust-website"],
       "validations": [
-        {"id": "catalog-separation", "status": "passed", "evidence": "External RIDE control plane and local runtime bridge are separate catalog components."},
+        {"id": "catalog-separation", "status": "passed", "evidence": "External RIDE control plane, unimplemented remote runtime sidecar, and core-delivered local control host are three separate catalog components with independent topology, ownership, maturity, repository, and evidence fields."},
         {"id": "wire-contracts", "status": "passed", "evidence": "Closed packaged action/receipt schemas, strict read-only health-probe parsing, and side-effect-free target, issuer-policy, scope, expiry, epoch, precondition, duplicate, and idempotency decisions remain covered."},
         {"id": "authentication-replay-foundation", "status": "passed", "evidence": "Exact-wire-byte HMAC-SHA256 verification precedes strict parsing; a mode-0600 SQLite ledger binds idempotency key, action ID, and semantic fingerprint, restores in-progress actions and immutable correlated terminal receipts after restart, and rejects tampering, conflicts, nonterminal completion, and receipt identity mismatches. All 42 focused control-bridge tests and relevant pre-commit hooks passed."},
         {"id": "fixed-process-executor", "status": "passed", "evidence": "A core-owned spawn worker materializes only for exact action/receipt v1, bridge-plane, process-isolated, IPC-only descriptors; it imports no bundle code and implements ready handshake, a single bounded request slot, timeout/failure cleanup, drain/stop, explicit restart, and runtime/epoch/state/receipt rechecks."},

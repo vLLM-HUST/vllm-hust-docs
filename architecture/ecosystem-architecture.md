@@ -112,9 +112,16 @@ An external control plane owns cross-request, cross-instance, or cross-cluster
 decisions such as admission, placement, routing, capacity, workflow policy, and
 global KV actions.
 
-The runtime integrates through a narrow bridge with versioned actions, epochs
-or generations, idempotency, expiry, rejection reasons, and receipts. The
-external control plane itself MUST NOT be loaded as a vLLM runtime plugin.
+The remote and local bridge boundaries are distinct. A remote sidecar may own
+RIDE peer identity, TLS/mTLS termination, reconnect, and delivery policy. The
+core-delivered, default-off local host owns same-UID Unix-socket framing,
+authentication, replay, admission, the fixed process executor, and authoritative
+runtime health observation. The sidecar talks to that local host; it is not the
+local host and cannot inherit its evidence level.
+
+Both boundaries preserve versioned actions, epochs or generations, idempotency,
+expiry, rejection reasons, and receipts. The external control plane and remote
+sidecar implementations MUST NOT be loaded as vLLM runtime plugins.
 
 ### 3.6 Delivery and governance
 
@@ -133,7 +140,7 @@ The unified extension design is split into:
 ## 4. Dependency direction
 
 ```text
-external control plane -> bridge -> versioned runtime action contract
+external control plane -> remote sidecar -> local core host -> runtime action
 platform profile       -> platform/operator contracts -> runtime core
 runtime component      -> typed domain contract        -> runtime core
 runtime core           -> KV connector adapter         -> KV state system
