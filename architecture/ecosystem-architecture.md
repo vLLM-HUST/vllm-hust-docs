@@ -135,6 +135,14 @@ benchmark/evidence     -> verifies runtime, platform, and integration behavior
 website                -> consumes the ecosystem registry and evidence
 ```
 
+Materialization policy belongs to each domain contract, not to the bundle
+loader. The first implemented example is the exclusive scheduler victim
+selector: the scheduler chooses one admitted `vllm.scheduler.policy.v1`
+provider, imports it after admission, and validates the `VictimSelector`
+protocol. KV connectors, telemetry exporters, and control bridges may need
+different composition and lifecycle rules and MUST NOT inherit this exclusive
+policy merely because they share the same bundle format.
+
 Dependencies in the opposite direction require an architecture decision
 record. In particular, the runtime core MUST NOT import website metadata,
 benchmark publication state, or external control-plane implementation code.

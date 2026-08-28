@@ -119,6 +119,12 @@ domain- or isolation-materializer responsibilities. They MUST NOT be added to a
 generic lifecycle enum until a real executor implements and tests them. The
 generic loader does not import `implementation_ref` and does not launch sidecars.
 
+The first domain materializer is now the scheduler-local victim selector. It
+imports exactly one admitted `vllm.scheduler.policy.v1` component in the
+`scheduler` plane. This does not add generic lifecycle states: construction and
+protocol validation belong to the scheduler domain, while an empty typed
+provider set continues to the legacy compatibility path.
+
 ## 7. Process and frontend/backend boundary
 
 API, scheduler, worker, native, device, and bridge are execution planes, not
@@ -151,13 +157,35 @@ during migration. They are separate from `VLLM_EXTENSION_MANIFESTS` and
 | LoRA resolvers | artifact/model resolution | dedicated contract missing |
 | KV connectors | scheduler/worker integration with an external state system | descriptor contracts implemented; materializers pending |
 | weight-transfer connectors | data-path integration | dedicated contract missing |
-| scheduler/victim selector | scheduler-local policy | descriptor contract implemented; materializer pending |
+| scheduler/victim selector | scheduler-local policy | typed materializer implemented; experimental until BidKV equivalence gates pass |
 | platform/operator/model runner | coordinated platform/runtime components | descriptor contracts implemented; materializers pending |
 | control plane | external decision system | only action/receipt bridge contracts belong in vLLM |
 
 “Contract identity exists” is not behavior compatibility. A legacy surface is
 called migrated only after its component is materialized through the typed
 contract and equivalent behavior, failure, and rollback tests pass.
+
+### 8.1 Scheduler-policy materialization profile
+
+The scheduler materializer applies this exclusive-provider policy:
+
+- zero admitted typed providers: use the existing
+  `vllm.victim_selector` entry-point path;
+- one admitted typed provider: import its `module:attribute` reference only
+  after admission and construct it through `from_vllm_config`;
+- multiple providers: fail startup unless `additional_config` contains the
+  fully qualified `victim_selector_component` value
+  `<bundle_id>/<component_id>`;
+- a selected ID that is not admitted, an invalid import, a factory failure, or
+  an object that does not satisfy `VictimSelector`: fail closed without trying
+  another typed or legacy provider;
+- `victim_selector_plugin_disabled=true`: retain the existing emergency path
+  to `NoOpVictimSelector`.
+
+Typed selection and legacy discovery MUST NOT both instantiate a victim
+selector in one scheduler process. BidKV remains on its existing entry point
+until its repository publishes a conforming manifest and passes the equivalence
+and rollback gates below.
 
 ## 9. Non-breaking migration sequence
 
@@ -175,6 +203,11 @@ contract and equivalent behavior, failure, and rollback tests pass.
 8. Deprecate a legacy group only through a release notice, successor mapping,
    disablement test, and rollback window. No organization-wide removal date is
    currently approved.
+
+Implementation status: steps 1 and 2 are complete. Step 3 is active, with only
+the scheduler/victim-selector domain materializer implemented. Steps 4 through
+8 remain required; implementing a materializer does not by itself make the
+typed path recommended or deprecate its legacy surface.
 
 ## 10. Acceptance gates
 
@@ -196,6 +229,19 @@ and path integrity, dependency ordering, domain materialization, health,
 shutdown, recovery, and real hardware behavior. None is implied by completion
 of static admission.
 
+The experimental scheduler-policy materializer additionally requires:
+
+- zero typed providers preserves the legacy entry-point behavior;
+- one typed provider is imported only after the immutable snapshot exists;
+- ambiguity requires an exact `<bundle_id>/<component_id>` selection;
+- missing selection, import failure, factory failure, and protocol mismatch
+  fail closed and never fall through to another implementation;
+- the emergency disable flag returns the upstream-compatible no-op selector;
+- BidKV legacy and typed paths produce equivalent victim choices, metrics, and
+  failure behavior under the same scheduler traces before recommendation;
+- a release record names the tested core and BidKV revisions and the exact
+  rollback command/configuration.
+
 ## 11. Validation and rollback
 
 CPU validation targets:
@@ -205,10 +251,15 @@ tests/plugins_tests/test_extension_contracts.py
 tests/plugins_tests/test_extension_manifest.py
 tests/plugins_tests/test_extension_startup.py
 tests/test_envs.py
+tests/v1/core/test_victim_selector_extensions.py
 ```
 
-Rollback is immediate: unset `VLLM_EXTENSION_MANIFESTS` and keep the existing
-`VLLM_PLUGINS` configuration. Because v1 does not materialize implementations
-yet, this removes only typed admission and snapshot construction. A future
-domain materializer MUST define its own disablement and rollback behavior before
-graduating beyond experimental status.
+For scheduler-policy rollback, unset `VLLM_EXTENSION_MANIFESTS` (and
+`VLLM_EXTENSION_BUNDLES`) and keep the existing BidKV package and
+`vllm.victim_selector` entry point installed. The next process start then has no
+typed provider and follows the legacy path. For an emergency rollback to
+upstream-compatible selection, set
+`additional_config.victim_selector_plugin_disabled=true`; this bypasses both
+typed and legacy victim-selector providers and constructs `NoOpVictimSelector`.
+Other future domain materializers MUST define their own disablement and rollback
+behavior before graduating beyond experimental status.
