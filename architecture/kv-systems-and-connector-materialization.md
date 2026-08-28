@@ -105,6 +105,14 @@ does not mutate `KVTransferConfig`, and does not register anything with
 external-system handshake, lifecycle, and rollback implementation remain
 required before a typed connector can be instantiated.
 
+The existing `MultiConnector` compatibility path has also been hardened to
+delegate KV-recovery requeue observations, worker first-compute observations,
+and reclaimable block collection to every ordered child. Reclaimable block IDs
+are unioned because a completed durable copy from any configured child makes
+that device block reclaimable; asynchronous save completion continues to use
+the existing all-child accounting. This fixes legacy lifecycle parity but does
+not by itself materialize the typed topology.
+
 ## 5. Migration order
 
 1. Keep current named and module-path connector behavior unchanged.

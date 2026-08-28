@@ -9,7 +9,7 @@
       "name": "vllm-hust",
       "url": "https://github.com/vLLM-HUST/vllm-hust",
       "branch": "codex/ecosystem-architecture-reorganization-20260828",
-      "commit": "0b1de06a8ea1099038a0e79cd4d2f342fab0483c",
+      "commit": "98ca601e57eeb79db3a873eb254a7a5fcd801fd5",
       "role": "runtime_core"
     },
     {
@@ -23,7 +23,7 @@
       "name": "vllm-hust-website",
       "url": "https://github.com/vLLM-HUST/vllm-hust-website",
       "branch": "codex/ecosystem-architecture-reorganization-20260828",
-      "commit": "dcd48f6760070246f53793204c9dbf9f78fa1d92",
+      "commit": "d0d2b10c729e110c3b777050fc4d0d8953fac444",
       "role": "public_registry_renderer"
     },
     {
@@ -143,10 +143,12 @@
       "maturity": "experimental",
       "repository_refs": ["vllm-hust", "vllm-hust-bidkv", "vllm-hust-docs", "vllm-hust-website"],
       "validations": [
-        {"id": "compile", "status": "passed", "evidence": "Core plugin and victim-selector modules compile with the existing vllm-hust virtual environment."},
+        {"id": "compile", "status": "passed", "evidence": "Core extension, scheduler-policy, and KV selection modules compile in the repository-managed Python 3.12 environment."},
         {"id": "dependency-free-smoke", "status": "passed", "evidence": "Manifest admission, immutable snapshot, typed materialization, and BidKV manifest parsing passed."},
-        {"id": "bidkv-unit", "status": "passed", "evidence": "8 focused BidKV plugin/manifest tests passed with PYTHONPATH=src."},
-        {"id": "core-pytest", "status": "not_run", "evidence": "Existing core virtual environment does not contain pytest or torch."},
+        {"id": "extension-core-pytest", "status": "passed", "evidence": "42 manifest, admission, startup snapshot, KV selection, and scheduler-policy compatibility tests passed in the repository-managed Python 3.12 environment."},
+        {"id": "extension-core-hooks", "status": "passed", "evidence": "All pre-commit hooks for the new KV selection files passed, including Ruff, formatting, mypy, forbidden imports, SPDX, and configuration checks."},
+        {"id": "bidkv-unit", "status": "passed", "evidence": "396 BidKV tests passed and 1 environment-dependent test skipped against the editable core environment."},
+        {"id": "full-core-ci", "status": "not_run", "evidence": "The complete vLLM CPU test matrix has not been run; current evidence covers the extension and affected KV domains."},
         {"id": "legacy-typed-equivalence", "status": "not_run", "evidence": "Matched BidKV scheduler traces and hardware behavior are still required."}
       ],
       "blockers": [
@@ -166,9 +168,10 @@
       "validations": [
         {"id": "catalog-separation", "status": "passed", "evidence": "Mooncake, LMCache, PegaFlow, and LMCache-Ascend systems/providers are separate from their connector bridges."},
         {"id": "kv-selection-topology", "status": "passed", "evidence": "Closed single/ordered-multi schema and immutable-snapshot resolver preserve explicit order, validate exact scheduler/worker providers, reject role crossing and unknown fields, and import no implementation."},
+        {"id": "multi-connector-lifecycle", "status": "passed", "evidence": "MultiConnector now delegates recovery requeue, first-compute observation, and reclaimable-block collection; 22 non-gated tests passed and 1 conditional test skipped."},
         {"id": "kv-materializer", "status": "blocked", "evidence": "The factory-owned adapter, KVTransferConfig mapping, HMA parity, connector configuration/secrets, lifecycle, and rollback execution are not yet implemented."},
         {"id": "kvcompress-static-validation", "status": "passed", "evidence": "KVCompress source and test modules compile, and its repository profile validates against the organization schema."},
-        {"id": "kvcompress-pytest", "status": "not_run", "evidence": "The available PyTorch environment does not contain vLLM; pytest stopped during collection with nine ModuleNotFoundError failures for vllm.triton_utils."}
+        {"id": "kvcompress-pytest", "status": "passed", "evidence": "All 44 KVCompress tests passed against the editable core environment with PyTorch available."}
       ],
       "blockers": [
         "The KV selection topology is implemented, but it is not yet mapped into KVTransferConfig or consumed by KVConnectorFactory.",
@@ -208,7 +211,7 @@
   ],
   "known_limitations": [
     "All listed branches exist on GitHub, but no pull request is merged and no registry tag is published.",
-    "KVCompress full pytest requires an environment containing both PyTorch and an importable compatible vLLM; only compile and profile validation are recorded here.",
+    "One MultiConnector consistency test requires authenticated access to the gated meta-llama/Llama-3.2-1B-Instruct model and was not run.",
     "KV selection topology resolution is implemented, but no new KV connector or control-plane bridge materializer is claimed.",
     "No real NPU, GPU, or Apple Silicon execution was performed for this draft.",
     "This draft authorizes no legacy entry-point deprecation or removal."
