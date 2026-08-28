@@ -98,7 +98,7 @@
       "relation_to_runtime": "integrates_external_system",
       "lifecycle": "incubating",
       "canonical_artifacts": ["Ascend data movement provider", "LMCache vLLM adapter"],
-      "component_ids": ["lmcache-ascend"],
+      "component_ids": ["lmcache-ascend-provider", "lmcache-ascend-vllm-adapter"],
       "public_surface": true
     },
     {

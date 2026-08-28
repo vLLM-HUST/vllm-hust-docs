@@ -91,8 +91,9 @@ their entirety.
   Mooncake.
 - LMCache Controller is a KV management control plane.
 - `LMCacheConnectorV1` and `LMCacheMPConnector` are vLLM integration adapters.
-- `LMCache-Ascend` is a platform-specific provider and integration
-  distribution, not a separate general-purpose KV system.
+- `LMCache-Ascend` is one distribution containing two catalog components: an
+  Ascend storage/data-movement provider and a vLLM connector bridge. It is not
+  a separate general-purpose KV system.
 - PegaFlow is a HUST-owned external KV state system containing services,
   transport, storage, metadata, and vLLM connectors.
 - NIXL is a transfer substrate.
