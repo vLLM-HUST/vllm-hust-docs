@@ -9,7 +9,7 @@
       "name": "vllm-hust",
       "url": "https://github.com/vLLM-HUST/vllm-hust",
       "branch": "codex/ecosystem-architecture-reorganization-20260828",
-      "commit": "964c9ad8ed31755e625981f840bd5c7cef4536d9",
+      "commit": "03b9d4b1209cf1685b4a646911aef0b9eceb330c",
       "role": "runtime_core"
     },
     {
@@ -202,12 +202,13 @@
         {"id": "local-orchestration", "status": "passed", "evidence": "A transport-agnostic local service composes authentication, admission, durable lookup/reservation, and execution. Terminal retries after expiry restore the prior receipt; in-progress duplicates, semantic conflicts, executor failures, and unauthenticated inputs remain non-mutating and do not re-execute. All 24 affected security/service tests and relevant pre-commit hooks passed."},
         {"id": "runtime-health-observation", "status": "passed", "evidence": "The host adapter reuses EngineClient.check_health, distinguishes healthy, EngineDeadError, and unavailable outcomes, strips exception detail, and passes only a closed source/timestamp/state observation to the child. Future or older-than-five-second observations fail closed, and missing observations remain RUNTIME_HEALTH_UNAVAILABLE. All 23 affected health, executor, and service tests plus relevant pre-commit hooks passed."},
         {"id": "versioned-key-lifecycle", "status": "passed", "evidence": "Canonical v1 signatures select exact issuer/key IDs from immutable monotonic generations with activation, expiry, revocation, overlap, atomic replacement, and rollback prevention. Versioned mode rejects unknown IDs and legacy downgrade; explicit legacy mappings remain compatible. The same action re-signed by a new key restores its terminal receipt after the old key is removed without re-execution. All 32 affected key, security, and service tests plus relevant pre-commit hooks passed."},
-        {"id": "bridge-integration", "status": "blocked", "evidence": "No authenticated transport or concurrent request host, production secret provisioning/distribution/audit backend, general/mutating runtime operation API, OS sandbox for non-core code, or mutating action exists."}
+        {"id": "local-authenticated-transport", "status": "passed", "evidence": "A Linux same-UID Unix-domain-socket host uses SO_PEERCRED, mode-0600 sockets, secure pre-existing parent ownership, exact bounded frames, HMAC message authentication, bounded concurrent ingress, one serialized authority lane, generic error envelopes, timeout-to-pending recovery, and inode-safe cleanup. A timed-out operation retains its slot until durable completion, preventing an unbounded executor queue. All 31 affected transport, security, and service tests plus relevant pre-commit hooks passed."},
+        {"id": "bridge-integration", "status": "blocked", "evidence": "The same-host socket is not wired into default runtime startup and is not a production remote/TLS/mTLS transport. Production secret provisioning/distribution/audit, a general or mutating runtime operation API, and OS capability confinement for non-core code remain absent."}
       ],
       "blockers": [
-        "Only the read-only health-probe contract, pure admission gate, local HMAC primitive, durable replay ledger, and fixed core process worker exist; no mutating runtime action is defined.",
-        "The fixed worker proves IPC/lifecycle behavior but has no runtime health source and intentionally reports RUNTIME_HEALTH_UNAVAILABLE.",
-        "Authentication is not connected to a transport and no production key provisioning, rotation, revocation, or secret-storage policy exists.",
+        "Only the read-only health-probe contract is defined; no general or mutating runtime action exists.",
+        "The local socket host provides same-UID message authentication only; external RIDE connectivity, remote peer identity, TLS/mTLS, and production key provisioning/distribution/audit remain undefined.",
+        "The fixed core worker and local socket do not provide OS capability confinement for future non-core bridge code.",
         "Default configured Bundle v1 startup still rejects process isolation and non-empty permissions; the fixed executor is available only through explicit policy and materialization."
       ],
       "rollback": [
@@ -228,7 +229,7 @@
     "The documentation repository revision records the parent snapshot because a release record cannot contain the hash of the commit that contains itself; the published branch head is the authoritative record revision.",
     "All listed branches exist on GitHub, but no pull request is merged and no registry tag is published.",
     "One MultiConnector consistency test requires authenticated access to the gated meta-llama/Llama-3.2-1B-Instruct model and was not run.",
-    "Typed single and ordered_multi KV materialization are experimental; real-system equivalence is not claimed, and the control-plane authentication/replay foundation is not a runnable bridge.",
+    "Typed single and ordered_multi KV materialization are experimental; real-system equivalence is not claimed, and the local same-UID control transport is not a production remote RIDE bridge.",
     "No real NPU, GPU, or Apple Silicon execution was performed for this draft.",
     "This draft authorizes no legacy entry-point deprecation or removal."
   ]

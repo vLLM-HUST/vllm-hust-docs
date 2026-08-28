@@ -85,21 +85,44 @@ before atomic reservation. In-progress duplicates, semantic conflicts,
 executor failures, and terminal recovery have separate fail-closed receipts;
 unauthenticated bytes produce no trusted receipt.
 
+A Linux-only local transport now exposes that service through a Unix-domain
+socket. The host requires `SO_PEERCRED` and the same effective UID, creates the
+socket with mode `0600`, and accepts a socket parent only when it already exists,
+is owned by the host UID, and is not group- or world-writable. It never removes
+an existing path and removes its own socket only when the device/inode identity
+still matches the path it created. The closed binary frame preserves the exact
+bounded action bytes used by HMAC verification; request signature, action, and
+response sizes are independently bounded.
+
+Ingress handlers may run concurrently, but an explicit `max_in_flight` counter
+and one serialized authority lane bound all authentication, ledger, admission,
+and execution work. Read, health-observation, service, and shutdown waits are
+bounded. A service timeout returns only the generic `ACTION_PENDING` transport
+state; it does not cancel the authoritative operation or release its ingress
+slot until the durable operation actually finishes, preventing an implicit
+unbounded executor queue. Peer, framing, authentication, parsing, pending, busy,
+and internal failures expose stable generic transport codes without exception
+details. SQLite access is serialized across the transport and lifecycle threads.
+
+This is same-host message authentication, not a remote control-plane transport:
+it provides neither TLS/mTLS nor production secret provisioning, distribution,
+storage, or audit. It is also not an OS sandbox and is not enabled by the default
+OpenAI-compatible runtime startup path.
+
 The configured startup path still:
 
 - grants no non-empty permission requests;
 - admits only `trusted_in_process` isolation;
 - does not automatically materialize the opt-in fixed process executor;
-- has no authenticated transport, production secret backend, or key
+- does not automatically start the opt-in local authenticated socket host;
+- has no production remote transport, TLS/mTLS identity, secret backend, or key
   distribution/audit integration;
-- does not wire the local orchestration service to any transport or concurrent
-  request host;
 - has no general or mutating runtime operation API or external transport.
 
-Consequently the external bridge remains non-runnable end to end. The fixed
-child is a tested process-isolation and lifecycle foundation, but the overall
-contract/authentication/replay/executor pieces MUST NOT be described as a
-transport-authenticated, sandboxed, supported, or complete secure bridge.
+Consequently the external RIDE-to-runtime bridge remains non-runnable end to
+end. The fixed child and same-UID socket host form a tested local
+message-authenticated foundation, but the overall system MUST NOT be described
+as remotely authenticated, sandboxed, supported, or a complete secure bridge.
 
 ## 3. Required action contract
 
@@ -182,8 +205,11 @@ foundations are complete; the remaining end-to-end gates are not:
   primitives — complete;
 - versioned key IDs, overlap, activation, expiry, revocation, atomic generation
   replacement, rollback prevention, and explicit legacy mode — complete;
-- transport authentication plus production secret provisioning, distribution,
-  storage, and audit integration;
+- same-UID Unix-socket message authentication, exact bounded framing, bounded
+  concurrent ingress, serialized authority, safe path ownership/cleanup, and
+  timeout-to-pending recovery — complete;
+- production remote transport, TLS/mTLS peer identity, and production secret
+  provisioning, distribution, storage, and audit integration;
 - authorization, expiry, epoch, replay, and idempotency integration tests
   across the real transport and executor;
 - fixed core-only process executor, IPC-only manifest policy, bounded slot,
@@ -191,8 +217,9 @@ foundations are complete; the remaining end-to-end gates are not:
   fail-closed missing-health result — complete;
 - OS-enforced capability confinement for any future non-core bridge code;
 - atomic rejection and no-partial-mutation tests;
-- restart, reconnect, duplicate-delivery, drain, and shutdown tests;
-- bounded backpressure and failure behavior when the control plane is absent;
+- local restart/retry, duplicate-delivery, bounded backpressure, drain, and
+  shutdown behavior — complete for the same-host socket; remote reconnect and
+  control-plane-absence behavior remain open;
 - default runtime behavior remains usable with no bridge configured;
 - rollback removes bridge configuration without uninstalling the runtime;
 - exact core, bridge, and control-plane revisions appear in the release record;
@@ -201,5 +228,5 @@ foundations are complete; the remaining end-to-end gates are not:
 
 Until these gates pass, RIDE is a concept-level external system and its runtime
 bridge is a concept-level integration with tested wire-contract,
-authentication-primitive, durable-replay, and fixed process-executor
-foundations, not a supported Bundle v1 plugin.
+authentication, durable-replay, fixed process-executor, and bounded same-host
+transport foundations, not a supported Bundle v1 plugin.
