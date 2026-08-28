@@ -9,14 +9,14 @@
       "name": "vllm-hust",
       "url": "https://github.com/vLLM-HUST/vllm-hust",
       "branch": "codex/ecosystem-architecture-reorganization-20260828",
-      "commit": "0bdb12fd83924bea21e5982221f5c05409331d9f",
+      "commit": "ce41f7445d067aa85929ee3d69663d5887d3c6ea",
       "role": "runtime_core"
     },
     {
       "name": "vllm-hust-docs",
       "url": "https://github.com/vLLM-HUST/vllm-hust-docs",
       "branch": "codex/ecosystem-architecture-reorganization",
-      "commit": "0a3e3cc3e55f02e71df21fc4c36cea30ba2f7309",
+      "commit": "30fd96e8ed84a0291110c86f63239d042a8bb35e",
       "role": "documentation_source"
     },
     {
@@ -175,8 +175,10 @@
         {"id": "kv-affected-regression", "status": "passed", "evidence": "94 affected extension, config, HMA, cache-layout, typed factory, and non-gated MultiConnector tests passed; 1 conditional test skipped and 1 gated-model test deselected."},
         {"id": "kv-ordered-materializer", "status": "passed", "evidence": "Typed ordered_multi constructs scheduler and worker children in declared order with connector-ID-scoped configuration; API telemetry composes by the same logical IDs and rejects unknown IDs without legacy registry lookup."},
         {"id": "kv-runtime-config-schema", "status": "passed", "evidence": "The closed typed_connectors host envelope is validated by a packaged Draft 2020-12 schema; all plugin schemas are included through plugins/*.schema.json package data."},
+        {"id": "kv-config-rollback", "status": "passed", "evidence": "A typed import failure stops without consulting legacy discovery; replacing the next-start configuration with the existing external module-path form successfully resolves the legacy connector. All 34 typed factory, config, HMA, module-path, and rollback tests passed."},
+        {"id": "bidkv-post-factory-regression", "status": "passed", "evidence": "All 396 BidKV tests passed and 1 environment-dependent test skipped against the editable core after typed single/ordered factory changes."},
         {"id": "kvcompress-static-validation", "status": "passed", "evidence": "KVCompress source and test modules compile, and its repository profile validates against the organization schema."},
-        {"id": "kvcompress-pytest", "status": "passed", "evidence": "All 44 KVCompress tests passed against the editable core environment with PyTorch available."}
+        {"id": "kvcompress-pytest", "status": "passed", "evidence": "All 44 KVCompress tests passed against the editable core after typed single/ordered factory changes."}
       ],
       "blockers": [
         "Typed single and ordered_multi paths lack matched real Mooncake, LMCache, PegaFlow, and LMCache-Ascend behavior and rollback evidence.",
