@@ -85,7 +85,7 @@ The generic Bundle v1 manifest does not yet encode all of these domain choices.
 Adding a free-form configuration object to the generic manifest is not an
 acceptable shortcut; the KV domain must own and version its configuration.
 
-### 4.1 Implemented selection and single-connector boundary
+### 4.1 Implemented typed KV materialization boundary
 
 The core now contains a closed `kv-connector-selection-v1` schema and a
 dependency-light parser/resolver in
@@ -115,13 +115,16 @@ not accept endpoint credentials or connector-specific free-form configuration.
 normalizes CLI dictionaries into the immutable profile; typed selection is
 mutually exclusive with legacy connector names and module paths. Configuration
 does not register anything with `KVConnectorFactory`. The factory now
-materializes typed `single` selections after the immutable startup snapshot
-exists: scheduler, worker, and API/logger processes import only their selected
-component. Typed `ordered_multi`, configuration/secret schemas,
-external-system handshake, lifecycle, and rollback execution remain required.
+materializes typed `single` and `ordered_multi` selections after the immutable
+startup snapshot exists: scheduler, worker, and API/logger processes import
+only their selected components. Ordered child configuration is keyed by logical
+`connector_id` under `kv_connector_extra_config.typed_connectors`; its closed
+host envelope has a packaged Draft 2020-12 schema, while each provider owns its
+inner fields. External-system handshake, secret-source integration, lifecycle,
+and rollback execution remain required.
 
 Capability declarations are admission inputs, not trusted implementation
-facts. The `single` factory adapter verifies `SupportsHMA`, piecewise-mode, and
+facts. The factory adapters verify `SupportsHMA`, piecewise-mode, and
 cache-layout requirements against the imported role implementation inside its
 owning process and fails closed on any declaration mismatch. Scheduler code may
 import only the scheduler component, worker code only the worker component,
@@ -149,8 +152,8 @@ not by itself materialize the typed topology.
    compatibility checks, and mutually exclusive `KVTransferConfig` mapping are
    implemented.
 5. Add a factory-owned adapter that consumes admitted descriptors only after
-   the immutable startup snapshot exists. Typed `single` is implemented;
-   typed `ordered_multi` remains pending.
+   the immutable startup snapshot exists. Typed `single` and `ordered_multi`
+   are implemented; release equivalence remains pending.
 6. Run matched tests for built-in Mooncake and LMCache connectors, external
    PegaFlow module-path loading, LMCache-Ascend, and `MultiConnector`.
 7. Run scheduler/worker process, HMA, failure, recovery, and shutdown tests.
