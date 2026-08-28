@@ -189,6 +189,27 @@ bundle, config, and revision checks. Direct correctly blocked because
 store-embedded additionally blocked because `mooncake_master` was unavailable.
 These are environment-readiness records, not connector or performance results.
 
+Mooncake direct mode now has a process-owned real-run harness for three
+mutually exclusive next-start states: `legacy`, `typed`, and `rollback`. Every
+state requires a successful preflight for the exact core revision, source tree,
+model, runnable CLI, bundle roles, device set, free-memory threshold, and port
+set; it writes to a new evidence directory and uses a deterministic request
+workload. The runner repeats volatile GPU-memory and port checks immediately
+before launch, fails as soon as a retained child exits, and cleans up only its
+own prefiller, decoder, and proxy process groups.
+
+The controlled A100 audit is deliberately recorded as blocked rather than as a
+connector result. An isolated environment reached Mooncake 0.3.10, Torch 2.11,
+the exact editable vLLM-HUST source, CUDA platform detection, and a runnable
+vLLM CLI. Before matched runs could complete, an unrelated 32B service occupied
+both GPUs and the selected proxy port. The attempted child groups were cleaned
+without touching that service. At core revision
+`b0ea14144941891022693bf0dfdc3b6fccad3dd5`, the strengthened preflight then
+reported both A100s ineligible because each had less than the required 20,000
+MiB free. This proves resource admission and cleanup behavior only; no
+real-online, equivalence, hardware-performance, or Mooncake-failure claim is
+made.
+
 ## 5. Migration order
 
 1. Keep current named and module-path connector behavior unchanged.
