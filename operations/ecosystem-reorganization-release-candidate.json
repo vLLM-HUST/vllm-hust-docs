@@ -9,7 +9,7 @@
       "name": "vllm-hust",
       "url": "https://github.com/vLLM-HUST/vllm-hust",
       "branch": "codex/ecosystem-architecture-reorganization-20260828",
-      "commit": "3f301b72342852fe3ae4a14abfe5820784dddf26",
+      "commit": "0b1de06a8ea1099038a0e79cd4d2f342fab0483c",
       "role": "runtime_core"
     },
     {
@@ -165,12 +165,13 @@
       "repository_refs": ["vllm-hust", "vllm-hust-docs", "vllm-hust-website", "pegaflow-hust", "LMCache-Ascend", "vllm-ascend-kvcompress-hust"],
       "validations": [
         {"id": "catalog-separation", "status": "passed", "evidence": "Mooncake, LMCache, PegaFlow, and LMCache-Ascend systems/providers are separate from their connector bridges."},
-        {"id": "kv-materializer", "status": "blocked", "evidence": "Factory-owned role, HMA, MultiConnector, configuration, and rollback semantics are not yet encoded."},
+        {"id": "kv-selection-topology", "status": "passed", "evidence": "Closed single/ordered-multi schema and immutable-snapshot resolver preserve explicit order, validate exact scheduler/worker providers, reject role crossing and unknown fields, and import no implementation."},
+        {"id": "kv-materializer", "status": "blocked", "evidence": "The factory-owned adapter, KVTransferConfig mapping, HMA parity, connector configuration/secrets, lifecycle, and rollback execution are not yet implemented."},
         {"id": "kvcompress-static-validation", "status": "passed", "evidence": "KVCompress source and test modules compile, and its repository profile validates against the organization schema."},
         {"id": "kvcompress-pytest", "status": "not_run", "evidence": "The available PyTorch environment does not contain vLLM; pytest stopped during collection with nine ModuleNotFoundError failures for vllm.triton_utils."}
       ],
       "blockers": [
-        "KV-specific selection and composition schema is not implemented.",
+        "The KV selection topology is implemented, but it is not yet mapped into KVTransferConfig or consumed by KVConnectorFactory.",
         "No typed connector path has matched the built-in names or external module-path compatibility behavior."
       ],
       "rollback": [
@@ -208,7 +209,7 @@
   "known_limitations": [
     "All listed branches exist on GitHub, but no pull request is merged and no registry tag is published.",
     "KVCompress full pytest requires an environment containing both PyTorch and an importable compatible vLLM; only compile and profile validation are recorded here.",
-    "No new KV connector or control-plane bridge materializer is claimed.",
+    "KV selection topology resolution is implemented, but no new KV connector or control-plane bridge materializer is claimed.",
     "No real NPU, GPU, or Apple Silicon execution was performed for this draft.",
     "This draft authorizes no legacy entry-point deprecation or removal."
   ]

@@ -80,6 +80,31 @@ The generic Bundle v1 manifest does not yet encode all of these domain choices.
 Adding a free-form configuration object to the generic manifest is not an
 acceptable shortcut; the KV domain must own and version its configuration.
 
+### 4.1 Implemented selection-topology boundary
+
+The core now contains a closed `kv-connector-selection-v1` schema and a
+dependency-light parser/resolver in
+`vllm/plugins/kv_connector_selection.py`. This boundary implements only the
+domain decisions that are safe before factory integration:
+
+- `single` requires exactly one logical connector;
+- `ordered_multi` requires at least two connectors and preserves declared
+  order rather than manifest discovery order;
+- every logical connector names an exact qualified scheduler component and an
+  exact qualified worker component;
+- a component may implement both roles, or the roles may be separate;
+- resolution rejects role crossing, missing admission, wrong execution plane,
+  duplicate logical connectors, duplicate component pairs, and unknown fields;
+- resolution reads the immutable startup snapshot and never imports a connector
+  implementation.
+
+This is a topology descriptor, not a runtime configuration shortcut. It does
+not accept endpoint credentials or connector-specific free-form configuration,
+does not mutate `KVTransferConfig`, and does not register anything with
+`KVConnectorFactory`. The factory-owned adapter, configuration/secret schema,
+external-system handshake, lifecycle, and rollback implementation remain
+required before a typed connector can be instantiated.
+
 ## 5. Migration order
 
 1. Keep current named and module-path connector behavior unchanged.
@@ -87,7 +112,8 @@ acceptable shortcut; the KV domain must own and version its configuration.
 3. Publish repository profiles that list services/providers and connector
    bridges as separate artifacts.
 4. Define a KV-specific selection and composition schema mapped to
-   `KVTransferConfig`.
+   `KVTransferConfig`. The closed selection topology and admitted-component
+   resolution are implemented; the `KVTransferConfig` mapping remains pending.
 5. Add a factory-owned adapter that consumes admitted descriptors only after
    the immutable startup snapshot exists.
 6. Run matched tests for built-in Mooncake and LMCache connectors, external
