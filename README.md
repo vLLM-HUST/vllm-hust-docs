@@ -21,8 +21,14 @@ This repository contains vllm-hust documentation, sync notes, and fork-specific 
 - `sync-notes/` — upstream sync notes and merge records.
 - `operations/` — deployment, runtime, and hardware operation guides.
 - `architecture/` — source code deconstruction, module maps, and internal design notes.
+- `governance/` — organization-wide ownership, repository lifecycle, and graduation rules.
+- `registry/` — machine-readable ecosystem classifications and their schemas.
 
 ## Key Documents
+
+- `architecture/ecosystem-architecture.md` — normative organization-wide boundaries between the runtime core, platform profiles, runtime components, KV state systems, control planes, plugin bundles, and evidence tooling.
+- `governance/repository-lifecycle.md` — ownership and lifecycle policy for core, incubating, certified external, deprecated, and archived repositories or integrations.
+- `registry/ecosystem-components.json` — canonical machine-readable ecosystem catalog consumed by public documentation and the website.
 
 - `operations/optimization-repository-playbook.md` — a reusable playbook for optimization repositories that pin runtime dependencies with submodules, manage feature branches, preserve experiment provenance, and decide when upstream PRs are appropriate.
 - `architecture/vllm-hust-source-deconstruction.md` — a layered source walkthrough of the `vllm-hust` fork, including request flow, engine structure, execution path, and fork-specific extension surfaces.
