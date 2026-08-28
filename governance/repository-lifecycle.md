@@ -46,6 +46,18 @@ Repository metadata MUST agree with the ecosystem registry. The registry wins
 for public classification; the component repository wins for implementation
 details and test commands.
 
+The organization maintains two deliberately separate inventories:
+
+- `registry/ecosystem-components.json` classifies deployable systems, runtime
+  components, bridges, tools, and public applications;
+- `registry/repository-portfolio.json` classifies source repositories and their
+  relationship to the runtime.
+
+A repository is a source and governance boundary, not a runtime type. A single
+repository may contain an external service, several connectors, and packaging;
+conversely, one ecosystem system may span more than one repository. Repository
+presence alone MUST NOT imply plugin compatibility or support status.
+
 ## 4. Incubation graduation
 
 An incubating component graduates to `supported` only when it has:

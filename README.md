@@ -29,6 +29,7 @@ This repository contains vllm-hust documentation, sync notes, and fork-specific 
 - `architecture/ecosystem-architecture.md` — normative organization-wide boundaries between the runtime core, platform profiles, runtime components, KV state systems, control planes, plugin bundles, and evidence tooling.
 - `governance/repository-lifecycle.md` — ownership and lifecycle policy for core, incubating, certified external, deprecated, and archived repositories or integrations.
 - `registry/ecosystem-components.json` — canonical machine-readable ecosystem catalog consumed by public documentation and the website.
+- `registry/repository-portfolio.json` — organization-wide inventory that assigns every repository a lifecycle, role, runtime relationship, and canonical artifact scope without treating repositories as runtime components.
 
 - `operations/optimization-repository-playbook.md` — a reusable playbook for optimization repositories that pin runtime dependencies with submodules, manage feature branches, preserve experiment provenance, and decide when upstream PRs are appropriate.
 - `architecture/vllm-hust-source-deconstruction.md` — a layered source walkthrough of the `vllm-hust` fork, including request flow, engine structure, execution path, and fork-specific extension surfaces.
