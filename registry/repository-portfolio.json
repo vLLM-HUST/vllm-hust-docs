@@ -109,7 +109,7 @@
       "relation_to_runtime": "provides_external_subsystem",
       "lifecycle": "incubating",
       "canonical_artifacts": ["KV storage service", "transfer engine", "metadata service", "vLLM connectors"],
-      "component_ids": ["pegaflow"],
+      "component_ids": ["pegaflow", "pegaflow-vllm-connectors"],
       "public_surface": true
     },
     {
