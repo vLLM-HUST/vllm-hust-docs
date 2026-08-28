@@ -262,14 +262,17 @@ admission tests establish packaging and contract compatibility, not matched
 LMCache behavior or Ascend hardware equivalence.
 
 LMCache-Ascend also has a fail-closed `preflight-only` command and real-run
-runbook. It preserves the selected virtual-environment interpreter, requires a
-fresh evidence directory, and records exact imports and dependency versions,
-bundle roles, model, ports, NPU inventory, and both Git revisions without
-starting or terminating a service. The 2026-08-29 host-112 preflight passed the
-model, two requested ports, eight-device inventory, split-role manifest, and
-core/provider revision checks. It correctly blocked because `lmcache` 0.4.4,
-`lmcache_ascend`, and `torch_npu` were unavailable in the isolated core
-environment. That record is environment-readiness evidence only.
+runbook. At provider revision
+`754bbb0d3efcc876fbbe6f88100fa08a8c4252e1`, it preserves the selected
+virtual-environment interpreter and requires a fresh evidence directory, exact
+core and provider source roots, an engine-level core import, a runnable vLLM
+CLI, dependency versions, bundle roles, model, ports, NPU inventory, and both
+Git revisions without starting or terminating a service. Fourteen focused
+preflight and bundle tests passed. The 2026-08-29 host-112 rerun proved the core
+import and CLI came from the selected checkout, then correctly blocked because
+the provider's generated version module, `lmcache` 0.4.4, and `torch_npu` were
+unavailable in the isolated core environment. That record is
+environment-readiness evidence only.
 
 ## 6. Blocking acceptance gates
 
