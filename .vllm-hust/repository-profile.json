@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "canonical_registry": "https://github.com/vLLM-HUST/vllm-hust-docs/tree/codex/ecosystem-architecture-reorganization/registry",
+  "repository": "https://github.com/vLLM-HUST/vllm-hust-docs",
+  "repository_role": "documentation_source",
+  "relation_to_runtime": "documents_runtime",
+  "lifecycle": "core",
+  "artifacts": [
+    {
+      "id": "vllm-hust-architecture-governance",
+      "artifact_type": "tool",
+      "system_role": "documentation_catalog",
+      "delivery_model": "source_repository",
+      "execution_planes": ["offline"],
+      "integration_contracts": []
+    }
+  ],
+  "system_boundaries": {
+    "is": [
+      "the canonical source for organization architecture, governance, registries, and migration policy",
+      "the authority for public component and repository classification"
+    ],
+    "is_not": [
+      "a runtime implementation repository",
+      "a benchmark result store",
+      "a public renderer that independently invents classifications"
+    ]
+  },
+  "validation": [
+    "python3 scripts/validate_ecosystem_registry.py",
+    "python3 scripts/check_markdown_links.py",
+    "git diff --check"
+  ],
+  "compatibility_document": "operations/extension-bundle-v1-migration.md"
+}
