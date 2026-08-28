@@ -158,6 +158,18 @@ used by their respective trusted in-process paths. These descriptors describe
 core-delivered bridges only; they do not transfer ownership of Mooncake or
 LMCache services into vLLM.
 
+The four built-in bridge names now also have a factory-level materialization
+equivalence gate. For `MooncakeConnector`, `MooncakeStoreConnector`,
+`LMCacheConnectorV1`, and `LMCacheMPConnector`, the typed scheduler and worker
+roles resolve to the same implementation class as the legacy name, the
+next-start rollback name resolves back to that class, and each loadable typed
+telemetry role produces the same stats type and payload as the legacy codec.
+When the optional `lmcache` package is absent, the typed multiprocess path fails
+closed while preserving the same `ModuleNotFoundError` root cause as the legacy
+path. This is class, role, codec, rollback-configuration, and dependency-failure
+equivalence only; it is not service, accelerator, lifecycle, or performance
+equivalence.
+
 ## 5. Migration order
 
 1. Keep current named and module-path connector behavior unchanged.
@@ -171,9 +183,11 @@ LMCache services into vLLM.
    implemented.
 5. Add a factory-owned adapter that consumes admitted descriptors only after
    the immutable startup snapshot exists. Typed `single` and `ordered_multi`
-   are implemented; release equivalence remains pending.
-6. Run matched tests for built-in Mooncake and LMCache connectors, external
-   PegaFlow module-path loading, LMCache-Ascend, and `MultiConnector`.
+   are implemented. Factory-level materialization equivalence for the four
+   built-in Mooncake and LMCache names is verified; real-system equivalence
+   remains pending.
+6. Run matched real-system tests for built-in Mooncake and LMCache connectors,
+   external PegaFlow module-path loading, LMCache-Ascend, and `MultiConnector`.
 7. Run scheduler/worker process, HMA, failure, recovery, and shutdown tests.
 8. Publish an exact core/connector/system/platform release record and rollback
    configuration before recommending the typed path.
@@ -208,6 +222,9 @@ admission tests establish packaging and contract compatibility, not matched
 LMCache behavior or Ascend hardware equivalence.
 
 ## 6. Blocking acceptance gates
+
+The built-in materialization gate above is complete. It does not satisfy the
+remaining real-run gates below.
 
 KV bundle materialization is blocked until all of these are testable:
 
