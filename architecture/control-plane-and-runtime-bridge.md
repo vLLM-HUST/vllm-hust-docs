@@ -45,6 +45,18 @@ Receipt completion must correlate with the reserved action's runtime, trace,
 and causation identities. An `accepted` admission receipt cannot close the
 terminal record.
 
+Versioned authentication uses the canonical header
+`v1;kid=<key-id>;sha256=<digest>`. Immutable issuer-scoped key sets declare a
+monotonic generation, activation time, optional expiry, and optional revocation
+time. A reloadable host store swaps complete generations atomically and rejects
+generation rollback. Rotation overlap accepts both exact key IDs; an unknown,
+inactive, expired, or revoked key never falls back to another key. Because the
+signature header is outside the signed action bytes, a previously completed
+action can be re-signed with the new active key and recover its durable receipt
+without re-execution. The old `sha256=<digest>` form remains available only
+when the caller explicitly supplies the legacy issuer-to-secret mapping; a
+versioned key set rejects that form as a downgrade.
+
 A fixed core-owned reference executor now establishes the first real process
 boundary. Its materializer accepts only a component that declares exactly the
 action/receipt v1 contracts, the `bridge` plane, `process_isolated`, the single
@@ -78,7 +90,8 @@ The configured startup path still:
 - grants no non-empty permission requests;
 - admits only `trusted_in_process` isolation;
 - does not automatically materialize the opt-in fixed process executor;
-- has no authenticated transport or host key provisioning/rotation mechanism;
+- has no authenticated transport, production secret backend, or key
+  distribution/audit integration;
 - does not wire the local orchestration service to any transport or concurrent
   request host;
 - has no general or mutating runtime operation API or external transport.
@@ -167,7 +180,10 @@ foundations are complete; the remaining end-to-end gates are not:
 - closed action and receipt schemas with compatibility tests — complete;
 - exact-byte HMAC authentication and persistent replay/idempotency recovery
   primitives — complete;
-- transport authentication, key provisioning, rotation, and revocation;
+- versioned key IDs, overlap, activation, expiry, revocation, atomic generation
+  replacement, rollback prevention, and explicit legacy mode — complete;
+- transport authentication plus production secret provisioning, distribution,
+  storage, and audit integration;
 - authorization, expiry, epoch, replay, and idempotency integration tests
   across the real transport and executor;
 - fixed core-only process executor, IPC-only manifest policy, bounded slot,

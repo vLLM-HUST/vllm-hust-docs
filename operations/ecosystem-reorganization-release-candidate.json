@@ -9,7 +9,7 @@
       "name": "vllm-hust",
       "url": "https://github.com/vLLM-HUST/vllm-hust",
       "branch": "codex/ecosystem-architecture-reorganization-20260828",
-      "commit": "5318d430c7aad88aebea043f4843d9d596d33600",
+      "commit": "964c9ad8ed31755e625981f840bd5c7cef4536d9",
       "role": "runtime_core"
     },
     {
@@ -201,7 +201,8 @@
         {"id": "fixed-process-executor", "status": "passed", "evidence": "A core-owned spawn worker materializes only for exact action/receipt v1, bridge-plane, process-isolated, IPC-only descriptors; it imports no bundle code and implements ready handshake, a single bounded request slot, timeout/failure cleanup, drain/stop, explicit restart, and runtime/epoch/state/receipt rechecks."},
         {"id": "local-orchestration", "status": "passed", "evidence": "A transport-agnostic local service composes authentication, admission, durable lookup/reservation, and execution. Terminal retries after expiry restore the prior receipt; in-progress duplicates, semantic conflicts, executor failures, and unauthenticated inputs remain non-mutating and do not re-execute. All 24 affected security/service tests and relevant pre-commit hooks passed."},
         {"id": "runtime-health-observation", "status": "passed", "evidence": "The host adapter reuses EngineClient.check_health, distinguishes healthy, EngineDeadError, and unavailable outcomes, strips exception detail, and passes only a closed source/timestamp/state observation to the child. Future or older-than-five-second observations fail closed, and missing observations remain RUNTIME_HEALTH_UNAVAILABLE. All 23 affected health, executor, and service tests plus relevant pre-commit hooks passed."},
-        {"id": "bridge-integration", "status": "blocked", "evidence": "No authenticated transport or concurrent request host, production key lifecycle, general/mutating runtime operation API, OS sandbox for non-core code, or mutating action exists."}
+        {"id": "versioned-key-lifecycle", "status": "passed", "evidence": "Canonical v1 signatures select exact issuer/key IDs from immutable monotonic generations with activation, expiry, revocation, overlap, atomic replacement, and rollback prevention. Versioned mode rejects unknown IDs and legacy downgrade; explicit legacy mappings remain compatible. The same action re-signed by a new key restores its terminal receipt after the old key is removed without re-execution. All 32 affected key, security, and service tests plus relevant pre-commit hooks passed."},
+        {"id": "bridge-integration", "status": "blocked", "evidence": "No authenticated transport or concurrent request host, production secret provisioning/distribution/audit backend, general/mutating runtime operation API, OS sandbox for non-core code, or mutating action exists."}
       ],
       "blockers": [
         "Only the read-only health-probe contract, pure admission gate, local HMAC primitive, durable replay ledger, and fixed core process worker exist; no mutating runtime action is defined.",
