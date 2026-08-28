@@ -155,7 +155,7 @@ during migration. They are separate from `VLLM_EXTENSION_MANIFESTS` and
 | model registry / out-of-tree model | model descriptor plus implementation registration | dedicated contract missing |
 | reasoning and tool parsers | explicit API-plane parser selection | dedicated contract missing |
 | LoRA resolvers | artifact/model resolution | dedicated contract missing |
-| KV connectors | scheduler/worker integration with an external state system | contracts and closed ordered selection topology implemented; factory adapter remains blocked on the [KV domain design gate](../architecture/kv-systems-and-connector-materialization.md) |
+| KV connectors | scheduler/worker integration with an external state system | contracts, closed ordered selection topology, capability declarations, and `KVTransferConfig` mapping implemented; factory adapter remains blocked on the [KV domain design gate](../architecture/kv-systems-and-connector-materialization.md) |
 | weight-transfer connectors | data-path integration | dedicated contract missing |
 | scheduler/victim selector | scheduler-local policy | typed materializer implemented; experimental until BidKV equivalence gates pass |
 | platform/operator/model runner | coordinated platform/runtime components | descriptor contracts implemented; materializers pending |
@@ -206,8 +206,9 @@ equivalence and rollback gates below pass.
 
 Implementation status: steps 1 and 2 are complete. Step 3 is active. The
 scheduler/victim-selector materializer is implemented, and the KV domain now
-has a closed selection-topology parser/resolver that deliberately stops before
-factory materialization. Steps 4 through 8 remain required; implementing a
+has a closed selection-topology parser/resolver plus mutually exclusive
+`KVTransferConfig` mapping that deliberately stops before factory
+materialization. Steps 4 through 8 remain required; implementing a
 materializer does not by itself make the typed path recommended or deprecate
 its legacy surface.
 

@@ -9,7 +9,7 @@
       "name": "vllm-hust",
       "url": "https://github.com/vLLM-HUST/vllm-hust",
       "branch": "codex/ecosystem-architecture-reorganization-20260828",
-      "commit": "fec843b00110171b9efa59eb48b1288b7ab28648",
+      "commit": "3d1866b3cc17c601918307adb301f0948b4bbdee",
       "role": "runtime_core"
     },
     {
@@ -23,7 +23,7 @@
       "name": "vllm-hust-website",
       "url": "https://github.com/vLLM-HUST/vllm-hust-website",
       "branch": "codex/ecosystem-architecture-reorganization-20260828",
-      "commit": "aa8b60c3f7afe093a769a84eb49f46913bffc04b",
+      "commit": "684afd970bbb92728531896f2d39b1ab95044712",
       "role": "public_registry_renderer"
     },
     {
@@ -168,13 +168,14 @@
       "validations": [
         {"id": "catalog-separation", "status": "passed", "evidence": "Mooncake, LMCache, PegaFlow, and LMCache-Ascend systems/providers are separate from their connector bridges."},
         {"id": "kv-selection-topology", "status": "passed", "evidence": "Closed single/ordered-multi schema and immutable-snapshot resolver preserve explicit order, validate exact scheduler/worker providers and declared HMA/piecewise capabilities, reject role crossing and unknown fields, and import no implementation."},
+        {"id": "kv-transfer-config", "status": "passed", "evidence": "Typed selection dictionaries normalize into immutable profiles, are mutually exclusive with legacy connector names/module paths, and participate in transfer-instance role flags; all 17 affected config tests passed."},
         {"id": "multi-connector-lifecycle", "status": "passed", "evidence": "MultiConnector now delegates recovery requeue, first-compute observation, and reclaimable-block collection; 22 non-gated tests passed and 1 conditional test skipped."},
-        {"id": "kv-materializer", "status": "blocked", "evidence": "The factory-owned adapter, KVTransferConfig mapping, in-process capability verification, connector configuration/secrets, lifecycle, and rollback execution are not yet implemented."},
+        {"id": "kv-materializer", "status": "blocked", "evidence": "The factory-owned adapter, in-process capability verification, connector configuration/secrets, telemetry for split-role providers, and rollback execution are not yet implemented."},
         {"id": "kvcompress-static-validation", "status": "passed", "evidence": "KVCompress source and test modules compile, and its repository profile validates against the organization schema."},
         {"id": "kvcompress-pytest", "status": "passed", "evidence": "All 44 KVCompress tests passed against the editable core environment with PyTorch available."}
       ],
       "blockers": [
-        "The KV selection topology is implemented, but it is not yet mapped into KVTransferConfig or consumed by KVConnectorFactory.",
+        "The KV selection topology is mapped into KVTransferConfig but is not yet consumed by KVConnectorFactory.",
         "No typed connector path has matched the built-in names or external module-path compatibility behavior."
       ],
       "rollback": [

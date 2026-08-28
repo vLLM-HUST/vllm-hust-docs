@@ -102,11 +102,13 @@ domain decisions that are safe before factory integration:
   implementation.
 
 This is a topology descriptor, not a runtime configuration shortcut. It does
-not accept endpoint credentials or connector-specific free-form configuration,
-does not mutate `KVTransferConfig`, and does not register anything with
-`KVConnectorFactory`. The factory-owned adapter, configuration/secret schema,
-external-system handshake, lifecycle, and rollback implementation remain
-required before a typed connector can be instantiated.
+not accept endpoint credentials or connector-specific free-form configuration.
+`KVTransferConfig` now owns an optional `kv_connector_selection` field and
+normalizes CLI dictionaries into the immutable profile; typed selection is
+mutually exclusive with legacy connector names and module paths. Configuration
+does not register anything with `KVConnectorFactory`. The factory-owned adapter,
+configuration/secret schema, external-system handshake, lifecycle, and rollback
+implementation remain required before a typed connector can be instantiated.
 
 Capability declarations are admission inputs, not trusted implementation
 facts. A future factory adapter MUST verify `SupportsHMA` and piecewise-mode
@@ -128,8 +130,9 @@ not by itself materialize the typed topology.
 3. Publish repository profiles that list services/providers and connector
    bridges as separate artifacts.
 4. Define a KV-specific selection and composition schema mapped to
-   `KVTransferConfig`. The closed selection topology and admitted-component
-   resolution are implemented; the `KVTransferConfig` mapping remains pending.
+   `KVTransferConfig`. The closed selection topology, admitted-component
+   resolution, role capability declarations, and mutually exclusive
+   `KVTransferConfig` mapping are implemented.
 5. Add a factory-owned adapter that consumes admitted descriptors only after
    the immutable startup snapshot exists.
 6. Run matched tests for built-in Mooncake and LMCache connectors, external
