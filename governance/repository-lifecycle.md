@@ -58,6 +58,14 @@ repository may contain an external service, several connectors, and packaging;
 conversely, one ecosystem system may span more than one repository. Repository
 presence alone MUST NOT imply plugin compatibility or support status.
 
+Active component and subsystem repositories SHOULD publish
+`.vllm-hust/repository-profile.json`, validated against
+`registry/repository-profile.schema.json`. This local profile declares contained
+artifacts and implementation-specific validation without copying organization
+policy into README prose. During migration the profile may point to the
+architecture branch; it MUST point to a tagged registry release before the
+classification is treated as stable.
+
 ## 4. Incubation graduation
 
 An incubating component graduates to `supported` only when it has:
