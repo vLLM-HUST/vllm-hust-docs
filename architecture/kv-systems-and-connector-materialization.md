@@ -65,8 +65,13 @@ A future KV bundle profile MUST define, before implementation:
 
 - a scheduler component implementing `vllm.kv_connector.scheduler.v1`;
 - a worker component implementing `vllm.kv_connector.worker.v1`;
+- an API-plane telemetry component implementing
+  `vllm.kv_connector.telemetry.v1`, which owns the stats codec and logger-side
+  class behavior without importing a worker implementation;
 - whether both contracts are implemented by one class or separate classes;
 - exact qualified component selection for each execution plane;
+- worker declarations for HMA, piecewise CUDA Graph mode, and an optional
+  required KV cache layout (`NHD` or `HND`);
 - how `MultiConnector` expresses ordered child composition without relying on
   manifest discovery order;
 - how the admitted implementation is passed into `KVConnectorFactory` without
@@ -90,12 +95,15 @@ domain decisions that are safe before factory integration:
 - `single` requires exactly one logical connector;
 - `ordered_multi` requires at least two connectors and preserves declared
   order rather than manifest discovery order;
-- every logical connector names an exact qualified scheduler component and an
-  exact qualified worker component;
+- every logical connector names exact qualified scheduler, worker, and
+  API-plane telemetry components;
 - a component may implement both roles, or the roles may be separate;
 - each role declares HMA support, while the worker also declares whether it
-  requires piecewise CUDA Graph mode, so configuration checks do not import a
-  worker implementation in the wrong process;
+  requires piecewise CUDA Graph mode and an optional required cache layout, so
+  configuration checks do not import a worker implementation in the wrong
+  process;
+- an ordered composition with conflicting non-null `NHD`/`HND` requirements is
+  rejected before any implementation import;
 - resolution rejects role crossing, missing admission, wrong execution plane,
   duplicate logical connectors, duplicate component pairs, and unknown fields;
 - resolution reads the immutable startup snapshot and never imports a connector
@@ -111,9 +119,13 @@ configuration/secret schema, external-system handshake, lifecycle, and rollback
 implementation remain required before a typed connector can be instantiated.
 
 Capability declarations are admission inputs, not trusted implementation
-facts. A future factory adapter MUST verify `SupportsHMA` and piecewise-mode
-requirements against the imported role implementation inside its owning
-process and fail closed on any declaration mismatch.
+facts. A future factory adapter MUST verify `SupportsHMA`, piecewise-mode, and
+cache-layout requirements against the imported role implementation inside its
+owning process and fail closed on any declaration mismatch. Scheduler code may
+import only the scheduler component, worker code only the worker component,
+and API/logger code only the telemetry component. A combined class remains
+valid only when its descriptor explicitly implements all three contracts and
+is admitted in all three planes.
 
 The existing `MultiConnector` compatibility path has also been hardened to
 delegate KV-recovery requeue observations, worker first-compute observations,
@@ -131,8 +143,9 @@ not by itself materialize the typed topology.
    bridges as separate artifacts.
 4. Define a KV-specific selection and composition schema mapped to
    `KVTransferConfig`. The closed selection topology, admitted-component
-   resolution, role capability declarations, and mutually exclusive
-   `KVTransferConfig` mapping are implemented.
+   resolution, scheduler/worker/telemetry role declarations, cache-layout
+   compatibility checks, and mutually exclusive `KVTransferConfig` mapping are
+   implemented.
 5. Add a factory-owned adapter that consumes admitted descriptors only after
    the immutable startup snapshot exists.
 6. Run matched tests for built-in Mooncake and LMCache connectors, external
@@ -147,12 +160,14 @@ KV bundle materialization is blocked until all of these are testable:
 
 - zero typed KV providers is behavior-identical to current configuration;
 - scheduler and worker providers cannot be accidentally crossed;
+- a worker provider cannot be used as the API-plane telemetry codec;
 - explicit ambiguity errors name the qualified candidates for that plane;
 - `MultiConnector` order is explicit and deterministic;
 - external module-path connectors remain supported during the migration
   window;
 - HMA capability checks run for typed and legacy paths identically;
 - implementation import occurs after admission and in the owning process only;
+- ordered children cannot require conflicting KV cache layouts;
 - a connector failure never changes the lifecycle classification of the
   external KV system;
 - rollback needs no package uninstall and is verified on the next process

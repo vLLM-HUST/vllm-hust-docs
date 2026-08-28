@@ -9,21 +9,21 @@
       "name": "vllm-hust",
       "url": "https://github.com/vLLM-HUST/vllm-hust",
       "branch": "codex/ecosystem-architecture-reorganization-20260828",
-      "commit": "3d1866b3cc17c601918307adb301f0948b4bbdee",
+      "commit": "6aa49326b1d6bc2edd145d72d3e3f9cd574b289e",
       "role": "runtime_core"
     },
     {
       "name": "vllm-hust-docs",
       "url": "https://github.com/vLLM-HUST/vllm-hust-docs",
       "branch": "codex/ecosystem-architecture-reorganization",
-      "commit": "fef8d9df413c83dc30ecd82723d242d98ee494b5",
+      "commit": "eb938d6d9c25fa1e23e5555c9d2229412e732fe1",
       "role": "documentation_source"
     },
     {
       "name": "vllm-hust-website",
       "url": "https://github.com/vLLM-HUST/vllm-hust-website",
       "branch": "codex/ecosystem-architecture-reorganization-20260828",
-      "commit": "684afd970bbb92728531896f2d39b1ab95044712",
+      "commit": "d07a0b4ac54feaba8e977566fb6b1520060c6ed7",
       "role": "public_registry_renderer"
     },
     {
@@ -167,10 +167,11 @@
       "repository_refs": ["vllm-hust", "vllm-hust-docs", "vllm-hust-website", "pegaflow-hust", "LMCache-Ascend", "vllm-ascend-kvcompress-hust"],
       "validations": [
         {"id": "catalog-separation", "status": "passed", "evidence": "Mooncake, LMCache, PegaFlow, and LMCache-Ascend systems/providers are separate from their connector bridges."},
-        {"id": "kv-selection-topology", "status": "passed", "evidence": "Closed single/ordered-multi schema and immutable-snapshot resolver preserve explicit order, validate exact scheduler/worker providers and declared HMA/piecewise capabilities, reject role crossing and unknown fields, and import no implementation."},
+        {"id": "kv-selection-topology", "status": "passed", "evidence": "Closed single/ordered-multi schema and immutable-snapshot resolver preserve explicit order, validate exact scheduler/worker/API-telemetry providers plus declared HMA, piecewise, and cache-layout capabilities, reject role crossing, conflicting layouts, and unknown fields, and import no implementation."},
+        {"id": "kv-split-role-contracts", "status": "passed", "evidence": "The API-plane vllm.kv_connector.telemetry.v1 contract prevents logger-side code from depending on worker imports; 54 affected extension and KVTransferConfig tests passed with all relevant pre-commit hooks."},
         {"id": "kv-transfer-config", "status": "passed", "evidence": "Typed selection dictionaries normalize into immutable profiles, are mutually exclusive with legacy connector names/module paths, and participate in transfer-instance role flags; all 17 affected config tests passed."},
         {"id": "multi-connector-lifecycle", "status": "passed", "evidence": "MultiConnector now delegates recovery requeue, first-compute observation, and reclaimable-block collection; 22 non-gated tests passed and 1 conditional test skipped."},
-        {"id": "kv-materializer", "status": "blocked", "evidence": "The factory-owned adapter, in-process capability verification, connector configuration/secrets, telemetry for split-role providers, and rollback execution are not yet implemented."},
+        {"id": "kv-materializer", "status": "blocked", "evidence": "Split-role telemetry and cache-layout declarations are implemented, but the factory-owned adapter, in-process declaration verification, connector configuration/secrets, and rollback execution are not yet implemented."},
         {"id": "kvcompress-static-validation", "status": "passed", "evidence": "KVCompress source and test modules compile, and its repository profile validates against the organization schema."},
         {"id": "kvcompress-pytest", "status": "passed", "evidence": "All 44 KVCompress tests passed against the editable core environment with PyTorch available."}
       ],
@@ -211,6 +212,7 @@
     {"sequence": 7, "status": "pending", "gate": "Tag the canonical docs registry, replace branch URLs in repository profiles, and then consider supported labels.", "repository_refs": ["vllm-hust-docs", "vllm-hust-website"]}
   ],
   "known_limitations": [
+    "The documentation repository revision records the parent snapshot because a release record cannot contain the hash of the commit that contains itself; the published branch head is the authoritative record revision.",
     "All listed branches exist on GitHub, but no pull request is merged and no registry tag is published.",
     "One MultiConnector consistency test requires authenticated access to the gated meta-llama/Llama-3.2-1B-Instruct model and was not run.",
     "KV selection topology resolution is implemented, but no new KV connector or control-plane bridge materializer is claimed.",

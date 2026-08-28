@@ -135,9 +135,12 @@ frontend page categories. A component is materialized only in a process that:
 3. supports the declared isolation and permissions;
 4. has an explicit domain composition policy.
 
-A KV integration normally uses distinct scheduler and worker components in one
-bundle. An external control plane exposes no in-engine plugin object; a local
-bridge may implement `vllm.control.action.v1` and
+A KV integration names scheduler, worker, and API-plane telemetry components
+in one bundle. They may share one implementation only when its descriptor is
+admitted for all three contracts and planes; split-role bundles prevent the
+API/logger process from importing worker/device code merely to decode stats.
+An external control plane exposes no in-engine plugin object; a local bridge
+may implement `vllm.control.action.v1` and
 `vllm.control.receipt.v1`.
 
 ## 8. Legacy compatibility profile
@@ -155,7 +158,7 @@ during migration. They are separate from `VLLM_EXTENSION_MANIFESTS` and
 | model registry / out-of-tree model | model descriptor plus implementation registration | dedicated contract missing |
 | reasoning and tool parsers | explicit API-plane parser selection | dedicated contract missing |
 | LoRA resolvers | artifact/model resolution | dedicated contract missing |
-| KV connectors | scheduler/worker integration with an external state system | contracts, closed ordered selection topology, capability declarations, and `KVTransferConfig` mapping implemented; factory adapter remains blocked on the [KV domain design gate](../architecture/kv-systems-and-connector-materialization.md) |
+| KV connectors | scheduler/worker integration with an external state system | scheduler, worker, and API-plane telemetry contracts; closed ordered selection topology; HMA, piecewise, and cache-layout declarations; and `KVTransferConfig` mapping implemented; factory adapter remains blocked on the [KV domain design gate](../architecture/kv-systems-and-connector-materialization.md) |
 | weight-transfer connectors | data-path integration | dedicated contract missing |
 | scheduler/victim selector | scheduler-local policy | typed materializer implemented; experimental until BidKV equivalence gates pass |
 | platform/operator/model runner | coordinated platform/runtime components | descriptor contracts implemented; materializers pending |
@@ -206,8 +209,9 @@ equivalence and rollback gates below pass.
 
 Implementation status: steps 1 and 2 are complete. Step 3 is active. The
 scheduler/victim-selector materializer is implemented, and the KV domain now
-has a closed selection-topology parser/resolver plus mutually exclusive
-`KVTransferConfig` mapping that deliberately stops before factory
+has a closed three-role selection-topology parser/resolver, cache-layout
+compatibility checks, plus mutually exclusive `KVTransferConfig` mapping that
+deliberately stops before factory
 materialization. Steps 4 through 8 remain required; implementing a
 materializer does not by itself make the typed path recommended or deprecate
 its legacy surface.
@@ -222,6 +226,10 @@ The current static-admission phase is accepted only when all of these hold:
 - incompatible API ranges, duplicate paths/IDs, unknown allowlist IDs, unknown
   permissions, denied permissions, and unsupported isolation fail closed;
 - scheduler and worker components remain independently selectable;
+- API-plane telemetry is selected independently and cannot resolve to a
+  worker-only component;
+- ordered KV connectors with conflicting non-null cache-layout declarations
+  fail before implementation import;
 - snapshot order is deterministic and snapshot data is immutable;
 - legacy entry-point tests remain unchanged and passing;
 - schema is included in wheel and sdist package data;
