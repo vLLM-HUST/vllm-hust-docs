@@ -159,7 +159,7 @@ during migration. They are separate from `VLLM_EXTENSION_MANIFESTS` and
 | weight-transfer connectors | data-path integration | dedicated contract missing |
 | scheduler/victim selector | scheduler-local policy | typed materializer implemented; experimental until BidKV equivalence gates pass |
 | platform/operator/model runner | coordinated platform/runtime components | descriptor contracts implemented; materializers pending |
-| control plane | external decision system | only action/receipt bridge contracts belong in vLLM |
+| control plane | external decision system | external system stays outside vLLM; bridge materialization blocked on the [control-plane design gate](../architecture/control-plane-and-runtime-bridge.md) |
 
 “Contract identity exists” is not behavior compatibility. A legacy surface is
 called migrated only after its component is materialized through the typed
