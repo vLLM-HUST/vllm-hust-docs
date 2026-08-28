@@ -22,6 +22,14 @@ The ecosystem registry therefore publishes separate entries for each external
 system and its vLLM connector bridge. A system entry has no vLLM connector
 contract merely because the same repository also contains an adapter.
 
+Canonical ownership follows implementation delivery, not the external system's
+brand. The Mooncake system entry remains canonical to `kvcache-ai/Mooncake`, and
+the LMCache system entry remains canonical to `LMCache/LMCache`. The HUST core
+fork is canonical for the bridge entries it actually ships: Mooncake direct and
+distributed-store connectors, plus the LMCache v1 facade and multiprocess
+connector/fallback. Their registry entries retain upstream links to the systems
+they integrate.
+
 ## 2. Runtime ownership that MUST remain intact
 
 The runtime core owns the connector domain in
@@ -139,6 +147,16 @@ are unioned because a completed durable copy from any configured child makes
 that device block reclaimable; asynchronous save completion continues to use
 the existing all-child accounting. This fixes legacy lifecycle parity but does
 not by itself materialize the typed topology.
+
+The core release now packages two explicit bridge bundles. The Mooncake bundle
+separates direct-transfer and distributed-store triples; the LMCache bundle
+separates v1 and multiprocess triples. Each triple contains scheduler, worker,
+and API telemetry components. Dedicated telemetry providers avoid importing the
+connector worker modules in the API process, and the descriptors request the
+filesystem, IPC, network, shared-memory, subprocess, and device permissions
+used by their respective trusted in-process paths. These descriptors describe
+core-delivered bridges only; they do not transfer ownership of Mooncake or
+LMCache services into vLLM.
 
 ## 5. Migration order
 
