@@ -126,7 +126,7 @@
       "name": "BidKV",
       "artifact_type": "runtime_component",
       "system_role": "scheduler_policy",
-      "integration_contracts": ["vllm.scheduler.victim_selector"],
+      "integration_contracts": ["vllm.scheduler.policy.v1"],
       "execution_planes": ["scheduler"],
       "deployment_topology": "in_process",
       "delivery_model": "plugin_bundle",

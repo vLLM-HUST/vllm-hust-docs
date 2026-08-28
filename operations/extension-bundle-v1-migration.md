@@ -183,9 +183,9 @@ The scheduler materializer applies this exclusive-provider policy:
   to `NoOpVictimSelector`.
 
 Typed selection and legacy discovery MUST NOT both instantiate a victim
-selector in one scheduler process. BidKV remains on its existing entry point
-until its repository publishes a conforming manifest and passes the equivalence
-and rollback gates below.
+selector in one scheduler process. BidKV now publishes a conforming experimental
+manifest, but its existing entry point remains the recommended path until the
+equivalence and rollback gates below pass.
 
 ## 9. Non-breaking migration sequence
 
