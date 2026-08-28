@@ -1,12 +1,25 @@
-# vLLM-HUST 统一插件 API v1 标准化改造交接书
+# vLLM-HUST 统一插件 API v1 标准化改造交接书（历史设计输入）
 
-> 状态：待专用实现线程接管
+> 状态：**已被组织级生态架构取代，不得按本文直接实施**
 >
 > 编写日期：2026-08-28
 >
 > 主要实现仓库：`/home/shuhao/vllm-hust`
 >
 > 参考原型仓库：`/home/shuhao/statecentric-ascend-engine`
+
+本文保留用于追踪早期设计假设。当前规范入口是：
+
+- `architecture/ecosystem-architecture.md`：系统角色与边界；
+- `operations/extension-bundle-v1-migration.md`：实际 bundle v1 契约、兼容策略、状态和迁移门槛；
+- `registry/ecosystem-components.json`：组件与外部系统分类；
+- `registry/repository-portfolio.json`：组织仓库治理分类。
+
+本文第 2–21 节中的“无需向后兼容”、统一 `plugin_kind`、默认 sidecar、
+通用生命周期 host、完整 PEP 440、万能 hook vocabulary 及旧目录建议均为
+**非规范历史提案**。它们不得覆盖当前决定：旧 entry point 在迁移期保留；
+bundle 是交付单元而不是系统角色；scheduler、KV、platform、operator 和
+control-plane bridge 分别使用其领域契约；未实现能力不进入受支持 v1。
 
 ## 1. 接管指令
 

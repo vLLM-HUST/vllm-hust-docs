@@ -178,3 +178,9 @@ behavior tests exist for the component.
 The removal of a legacy path requires a release notice, tested rollback, and a
 catalog update. Platform profiles and hardware hot paths are migrated after
 control-plane and descriptor-only components.
+
+The executable migration contract, current implementation status, legacy
+surface matrix, and acceptance gates are maintained in
+`operations/extension-bundle-v1-migration.md`. The earlier
+`operations/unified-plugin-api-v1-handoff.md` is historical design input and is
+not normative.
