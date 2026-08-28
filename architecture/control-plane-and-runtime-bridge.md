@@ -60,14 +60,22 @@ therefore returns terminal `failed` / `RUNTIME_HEALTH_UNAVAILABLE` while proving
 only that the bridge worker responded. Reporting the runtime as healthy from
 IPC liveness alone is prohibited.
 
+A transport-agnostic local service now composes authentication, admission,
+durable lookup/reservation, and the executor. Authenticated durable bindings
+are resolved before new deadline admission, so a terminal retry after its
+original expiry returns the prior receipt. New requests still pass admission
+before atomic reservation. In-progress duplicates, semantic conflicts,
+executor failures, and terminal recovery have separate fail-closed receipts;
+unauthenticated bytes produce no trusted receipt.
+
 The configured startup path still:
 
 - grants no non-empty permission requests;
 - admits only `trusted_in_process` isolation;
 - does not automatically materialize the opt-in fixed process executor;
 - has no authenticated transport or host key provisioning/rotation mechanism;
-- has no orchestration service joining authentication, admission, replay, and
-  execution;
+- does not wire the local orchestration service to any transport or concurrent
+  request host;
 - has no runtime operation API, real health source, or external transport.
 
 Consequently the external bridge remains non-runnable end to end. The fixed
