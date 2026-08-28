@@ -170,6 +170,14 @@ path. This is class, role, codec, rollback-configuration, and dependency-failure
 equivalence only; it is not service, accelerator, lifecycle, or performance
 equivalence.
 
+The Mooncake disaggregated example no longer uses name-based `pkill` or kills
+the caller's whole process group. Every prefiller, decoder, and proxy is started
+in its own retained process group; cleanup sends `TERM` only to those groups,
+waits for a bounded grace period, and escalates only those still alive. Static
+safety tests and shell syntax validation cover this invariant. The example is
+now safe enough to serve as the basis for a future preflight/real-run harness,
+but it still does not constitute a Mooncake real-system run.
+
 ## 5. Migration order
 
 1. Keep current named and module-path connector behavior unchanged.
