@@ -27,6 +27,7 @@ This repository contains vllm-hust documentation, sync notes, and fork-specific 
 ## Key Documents
 
 - `architecture/ecosystem-architecture.md` — normative organization-wide boundaries between the runtime core, platform profiles, runtime components, KV state systems, control planes, plugin bundles, and evidence tooling.
+- `architecture/kv-systems-and-connector-materialization.md` — normative design gate separating KV systems, connector bridges, and bundle delivery while preserving factory-owned role, HMA, composition, and rollback behavior.
 - `governance/repository-lifecycle.md` — ownership and lifecycle policy for core, incubating, certified external, deprecated, and archived repositories or integrations.
 - `registry/ecosystem-components.json` — canonical machine-readable ecosystem catalog consumed by public documentation and the website.
 - `registry/repository-portfolio.json` — organization-wide inventory that assigns every repository a lifecycle, role, runtime relationship, and canonical artifact scope without treating repositories as runtime components.

@@ -155,7 +155,7 @@ during migration. They are separate from `VLLM_EXTENSION_MANIFESTS` and
 | model registry / out-of-tree model | model descriptor plus implementation registration | dedicated contract missing |
 | reasoning and tool parsers | explicit API-plane parser selection | dedicated contract missing |
 | LoRA resolvers | artifact/model resolution | dedicated contract missing |
-| KV connectors | scheduler/worker integration with an external state system | descriptor contracts implemented; materializers pending |
+| KV connectors | scheduler/worker integration with an external state system | contracts implemented; materializer blocked on the [KV domain design gate](../architecture/kv-systems-and-connector-materialization.md) |
 | weight-transfer connectors | data-path integration | dedicated contract missing |
 | scheduler/victim selector | scheduler-local policy | typed materializer implemented; experimental until BidKV equivalence gates pass |
 | platform/operator/model runner | coordinated platform/runtime components | descriptor contracts implemented; materializers pending |
