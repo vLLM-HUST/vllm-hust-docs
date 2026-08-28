@@ -1,7 +1,9 @@
 # vLLM-HUST Ecosystem Architecture
 
-Status: **normative draft**  
-Scope: vLLM-HUST organization, integrations, and public catalog  
+Status: **normative draft**
+
+Scope: vLLM-HUST organization, integrations, and public catalog
+
 Supersedes: repository-level use of “plugin” as a universal system category
 
 ## 1. Governing principle
