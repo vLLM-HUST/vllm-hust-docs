@@ -106,15 +106,29 @@ details. SQLite access is serialized across the transport and lifecycle threads.
 
 This is same-host message authentication, not a remote control-plane transport:
 it provides neither TLS/mTLS nor production secret provisioning, distribution,
-storage, or audit. It is also not an OS sandbox and is not enabled by the default
-OpenAI-compatible runtime startup path.
+storage, or audit. It is also not an OS sandbox.
 
-The configured startup path still:
+The OpenAI-compatible server now has one explicit opt-in lifecycle path through
+`--control-bridge-config`. Absence of that option preserves the prior startup
+behavior and allocates no bridge resources. The referenced, closed v1 JSON
+configuration supplies runtime/epoch/state identity, absolute socket and replay
+paths, the exact `runtime.read` grant, a versioned key set, and bounded limits.
+Secrets are not embedded in the JSON or CLI: each key references a separate,
+host-owned regular file with no group/world access and canonical base64 content.
+Configuration and key symlinks, relative paths, unknown fields/scopes, excessive
+limits, and multi-API-process startup fail closed.
+
+When configured, FastAPI lifespan owns a core-fixed descriptor, process
+executor, replay ledger, orchestration service, health adapter, and socket host.
+Startup failure closes every resource already acquired; normal shutdown drains
+the socket before closing the worker and ledger. This path still cannot load
+bundle-supplied bridge code.
+
+The generic Bundle v1 startup path still:
 
 - grants no non-empty permission requests;
 - admits only `trusted_in_process` isolation;
-- does not automatically materialize the opt-in fixed process executor;
-- does not automatically start the opt-in local authenticated socket host;
+- does not automatically materialize or start the fixed bridge;
 - has no production remote transport, TLS/mTLS identity, secret backend, or key
   distribution/audit integration;
 - has no general or mutating runtime operation API or external transport.
@@ -208,6 +222,9 @@ foundations are complete; the remaining end-to-end gates are not:
 - same-UID Unix-socket message authentication, exact bounded framing, bounded
   concurrent ingress, serialized authority, safe path ownership/cleanup, and
   timeout-to-pending recovery — complete;
+- closed opt-in host configuration, protected separate key files, single-API
+  guard, FastAPI lifecycle ownership, startup cleanup, shutdown cleanup, and
+  default-disabled behavior — complete;
 - production remote transport, TLS/mTLS peer identity, and production secret
   provisioning, distribution, storage, and audit integration;
 - authorization, expiry, epoch, replay, and idempotency integration tests
@@ -220,8 +237,9 @@ foundations are complete; the remaining end-to-end gates are not:
 - local restart/retry, duplicate-delivery, bounded backpressure, drain, and
   shutdown behavior — complete for the same-host socket; remote reconnect and
   control-plane-absence behavior remain open;
-- default runtime behavior remains usable with no bridge configured;
-- rollback removes bridge configuration without uninstalling the runtime;
+- default runtime behavior remains usable with no bridge configured — complete;
+- rollback removes bridge configuration without uninstalling the runtime —
+  complete for the local host;
 - exact core, bridge, and control-plane revisions appear in the release record;
 - the website continues to classify the external control plane and bridge as
   separate components and evidence levels.

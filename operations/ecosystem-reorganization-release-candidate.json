@@ -9,7 +9,7 @@
       "name": "vllm-hust",
       "url": "https://github.com/vLLM-HUST/vllm-hust",
       "branch": "codex/ecosystem-architecture-reorganization-20260828",
-      "commit": "03b9d4b1209cf1685b4a646911aef0b9eceb330c",
+      "commit": "f985d7db2a3e16299961d3e8d79fea27af654d7b",
       "role": "runtime_core"
     },
     {
@@ -203,13 +203,14 @@
         {"id": "runtime-health-observation", "status": "passed", "evidence": "The host adapter reuses EngineClient.check_health, distinguishes healthy, EngineDeadError, and unavailable outcomes, strips exception detail, and passes only a closed source/timestamp/state observation to the child. Future or older-than-five-second observations fail closed, and missing observations remain RUNTIME_HEALTH_UNAVAILABLE. All 23 affected health, executor, and service tests plus relevant pre-commit hooks passed."},
         {"id": "versioned-key-lifecycle", "status": "passed", "evidence": "Canonical v1 signatures select exact issuer/key IDs from immutable monotonic generations with activation, expiry, revocation, overlap, atomic replacement, and rollback prevention. Versioned mode rejects unknown IDs and legacy downgrade; explicit legacy mappings remain compatible. The same action re-signed by a new key restores its terminal receipt after the old key is removed without re-execution. All 32 affected key, security, and service tests plus relevant pre-commit hooks passed."},
         {"id": "local-authenticated-transport", "status": "passed", "evidence": "A Linux same-UID Unix-domain-socket host uses SO_PEERCRED, mode-0600 sockets, secure pre-existing parent ownership, exact bounded frames, HMAC message authentication, bounded concurrent ingress, one serialized authority lane, generic error envelopes, timeout-to-pending recovery, and inode-safe cleanup. A timed-out operation retains its slot until durable completion, preventing an unbounded executor queue. All 31 affected transport, security, and service tests plus relevant pre-commit hooks passed."},
-        {"id": "bridge-integration", "status": "blocked", "evidence": "The same-host socket is not wired into default runtime startup and is not a production remote/TLS/mTLS transport. Production secret provisioning/distribution/audit, a general or mutating runtime operation API, and OS capability confinement for non-core code remain absent."}
+        {"id": "opt-in-runtime-lifecycle", "status": "passed", "evidence": "The OpenAI server accepts an absolute --control-bridge-config only when explicitly supplied. Its closed v1 configuration references separate host-owned mode-private base64 key files, grants exactly runtime.read, bounds all limits, rejects multi-API-process ambiguity, and lets FastAPI lifespan own startup and reverse-order cleanup of the fixed executor, ledger, service, health adapter, and socket. All 51 combined control-bridge tests and 38 existing CLI/server-lifecycle tests passed with relevant pre-commit hooks."},
+        {"id": "bridge-integration", "status": "blocked", "evidence": "The opt-in same-host socket is now runtime-lifecycle managed but is not a production remote/TLS/mTLS transport. Production secret provisioning/distribution/audit, a general or mutating runtime operation API, and OS capability confinement for non-core code remain absent."}
       ],
       "blockers": [
         "Only the read-only health-probe contract is defined; no general or mutating runtime action exists.",
         "The local socket host provides same-UID message authentication only; external RIDE connectivity, remote peer identity, TLS/mTLS, and production key provisioning/distribution/audit remain undefined.",
         "The fixed core worker and local socket do not provide OS capability confinement for future non-core bridge code.",
-        "Default configured Bundle v1 startup still rejects process isolation and non-empty permissions; the fixed executor is available only through explicit policy and materialization."
+        "Generic Bundle v1 startup still rejects process isolation and non-empty permissions; the explicit local host can materialize only the fixed core health-probe descriptor and cannot run bundle-supplied bridge code."
       ],
       "rollback": [
         "Keep the bridge unconfigured; default runtime behavior remains independent of the external control plane."
