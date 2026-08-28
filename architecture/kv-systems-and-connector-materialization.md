@@ -160,6 +160,15 @@ not by itself materialize the typed topology.
 8. Publish an exact core/connector/system/platform release record and rollback
    configuration before recommending the typed path.
 
+PegaFlow now has a safe real-run preflight and runbook. The runner labels
+preflight separately from `real-online`, requires a fresh output directory,
+records exact command/environment/model/hardware/revision inputs, and stops only
+process groups it created. The 2026-08-29 host-112 preflight verified the model,
+ports, and eight idle 910B2 devices, then correctly refused to launch because the
+invoking user could not access a controlled runtime environment or built server
+binary. This is readiness evidence, not connector equivalence or a negative
+performance result.
+
 ## 6. Blocking acceptance gates
 
 KV bundle materialization is blocked until all of these are testable:
@@ -180,6 +189,12 @@ KV bundle materialization is blocked until all of these are testable:
   start;
 - hardware and performance claims identify the external system, connector,
   platform, and exact revisions separately.
+- each real-run harness passes environment, model, accelerator, port, workload,
+  unique-output, command, and revision preflight; it never kills or silently
+  reuses processes it did not start;
+- legacy module-path, typed selection, and next-start rollback use matched
+  topology and retain raw request, hit/miss, telemetry, failure, and shutdown
+  evidence.
 
 Until these gates pass, Mooncake, LMCache, PegaFlow, and LMCache-Ascend may be
 first-class ecosystem integrations without being described as Bundle v1
