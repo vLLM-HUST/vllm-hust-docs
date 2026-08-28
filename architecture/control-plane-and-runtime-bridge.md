@@ -45,17 +45,35 @@ Receipt completion must correlate with the reserved action's runtime, trace,
 and causation identities. An `accepted` admission receipt cannot close the
 terminal record.
 
+A fixed core-owned reference executor now establishes the first real process
+boundary. Its materializer accepts only a component that declares exactly the
+action/receipt v1 contracts, the `bridge` plane, `process_isolated`, the single
+`ipc` permission, and the core health-probe worker reference. It never imports
+or executes a bundle-supplied implementation. The worker uses `spawn`, an
+explicit ready handshake, one non-blocking request slot, bounded request and
+shutdown timeouts, fail/terminate behavior, drain/stop states, and explicit
+restart. Runtime, epoch, state precondition, and receipt correlation are
+rechecked at the boundary.
+
+The worker is not connected to a runtime-owned health data source yet. A probe
+therefore returns terminal `failed` / `RUNTIME_HEALTH_UNAVAILABLE` while proving
+only that the bridge worker responded. Reporting the runtime as healthy from
+IPC liveness alone is prohibited.
+
 The configured startup path still:
 
 - grants no non-empty permission requests;
 - admits only `trusted_in_process` isolation;
-- has no process-isolated bridge executor;
+- does not automatically materialize the opt-in fixed process executor;
 - has no authenticated transport or host key provisioning/rotation mechanism;
-- has no runtime operation executor, health transport, drain, or shutdown path.
+- has no orchestration service joining authentication, admission, replay, and
+  execution;
+- has no runtime operation API, real health source, or external transport.
 
-Consequently the bridge remains non-runnable end to end. The contract,
-authentication primitive, and replay ledger MUST NOT be described as a
-process-isolated, transport-authenticated, supported, or complete secure bridge.
+Consequently the external bridge remains non-runnable end to end. The fixed
+child is a tested process-isolation and lifecycle foundation, but the overall
+contract/authentication/replay/executor pieces MUST NOT be described as a
+transport-authenticated, sandboxed, supported, or complete secure bridge.
 
 ## 3. Required action contract
 
@@ -98,6 +116,11 @@ The first bridge executor MUST be process-isolated. Calling an ordinary child
 process “sandboxed” is prohibited unless filesystem, network, subprocess,
 device, IPC, and credential capabilities are actually enforced.
 
+The fixed core worker satisfies the process-isolation requirement only for its
+closed read-only code path. Exact manifest admission limits it to `ipc`, but an
+ordinary spawned process is not proof of OS capability confinement. No
+bundle-supplied bridge code is admitted in v1.
+
 The bridge materializer owns initialize, authenticate, ready, degraded, drain,
 failed, and shutdown behavior. The generic bundle loader continues to own only
 configured, parsed, admitted/disabled/rejected, and snapshotted states.
@@ -134,7 +157,9 @@ foundations are complete; the remaining end-to-end gates are not:
 - transport authentication, key provisioning, rotation, and revocation;
 - authorization, expiry, epoch, replay, and idempotency integration tests
   across the real transport and executor;
-- process-isolated executor with enforced permission policy;
+- fixed core-only process executor, IPC-only manifest policy, bounded slot,
+  lifecycle, and fail-closed unavailable-health result — complete;
+- OS-enforced capability confinement for any future non-core bridge code;
 - atomic rejection and no-partial-mutation tests;
 - restart, reconnect, duplicate-delivery, drain, and shutdown tests;
 - bounded backpressure and failure behavior when the control plane is absent;
@@ -146,5 +171,5 @@ foundations are complete; the remaining end-to-end gates are not:
 
 Until these gates pass, RIDE is a concept-level external system and its runtime
 bridge is a concept-level integration with tested wire-contract,
-authentication-primitive, and durable-replay foundations, not a supported
-Bundle v1 plugin.
+authentication-primitive, durable-replay, and fixed process-executor
+foundations, not a supported Bundle v1 plugin.

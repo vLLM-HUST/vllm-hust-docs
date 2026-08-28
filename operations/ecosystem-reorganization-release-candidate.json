@@ -9,7 +9,7 @@
       "name": "vllm-hust",
       "url": "https://github.com/vLLM-HUST/vllm-hust",
       "branch": "codex/ecosystem-architecture-reorganization-20260828",
-      "commit": "b43e514bcb2622fb597264b0e4865c9000b7a5e1",
+      "commit": "5dac35eab526a46a2091307e70509c0476428e03",
       "role": "runtime_core"
     },
     {
@@ -198,12 +198,14 @@
         {"id": "catalog-separation", "status": "passed", "evidence": "External RIDE control plane and local runtime bridge are separate catalog components."},
         {"id": "wire-contracts", "status": "passed", "evidence": "Closed packaged action/receipt schemas, strict read-only health-probe parsing, and side-effect-free target, issuer-policy, scope, expiry, epoch, precondition, duplicate, and idempotency decisions remain covered."},
         {"id": "authentication-replay-foundation", "status": "passed", "evidence": "Exact-wire-byte HMAC-SHA256 verification precedes strict parsing; a mode-0600 SQLite ledger binds idempotency key, action ID, and semantic fingerprint, restores in-progress actions and immutable correlated terminal receipts after restart, and rejects tampering, conflicts, nonterminal completion, and receipt identity mismatches. All 42 focused control-bridge tests and relevant pre-commit hooks passed."},
-        {"id": "bridge-executor", "status": "blocked", "evidence": "No process-isolated executor, permission enforcement, authenticated transport, host key provisioning/rotation, mutating runtime operation API, or lifecycle integration exists."}
+        {"id": "fixed-process-executor", "status": "passed", "evidence": "A core-owned spawn worker materializes only for exact action/receipt v1, bridge-plane, process-isolated, IPC-only descriptors; it imports no bundle code and implements ready handshake, a single bounded request slot, timeout/failure cleanup, drain/stop, explicit restart, and runtime/epoch/state/receipt rechecks. Without a runtime health source it returns failed/RUNTIME_HEALTH_UNAVAILABLE rather than a false healthy result. All 12 executor tests and relevant pre-commit hooks passed."},
+        {"id": "bridge-integration", "status": "blocked", "evidence": "No authenticated transport, production key lifecycle, orchestration service, runtime-owned health/operation API, OS sandbox for non-core code, or mutating action exists."}
       ],
       "blockers": [
-        "Only the read-only health-probe contract, pure admission gate, local HMAC primitive, and durable replay ledger exist; no mutating runtime action is defined.",
+        "Only the read-only health-probe contract, pure admission gate, local HMAC primitive, durable replay ledger, and fixed core process worker exist; no mutating runtime action is defined.",
+        "The fixed worker proves IPC/lifecycle behavior but has no runtime health source and intentionally reports RUNTIME_HEALTH_UNAVAILABLE.",
         "Authentication is not connected to a transport and no production key provisioning, rotation, revocation, or secret-storage policy exists.",
-        "Configured Bundle v1 admission rejects the required process isolation and non-empty permission requests."
+        "Default configured Bundle v1 startup still rejects process isolation and non-empty permissions; the fixed executor is available only through explicit policy and materialization."
       ],
       "rollback": [
         "Keep the bridge unconfigured; default runtime behavior remains independent of the external control plane."
