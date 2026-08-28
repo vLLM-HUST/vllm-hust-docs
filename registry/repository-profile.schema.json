@@ -82,7 +82,7 @@
             "minItems": 1,
             "items": {
               "enum": [
-                "api", "scheduler", "worker", "native", "device",
+                "api", "scheduler", "worker", "native", "device", "bridge",
                 "external_service", "cluster_control", "offline"
               ]
             },

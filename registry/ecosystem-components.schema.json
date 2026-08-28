@@ -41,7 +41,7 @@
         "execution_planes": {
           "type": "array",
           "minItems": 1,
-          "items": {"enum": ["api", "scheduler", "worker", "native", "device", "external_service", "cluster_control", "offline"]},
+          "items": {"enum": ["api", "scheduler", "worker", "native", "device", "bridge", "external_service", "cluster_control", "offline"]},
           "uniqueItems": true
         },
         "deployment_topology": {
