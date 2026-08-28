@@ -125,7 +125,7 @@
       "validations": [
         {"id": "registry", "status": "passed", "evidence": "20 ecosystem components and 32 organization repositories validated"},
         {"id": "repository-profiles", "status": "passed", "evidence": "14 repository profiles validated against the closed schema"},
-        {"id": "website-tests", "status": "passed", "evidence": "146 targeted tests passed"},
+        {"id": "website-tests", "status": "passed", "evidence": "272 website tests passed; 3 environment-dependent tests were skipped"},
         {"id": "browser-desktop-mobile", "status": "passed", "evidence": "20 cards rendered at 1440px and 390px; zero horizontal overflow and zero console errors"},
         {"id": "remote-branches", "status": "passed", "evidence": "All 14 isolated worktree branches were created on their canonical GitHub repositories without overwriting an existing branch."}
       ],
