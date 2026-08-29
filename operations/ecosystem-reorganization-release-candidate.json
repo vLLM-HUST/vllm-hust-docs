@@ -9,14 +9,14 @@
       "name": "vllm-hust",
       "url": "https://github.com/vLLM-HUST/vllm-hust",
       "branch": "codex/ecosystem-architecture-reorganization-20260828",
-      "commit": "b8d03cb5936f3be0c0907e9fcfaade8756917050",
+      "commit": "fa5e2bcbb1814435cc7e5ac7a9cfc655d273af3a",
       "role": "runtime_core"
     },
     {
       "name": "vllm-hust-docs",
       "url": "https://github.com/vLLM-HUST/vllm-hust-docs",
       "branch": "codex/ecosystem-architecture-reorganization",
-      "commit": "dd8b818459dfb27146c4f9f6522600ad75e3e8cd",
+      "commit": "67d047c511240f1b5f3e40a155d13acb3f3fc316",
       "role": "documentation_source"
     },
     {
@@ -292,11 +292,12 @@
         {"id": "extension-core-hooks", "status": "passed", "evidence": "All pre-commit hooks for the new KV selection files passed, including Ruff, formatting, mypy, forbidden imports, SPDX, and configuration checks."},
         {"id": "extension-permission-policy", "status": "passed", "evidence": "Configured startup defaults to no non-empty permissions and accepts only an explicit strict host allowlist; blank, duplicate, aliased, unknown, and undeclared permissions fail closed. All 48 affected Bundle and KV tests passed with relevant pre-commit hooks."},
         {"id": "bidkv-unit", "status": "passed", "evidence": "396 BidKV tests passed and 1 environment-dependent test skipped against the editable core environment."},
-        {"id": "full-core-ci", "status": "not_run", "evidence": "The complete vLLM CPU test matrix has not been run; current evidence covers the extension and affected KV domains."},
+        {"id": "cpu-image-bootstrap-failure-propagation", "status": "passed", "evidence": "Core revision fa5e2bcbb1814435cc7e5ac7a9cfc655d273af3a downloads the CPU image's uv installer before execution, retries transient downloads, and verifies the installed binary by absolute path. This prevents a failed curl in a pipeline from being cached as a successful image layer. All repository pre-commit hooks applicable to docker/Dockerfile.cpu passed."},
+        {"id": "full-core-ci", "status": "not_run", "evidence": "The complete vLLM CPU test matrix has not been run. On an isolated x86_64 A100 host worktree at core revision fa5e2bcbb1814435cc7e5ac7a9cfc655d273af3a, the official .buildkite/scripts/hardware_ci/run-cpu-test-arm.sh entry failed during Docker image construction before vLLM C++ compilation or pytest because container DNS could not resolve static.rust-lang.org while rustup downloaded rust-docs 1.95.0. HF_TOKEN was intentionally absent, so even a successful script run would cover the CPU image and five kernel suites but skip model, offline, and online serving tests. A host-112 full pytest collection was also stopped after it initiated an unexpected multi-gigabyte Phi-4 Multimodal model download; no collection or test result is claimed."},
         {"id": "legacy-typed-equivalence", "status": "not_run", "evidence": "Matched BidKV scheduler traces and hardware behavior are still required."}
       ],
       "blockers": [
-        "Full core pytest is unavailable in the existing environment.",
+        "Full core pytest remains unavailable: the official CPU Docker entry is currently blocked before compilation by intermittent container DNS failures, and repository-wide collection is side-effectful because it downloads model weights.",
         "BidKV legacy-versus-typed victim choices, metrics, failures, and rollback are not yet matched on real scheduler traces.",
         "Wheel-content verification could not run because the available system build backend is too old for the project metadata."
       ],
