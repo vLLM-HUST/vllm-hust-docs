@@ -201,14 +201,19 @@ own prefiller, decoder, and proxy process groups.
 The controlled A100 audit is deliberately recorded as blocked rather than as a
 connector result. An isolated environment reached Mooncake 0.3.10, Torch 2.11,
 the exact editable vLLM-HUST source, CUDA platform detection, and a runnable
-vLLM CLI. Before matched runs could complete, an unrelated 32B service occupied
-both GPUs and the selected proxy port. The attempted child groups were cleaned
-without touching that service. At core revision
-`b0ea14144941891022693bf0dfdc3b6fccad3dd5`, the strengthened preflight then
-reported both A100s ineligible because each had less than the required 20,000
-MiB free. This proves resource admission and cleanup behavior only; no
-real-online, equivalence, hardware-performance, or Mooncake-failure claim is
-made.
+vLLM CLI. During one resource window both prefiller and decoder loaded the real
+7B model and became healthy. The comparison did not run because the harness
+incorrectly probed a nonexistent proxy `/health` route. SSH interruption then
+exposed a missing HUP cleanup path; the three process groups were identified by
+their retained PIDs and terminated without touching other services. Core
+revision `01ddb821dca26a424da104af8fd46f9e7e80f71e` now probes the proxy's actual
+OpenAPI route and maps HUP to the same bounded owned-process cleanup. Nineteen
+focused tests and external shellcheck passed. Before a fresh three-mode matrix
+could start, an unrelated 32B service reclaimed both GPUs and the proxy port;
+the final-revision preflight correctly reported both A100s below the required
+20,000 MiB free. This proves startup, resource admission, and harness correction
+only; no real-online, equivalence, hardware-performance, or Mooncake-failure
+claim is made.
 
 ## 5. Migration order
 
