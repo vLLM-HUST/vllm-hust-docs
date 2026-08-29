@@ -9,14 +9,14 @@
       "name": "vllm-hust",
       "url": "https://github.com/vLLM-HUST/vllm-hust",
       "branch": "codex/ecosystem-architecture-reorganization-20260828",
-      "commit": "81d084d1df8f6fb42a082a79a01cd335e8eadb6e",
+      "commit": "718d5e1b0a1830b142889401aa8830b49536e8bb",
       "role": "runtime_core"
     },
     {
       "name": "vllm-hust-docs",
       "url": "https://github.com/vLLM-HUST/vllm-hust-docs",
       "branch": "codex/ecosystem-architecture-reorganization",
-      "commit": "5a0176b9e3d4f1a7765cd5bf297a1c1a0913f602",
+      "commit": "5593d86cb524a6fa597946d9e3da92f16bef9d67",
       "role": "documentation_source"
     },
     {
@@ -295,11 +295,14 @@
         {"id": "cpu-image-bootstrap-failure-propagation", "status": "passed", "evidence": "Core revision 81d084d1df8f6fb42a082a79a01cd335e8eadb6e downloads the CPU image's uv installer before execution, retries transient downloads, and verifies the installed binary by absolute path. This prevents a failed curl in a pipeline from being cached as a successful image layer. All repository pre-commit hooks applicable to docker/Dockerfile.cpu passed."},
         {"id": "rust-build-minimal-profile", "status": "passed", "evidence": "Core revision 81d084d1df8f6fb42a082a79a01cd335e8eadb6e installs Rust with the minimal profile and retries the rustup bootstrap download, eliminating non-build components such as rust-docs from vLLM artifact image construction. Bash syntax and all available repository hooks passed; the same file passed shellcheck on the A100 host, with only the pre-existing informational dynamic-source diagnostic."},
         {"id": "extension-wheel-contents", "status": "passed", "evidence": "At core revision 81d084d1df8f6fb42a082a79a01cd335e8eadb6e, an actual ARM64 CPython 3.12 VLLM_TARGET_DEVICE=empty wheel was built with the repository-managed environment and verified by tools/verify_extension_wheel.py. It carries both built-in Mooncake and LMCache Bundle manifests, all five plugin/selection/runtime/control schemas, the control-bridge host schema, vllm-rs, and a Rust extension; all required JSON parses successfully. Three positive, missing-member, and optional-Rust verifier tests passed with every applicable pre-commit hook."},
-        {"id": "full-core-ci", "status": "not_run", "evidence": "The complete vLLM CPU test matrix has not been run. On an isolated x86_64 A100 host worktree at core revision fa5e2bcbb1814435cc7e5ac7a9cfc655d273af3a, the official .buildkite/scripts/hardware_ci/run-cpu-test-arm.sh entry failed during Docker image construction before vLLM C++ compilation or pytest because container DNS could not resolve static.rust-lang.org while rustup downloaded rust-docs 1.95.0. HF_TOKEN was intentionally absent, so even a successful script run would cover the CPU image and five kernel suites but skip model, offline, and online serving tests. A host-112 full pytest collection was also stopped after it initiated an unexpected multi-gigabyte Phi-4 Multimodal model download; no collection or test result is claimed."},
+        {"id": "isolated-worktree-cpu-versioning", "status": "passed", "evidence": "Core revision 0655213380cf5977867d4e42a18b1d537f158075 derives an explicit PEP 440 CPU image version from the checked-out commit and passes it into wheel construction. The official CPU image entry then progressed from an isolated Git worktree through Python packaging instead of trying to dereference the host-only .git worktree pointer inside the container. Bash syntax, setup.py version resolution, repository hooks, and external shellcheck passed."},
+        {"id": "public-cmake-dependency-transport", "status": "passed", "evidence": "Core revision 7c27f5aeca52531b1e6aff5d5d313df38db11ec8 preserves pinned oneDNN and Arm Compute Library revisions while changing their public CMake FetchContent transports from credentialed SSH to HTTPS. The official CPU image subsequently downloaded oneDNN, configured CMake, compiled all 481 CPU extension targets, linked the wheel, installed it, assembled the test image, and entered pytest. A repository test now rejects public CMake GitHub dependencies that require host SSH credentials."},
+        {"id": "cpu-torch-abi-alignment", "status": "passed", "evidence": "Core revision 718d5e1b0a1830b142889401aa8830b49536e8bb aligns CPU build, runtime, and generated test-lock PyTorch requirements on base version 2.11.0 after the official image exposed a 2.11-build/2.10-runtime undefined-symbol failure. Three build-requirement tests and every applicable pre-commit hook passed. A post-fix official image rerun resolved all three stages to PyTorch 2.11 but was interrupted during dependency fetch by host and container DNS timeouts before the wheel or kernel tests could run, so no post-fix end-to-end pass is claimed."},
+        {"id": "full-core-ci", "status": "not_run", "evidence": "The complete vLLM CPU test matrix has not been run. At core revision 7c27f5aeca52531b1e6aff5d5d313df38db11ec8, the official .buildkite/scripts/hardware_ci/run-cpu-test-arm.sh entry completed the CPU wheel and test image and reached the first oneDNN pytest, where it exposed a build/runtime PyTorch ABI mismatch; revision 718d5e1b0a1830b142889401aa8830b49536e8bb fixes and statically tests that mismatch, but its official rerun was stopped before compilation by simultaneous download.pytorch.org DNS timeouts in the build and test-dependency stages. HF_TOKEN was intentionally absent, so even a successful script run would cover the CPU image and five kernel suites but skip model, offline, and online serving tests. A host-112 full pytest collection was also stopped after it initiated an unexpected multi-gigabyte Phi-4 Multimodal model download; no complete collection or kernel-suite result is claimed."},
         {"id": "legacy-typed-equivalence", "status": "not_run", "evidence": "Matched BidKV scheduler traces and hardware behavior are still required."}
       ],
       "blockers": [
-        "Full core pytest remains unavailable: the official CPU Docker entry is currently blocked before compilation by intermittent container DNS failures, and repository-wide collection is side-effectful because it downloads model weights.",
+        "Full core pytest remains unavailable: the official CPU Docker entry now reaches wheel construction and pytest, and the discovered PyTorch ABI mismatch is fixed, but post-fix verification is currently blocked by intermittent host/container DNS failures; repository-wide collection is side-effectful because it downloads model weights.",
         "BidKV legacy-versus-typed victim choices, metrics, failures, and rollback are not yet matched on real scheduler traces."
       ],
       "rollback": [
