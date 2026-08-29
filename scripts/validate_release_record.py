@@ -36,7 +36,7 @@ def main() -> None:
         statuses = {
             validation["status"] for validation in compatibility_set["validations"]
         }
-        assert statuses <= {"passed", "not_run", "blocked"}
+        assert statuses <= {"passed", "failed", "not_run", "blocked"}
     assert len(set_ids) == len(set(set_ids)), "compatibility set ids must be unique"
 
     sequences = [item["sequence"] for item in record["publication_order"]]

@@ -63,7 +63,9 @@
               "required": ["id", "status", "evidence"],
               "properties": {
                 "id": {"type": "string"},
-                "status": {"enum": ["passed", "not_run", "blocked"]},
+                "status": {
+                  "enum": ["passed", "failed", "not_run", "blocked"]
+                },
                 "evidence": {"type": "string"}
               }
             }
