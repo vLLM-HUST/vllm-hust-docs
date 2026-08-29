@@ -16,14 +16,14 @@
       "name": "vllm-hust-docs",
       "url": "https://github.com/vLLM-HUST/vllm-hust-docs",
       "branch": "codex/ecosystem-architecture-reorganization",
-      "commit": "6dff7a4fe0a3fa4908d84755a6b77a4c5608bf4f",
+      "commit": "6f8a814ec6d52d32d7fdfb54df43d2beb75d5f20",
       "role": "documentation_source"
     },
     {
       "name": "vllm-hust-website",
       "url": "https://github.com/vLLM-HUST/vllm-hust-website",
       "branch": "codex/ecosystem-architecture-reorganization-20260828",
-      "commit": "9ddcf9c2f2587de9603bb1911f9eefa66f18dc3d",
+      "commit": "2e3a34dfad9e9f3dbd2f681700bb1dc237cbcb77",
       "role": "public_registry_renderer"
     },
     {
