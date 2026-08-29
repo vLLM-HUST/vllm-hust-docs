@@ -149,6 +149,8 @@ promoting them into the deployable ecosystem component registry.
   material;
 - `adjacent_application` describes applications that may consume a serving
   runtime but do not extend its contracts;
+- `model_artifact_preparation` describes offline quantization, conversion, or
+  packaging workflows whose outputs may later be served by a runtime;
 - `sandbox_experiment` carries no compatibility or support implication;
 - `archival_record` preserves historical context and must name its lifecycle as
   archived.

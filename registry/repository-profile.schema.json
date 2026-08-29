@@ -70,7 +70,8 @@
               "deployment_operations", "benchmark_evidence",
               "profiling_analysis", "documentation_catalog", "product_ui",
               "organization_governance", "adjacent_application",
-              "research_publication", "sandbox_experiment", "archival_record"
+              "research_publication", "sandbox_experiment", "archival_record",
+              "model_artifact_preparation"
             ]
           },
           "delivery_model": {
