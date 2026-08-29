@@ -16,14 +16,14 @@
       "name": "vllm-hust-docs",
       "url": "https://github.com/vLLM-HUST/vllm-hust-docs",
       "branch": "codex/ecosystem-architecture-reorganization",
-      "commit": "4bc88438a7d0380a82c423dc39d506341f9beb8f",
+      "commit": "6dff7a4fe0a3fa4908d84755a6b77a4c5608bf4f",
       "role": "documentation_source"
     },
     {
       "name": "vllm-hust-website",
       "url": "https://github.com/vLLM-HUST/vllm-hust-website",
       "branch": "codex/ecosystem-architecture-reorganization-20260828",
-      "commit": "13cff03341b30c87898851ced9ea1aa42a8125f7",
+      "commit": "9ddcf9c2f2587de9603bb1911f9eefa66f18dc3d",
       "role": "public_registry_renderer"
     },
     {
@@ -291,6 +291,7 @@
         {"id": "extension-core-pytest", "status": "passed", "evidence": "43 manifest, admission, startup snapshot, KV selection/capability, and scheduler-policy compatibility tests passed in the repository-managed Python 3.12 environment."},
         {"id": "extension-core-hooks", "status": "passed", "evidence": "All pre-commit hooks for the new KV selection files passed, including Ruff, formatting, mypy, forbidden imports, SPDX, and configuration checks."},
         {"id": "api-plane-materializers", "status": "passed", "evidence": "Core revision 2d0e6550db0a63ee417fd08944c5ff31bc16b6c8 materializes an explicitly qualified API-plane IO processor without legacy fallback after typed selection, and fans out admitted typed stat loggers alongside distinct legacy providers while deduplicating a class published through both mechanisms. Import, protocol, and initialization boundaries fail closed. Thirteen focused IO/stat tests passed with one real-engine integration test deselected because host 112 cannot infer a CPU device; 26 manifest/startup regressions and every applicable pre-commit hook passed."},
+        {"id": "platform-runtime-design-gate", "status": "passed", "evidence": "The normative platform/operator/model-runner gate records that a platform entry point is a lazy probe factory, operator integrations span registration, dispatch, and native-artifact roles, and model runners are platform-worker-owned factories selected only after runner generation and topology are known. It prohibits generic implementation_ref materialization until probe/profile, operator-role, runner-factory, cross-process identity, rollback, failure, ABI, accuracy, and hardware-equivalence gates pass. This is a completed design boundary, not a materialization or support claim."},
         {"id": "extension-permission-policy", "status": "passed", "evidence": "Configured startup defaults to no non-empty permissions and accepts only an explicit strict host allowlist; blank, duplicate, aliased, unknown, and undeclared permissions fail closed. All 48 affected Bundle and KV tests passed with relevant pre-commit hooks."},
         {"id": "bidkv-unit", "status": "passed", "evidence": "All 400 BidKV tests passed with integration mode required against the editable core environment at BidKV revision 703108492cf3f1681fd0b5b8ccb116cfc778f1e8."},
         {"id": "cpu-image-bootstrap-failure-propagation", "status": "passed", "evidence": "Core revision 81d084d1df8f6fb42a082a79a01cd335e8eadb6e downloads the CPU image's uv installer before execution, retries transient downloads, and verifies the installed binary by absolute path. This prevents a failed curl in a pipeline from being cached as a successful image layer. All repository pre-commit hooks applicable to docker/Dockerfile.cpu passed."},
