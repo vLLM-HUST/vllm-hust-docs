@@ -9,42 +9,42 @@
       "name": "vllm-hust",
       "url": "https://github.com/vLLM-HUST/vllm-hust",
       "branch": "codex/ecosystem-architecture-reorganization-20260828",
-      "commit": "2d0e6550db0a63ee417fd08944c5ff31bc16b6c8",
+      "commit": "d2c4f679cb9edf738374c18390d0be5e5657dbe8",
       "role": "runtime_core"
     },
     {
       "name": "vllm-hust-docs",
       "url": "https://github.com/vLLM-HUST/vllm-hust-docs",
       "branch": "codex/ecosystem-architecture-reorganization",
-      "commit": "6f8a814ec6d52d32d7fdfb54df43d2beb75d5f20",
+      "commit": "35d22d4bd21af413607f7d7d1810138fe675c9e3",
       "role": "documentation_source"
     },
     {
       "name": "vllm-hust-website",
       "url": "https://github.com/vLLM-HUST/vllm-hust-website",
       "branch": "codex/ecosystem-architecture-reorganization-20260828",
-      "commit": "2e3a34dfad9e9f3dbd2f681700bb1dc237cbcb77",
+      "commit": "510f2c88219a57f2a8d4c32eeeaaefdf1ddf5b33",
       "role": "public_registry_renderer"
     },
     {
       "name": "vllm-hust-bidkv",
       "url": "https://github.com/vLLM-HUST/vllm-hust-bidkv",
       "branch": "docs/ecosystem-role-metadata",
-      "commit": "703108492cf3f1681fd0b5b8ccb116cfc778f1e8",
+      "commit": "2b03ec97d93c24274c7a1caf2fbbe3a169262baf",
       "role": "scheduler_policy"
     },
     {
       "name": "pegaflow-hust",
       "url": "https://github.com/intellistream/pegaflow-hust",
       "branch": "feat/ecosystem-role-metadata",
-      "commit": "f42e2ca899ac578e5633aba99a4978b212e12d18",
+      "commit": "8e951edc8a3f9bb9f755b6438ec1edab3dac5a18",
       "role": "external_kv_subsystem_and_connectors"
     },
     {
       "name": "LMCache-Ascend",
       "url": "https://github.com/vLLM-HUST/LMCache-Ascend",
       "branch": "feat/ecosystem-role-metadata",
-      "commit": "8ce711d72b138f7fbbb4f0ca4501ed5a861ae0e3",
+      "commit": "a124a5314f40d605db15b70c19dcfc293609294d",
       "role": "lmcache_ascend_provider_and_adapter"
     },
     {
@@ -291,9 +291,10 @@
         {"id": "extension-core-pytest", "status": "passed", "evidence": "43 manifest, admission, startup snapshot, KV selection/capability, and scheduler-policy compatibility tests passed in the repository-managed Python 3.12 environment."},
         {"id": "extension-core-hooks", "status": "passed", "evidence": "All pre-commit hooks for the new KV selection files passed, including Ruff, formatting, mypy, forbidden imports, SPDX, and configuration checks."},
         {"id": "api-plane-materializers", "status": "passed", "evidence": "Core revision 2d0e6550db0a63ee417fd08944c5ff31bc16b6c8 materializes an explicitly qualified API-plane IO processor without legacy fallback after typed selection, and fans out admitted typed stat loggers alongside distinct legacy providers while deduplicating a class published through both mechanisms. Import, protocol, and initialization boundaries fail closed. Thirteen focused IO/stat tests passed with one real-engine integration test deselected because host 112 cannot infer a CPU device; 26 manifest/startup regressions and every applicable pre-commit hook passed."},
+        {"id": "installed-extension-discovery", "status": "passed", "evidence": "Core revision d2c4f679cb9edf738374c18390d0be5e5657dbe8 adds static vllm.extension_bundles distribution discovery, lightweight vllm plugin list/inspect/validate commands, and repeated vllm serve --extension activation. No selection performs no installed-distribution scan; selected IDs are resolved without importing plugin code; explicit manifest paths take precedence; duplicate, mismatched, missing, or malformed registrations fail closed. Fifty affected core tests passed with one pre-existing real-engine integration test deselected, and every applicable pre-commit hook passed. BidKV, PegaFlow, and LMCache-Ascend now publish matching wheel metadata and packaged manifests; their focused contract tests passed, BidKV passed all 400 tests and built a verified wheel, while PegaFlow native wheel construction remains environment-blocked by missing libclang and LMCache-Ascend full provider construction remains environment-blocked by its existing generated-version and accelerator dependencies."},
         {"id": "platform-runtime-design-gate", "status": "passed", "evidence": "The normative platform/operator/model-runner gate records that a platform entry point is a lazy probe factory, operator integrations span registration, dispatch, and native-artifact roles, and model runners are platform-worker-owned factories selected only after runner generation and topology are known. It prohibits generic implementation_ref materialization until probe/profile, operator-role, runner-factory, cross-process identity, rollback, failure, ABI, accuracy, and hardware-equivalence gates pass. This is a completed design boundary, not a materialization or support claim."},
         {"id": "extension-permission-policy", "status": "passed", "evidence": "Configured startup defaults to no non-empty permissions and accepts only an explicit strict host allowlist; blank, duplicate, aliased, unknown, and undeclared permissions fail closed. All 48 affected Bundle and KV tests passed with relevant pre-commit hooks."},
-        {"id": "bidkv-unit", "status": "passed", "evidence": "All 400 BidKV tests passed with integration mode required against the editable core environment at BidKV revision 703108492cf3f1681fd0b5b8ccb116cfc778f1e8."},
+        {"id": "bidkv-unit", "status": "passed", "evidence": "All 400 BidKV tests passed with integration mode required against the editable core environment at BidKV revision 2b03ec97d93c24274c7a1caf2fbbe3a169262baf; its source distribution and wheel include the static extension-bundle registration and packaged manifest."},
         {"id": "cpu-image-bootstrap-failure-propagation", "status": "passed", "evidence": "Core revision 81d084d1df8f6fb42a082a79a01cd335e8eadb6e downloads the CPU image's uv installer before execution, retries transient downloads, and verifies the installed binary by absolute path. This prevents a failed curl in a pipeline from being cached as a successful image layer. All repository pre-commit hooks applicable to docker/Dockerfile.cpu passed."},
         {"id": "rust-build-minimal-profile", "status": "passed", "evidence": "Core revision 81d084d1df8f6fb42a082a79a01cd335e8eadb6e installs Rust with the minimal profile and retries the rustup bootstrap download, eliminating non-build components such as rust-docs from vLLM artifact image construction. Bash syntax and all available repository hooks passed; the same file passed shellcheck on the A100 host, with only the pre-existing informational dynamic-source diagnostic."},
         {"id": "extension-wheel-contents", "status": "passed", "evidence": "At core revision 81d084d1df8f6fb42a082a79a01cd335e8eadb6e, an actual ARM64 CPython 3.12 VLLM_TARGET_DEVICE=empty wheel was built with the repository-managed environment and verified by tools/verify_extension_wheel.py. It carries both built-in Mooncake and LMCache Bundle manifests, all five plugin/selection/runtime/control schemas, the control-bridge host schema, vllm-rs, and a Rust extension; all required JSON parses successfully. Three positive, missing-member, and optional-Rust verifier tests passed with every applicable pre-commit hook."},
@@ -310,7 +311,7 @@
         "The reproducible official CPU kernel gate fails 17 of 96 fused-MoE BF16 vec cases under the aligned PyTorch 2.11 environment. Exact upstream file comparison and focused diagnostics classify this as an upstream-baseline-equivalent support blocker rather than an ecosystem-reorganization regression; fast-exp alone and reference accumulation order are not sufficient explanations. Do not change the kernel or widen tolerance without matched accuracy and performance analysis. Full model and serving CI additionally requires controlled model artifacts and credentials rather than side-effectful collection-time downloads."
       ],
       "rollback": [
-        "Unset VLLM_EXTENSION_MANIFESTS and VLLM_EXTENSION_BUNDLES, retain additional_config.victim_selector_plugin=bidkv, then restart to resolve the exact legacy vllm.victim_selector entry point.",
+        "Remove every --extension selection and unset VLLM_EXTENSION_MANIFESTS and VLLM_EXTENSION_BUNDLES, retain additional_config.victim_selector_plugin=bidkv, then restart to resolve the exact legacy vllm.victim_selector entry point.",
         "Set additional_config.victim_selector_plugin_disabled=true and restart to bypass typed and legacy providers with NoOpVictimSelector."
       ]
     },
