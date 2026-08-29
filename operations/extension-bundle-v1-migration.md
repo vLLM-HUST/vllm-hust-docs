@@ -289,6 +289,15 @@ tests/test_envs.py
 tests/v1/core/test_victim_selector_extensions.py
 ```
 
+These extension gates are distinct from platform support gates. A failure in an
+unchanged upstream kernel does not justify changing unrelated extension code or
+silently relaxing that kernel's tolerance. It MUST remain visible in the exact
+release record, MUST block any affected support claim, and MAY be classified as
+baseline-equivalent only after an exact branch-versus-upstream audit and a
+reproducible rerun. That classification does not turn a failed kernel gate into
+a pass; it only prevents an unrelated baseline defect from being misreported as
+an Extension Bundle regression.
+
 For scheduler-policy rollback, unset `VLLM_EXTENSION_MANIFESTS` (and
 `VLLM_EXTENSION_BUNDLES`), keep the existing BidKV package and
 `vllm.victim_selector` entry point installed, and retain
