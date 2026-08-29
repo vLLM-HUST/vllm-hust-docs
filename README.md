@@ -30,6 +30,7 @@ This repository contains vllm-hust documentation, sync notes, and fork-specific 
 - `architecture/kv-systems-and-connector-materialization.md` — normative design gate separating KV systems, connector bridges, and bundle delivery while preserving factory-owned role, HMA, composition, and rollback behavior.
 - `architecture/control-plane-and-runtime-bridge.md` — normative design gate separating an external decision system from its authenticated, process-isolated local action/receipt bridge.
 - `architecture/platform-operator-model-runner-boundaries.md` — normative design gate explaining why platform detection, operator registration/dispatch, and platform-owned model runners require separate materializers and matched rollback evidence.
+- `architecture/installed-extension-discovery-and-activation.md` — normative package-delivery profile for static wheel metadata, safe editable discovery, explicit `--extension` activation, diagnostics, failure policy, and packaging gates.
 - `governance/repository-lifecycle.md` — ownership and lifecycle policy for core, incubating, certified external, deprecated, and archived repositories or integrations.
 - `registry/ecosystem-components.json` — canonical machine-readable ecosystem catalog consumed by public documentation and the website.
 - `registry/repository-portfolio.json` — organization-wide inventory that assigns every repository a lifecycle, role, runtime relationship, and canonical artifact scope without treating repositories as runtime components.

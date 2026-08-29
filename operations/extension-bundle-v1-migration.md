@@ -69,19 +69,45 @@ configuration may not contain duplicate paths or duplicate bundle IDs.
 
 ## 4. Explicit discovery and enablement
 
-There is no implicit filesystem scan, installed-package scan, network lookup,
-or implementation import.
+The complete packaging and threat-model decision is specified in
+[Installed Extension Discovery and Activation](../architecture/installed-extension-discovery-and-activation.md).
+
+There is no implicit filesystem scan, network lookup, or implementation import.
+An unset Bundle selection also performs no installed-distribution scan.
+
+An installed distribution may statically register availability through the
+`vllm.extension_bundles` entry-point group. The entry-point name is the exact
+Bundle ID and its value is a module directory, not a callable. That directory
+contains exactly one `vllm-hust-extension-v1.json`; the legacy
+`extension-bundle-v1.json` filename remains accepted during migration. The host
+reads wheel `RECORD` metadata, or a PEP 660 editable install's local
+`direct_url.json`, and never calls `EntryPoint.load()` during discovery.
+
+```toml
+[project.entry-points."vllm.extension_bundles"]
+"org.example.performance" = "example_plugin.manifests"
+```
 
 `VLLM_EXTENSION_MANIFESTS` is an OS-path-separator-delimited ordered list of
 manifest files. `VLLM_EXTENSION_BUNDLES` is an optional comma-delimited bundle
-ID allowlist:
+ID selection. `vllm serve --extension <bundle-id>` provides the same explicit
+ordered selection without requiring an environment variable:
 
 - manifests unset: build an empty snapshot;
-- allowlist unset: admit all explicitly configured compatible manifests;
+- selection unset: admit all explicitly configured compatible manifests and
+  do not inspect installed distributions;
 - allowlist empty: validate the configured manifests but enable none;
-- unknown allowlist ID: fail startup;
+- selected ID present in explicit manifests: use the explicit path;
+- otherwise resolve that exact ID from installed static registration metadata;
+- unknown, duplicate, or ambiguously registered selection: fail startup;
 - malformed, incompatible, or duplicated disabled manifest: fail startup rather
   than leave invalid deployment configuration hidden.
+
+`vllm plugin list`, `vllm plugin inspect <id>`, and
+`vllm plugin validate <id>` expose static diagnostics without importing
+implementation modules. Installation registers availability only; runtime
+behavior changes only after explicit selection. Child processes inherit the
+same ordered selection and rebuild an equivalent immutable snapshot.
 
 Configuration order defines deterministic snapshot order. Domain materializers
 MUST NOT use discovery order as an implicit conflict-resolution policy.
