@@ -35,7 +35,7 @@
     },
     {
       "name": "pegaflow-hust",
-      "url": "https://github.com/vLLM-HUST/pegaflow-hust",
+      "url": "https://github.com/intellistream/pegaflow-hust",
       "branch": "feat/ecosystem-role-metadata",
       "commit": "f42e2ca899ac578e5633aba99a4978b212e12d18",
       "role": "external_kv_subsystem_and_connectors"
