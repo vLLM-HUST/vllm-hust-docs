@@ -24,8 +24,8 @@ Every supported or incubating component MUST declare these axes:
 
 | Axis | Meaning | Examples |
 |---|---|---|
-| `artifact_type` | The kind of deliverable | runtime core, platform profile, runtime component, external system, bridge, tool |
-| `system_role` | The responsibility in the serving system | scheduler policy, KV state manager, store, transport, control plane, benchmark |
+| `artifact_type` | The kind of deliverable | runtime core, platform profile, runtime component, external system, bridge, tool, governance, research artifact |
+| `system_role` | The responsibility in the serving system or organization portfolio | scheduler policy, KV state manager, transport, control plane, benchmark, research publication, organization governance |
 | `integration_contracts` | Versioned typed contracts owned by a stable domain | `vllm.kv_connector.worker.v1`, `vllm.platform.v1`, `vllm.control.action.v1` |
 | `integration_surfaces` | Existing or external extension surfaces not yet promoted to a typed contract | model-loader registration, LMCache storage backend, KV lifecycle hook |
 | `execution_planes` | Where behavior executes | API, scheduler, worker, native, device, bridge, external service, cluster control |
@@ -136,6 +136,27 @@ The unified extension design is split into:
 2. **Domain Contracts** owned by `vllm-hust`;
 3. **Ecosystem Registry** for public classification, ownership, compatibility,
    maturity, and evidence.
+
+### 3.7 Adjacent research and organization repositories
+
+The organization portfolio also contains governance, research publications,
+applications, sandboxes, archives, and compiler/runtime substrates that are not
+vLLM runtime extensions. Repository profiles classify these artifacts without
+promoting them into the deployable ecosystem component registry.
+
+- `organization_governance` describes shared policy and organization metadata;
+- `research_publication` describes papers, surveys, and their reproducibility
+  material;
+- `adjacent_application` describes applications that may consume a serving
+  runtime but do not extend its contracts;
+- `sandbox_experiment` carries no compatibility or support implication;
+- `archival_record` preserves historical context and must name its lifecycle as
+  archived.
+
+These roles use no vLLM integration contract unless the repository also ships
+a separately declared runtime artifact. Repository membership, source imports,
+or benchmark scripts alone MUST NOT turn adjacent work into a plugin, supported
+integration, or runtime component.
 
 ## 4. Dependency direction
 

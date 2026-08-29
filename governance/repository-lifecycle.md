@@ -58,13 +58,21 @@ repository may contain an external service, several connectors, and packaging;
 conversely, one ecosystem system may span more than one repository. Repository
 presence alone MUST NOT imply plugin compatibility or support status.
 
-Active component and subsystem repositories SHOULD publish
+Every non-empty organization repository MUST publish
 `.vllm-hust/repository-profile.json`, validated against
 `registry/repository-profile.schema.json`. This local profile declares contained
 artifacts and implementation-specific validation without copying organization
-policy into README prose. During migration the profile may point to the
-architecture branch; it MUST point to a tagged registry release before the
-classification is treated as stable.
+policy into README prose. Adjacent research, applications, sandboxes, governance,
+and archived repositories use their dedicated artifact and system roles; they
+MUST NOT claim a runtime contract merely to fit the schema. During migration the
+profile may point to the architecture branch; it MUST point to a tagged registry
+release before the classification is treated as stable.
+
+The canonical validator checks the closed schema and requires repository URL,
+role, runtime relationship, and lifecycle to match the organization portfolio.
+A complete release train additionally requires exactly one profile for every
+portfolio repository. A profile is descriptor evidence only; it does not raise
+the repository's support or runtime evidence level.
 
 ## 4. Incubation graduation
 

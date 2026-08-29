@@ -33,6 +33,7 @@ This repository contains vllm-hust documentation, sync notes, and fork-specific 
 - `registry/ecosystem-components.json` — canonical machine-readable ecosystem catalog consumed by public documentation and the website.
 - `registry/repository-portfolio.json` — organization-wide inventory that assigns every repository a lifecycle, role, runtime relationship, and canonical artifact scope without treating repositories as runtime components.
 - `registry/repository-profile.schema.json` — contract for repository-local `.vllm-hust/repository-profile.json` declarations.
+- `scripts/validate_repository_profiles.py` — validates local profiles against that schema and the canonical portfolio, with an optional complete-portfolio coverage gate.
 - `registry/release-record.schema.json` — contract for exact cross-repository compatibility, validation, blocker, rollback, and publication-order records.
 - `operations/extension-bundle-v1-migration.md` — normative static-admission contract, legacy compatibility policy, migration matrix, acceptance gates, and rollback sequence for Extension Bundle v1.
 - `operations/ecosystem-reorganization-release-candidate.json` — current draft release record; it is intentionally not a release or hardware-support claim.

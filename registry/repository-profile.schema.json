@@ -57,7 +57,8 @@
           "artifact_type": {
             "enum": [
               "runtime_core", "platform_profile", "runtime_component",
-              "external_system", "bridge", "tool", "application"
+              "external_system", "bridge", "tool", "application",
+              "governance", "research_artifact", "sandbox", "archive"
             ]
           },
           "system_role": {
@@ -67,7 +68,9 @@
               "kv_store", "transport", "kv_integration", "control_plane",
               "control_plane_bridge", "compiler_kernel",
               "deployment_operations", "benchmark_evidence",
-              "profiling_analysis", "documentation_catalog", "product_ui"
+              "profiling_analysis", "documentation_catalog", "product_ui",
+              "organization_governance", "adjacent_application",
+              "research_publication", "sandbox_experiment", "archival_record"
             ]
           },
           "delivery_model": {
