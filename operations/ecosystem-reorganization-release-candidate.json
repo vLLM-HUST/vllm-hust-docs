@@ -9,14 +9,14 @@
       "name": "vllm-hust",
       "url": "https://github.com/vLLM-HUST/vllm-hust",
       "branch": "codex/ecosystem-architecture-reorganization-20260828",
-      "commit": "b819e5a3e2c2c4322e3aa72cd028f82fc25605b1",
+      "commit": "2d0e6550db0a63ee417fd08944c5ff31bc16b6c8",
       "role": "runtime_core"
     },
     {
       "name": "vllm-hust-docs",
       "url": "https://github.com/vLLM-HUST/vllm-hust-docs",
       "branch": "codex/ecosystem-architecture-reorganization",
-      "commit": "0c917bdecf7ee9208f159393ed05e15f572a00ac",
+      "commit": "deba19af713913f01be333942baf610f7db482e1",
       "role": "documentation_source"
     },
     {
@@ -290,6 +290,7 @@
         {"id": "dependency-free-smoke", "status": "passed", "evidence": "Manifest admission, immutable snapshot, typed materialization, and BidKV manifest parsing passed."},
         {"id": "extension-core-pytest", "status": "passed", "evidence": "43 manifest, admission, startup snapshot, KV selection/capability, and scheduler-policy compatibility tests passed in the repository-managed Python 3.12 environment."},
         {"id": "extension-core-hooks", "status": "passed", "evidence": "All pre-commit hooks for the new KV selection files passed, including Ruff, formatting, mypy, forbidden imports, SPDX, and configuration checks."},
+        {"id": "api-plane-materializers", "status": "passed", "evidence": "Core revision 2d0e6550db0a63ee417fd08944c5ff31bc16b6c8 materializes an explicitly qualified API-plane IO processor without legacy fallback after typed selection, and fans out admitted typed stat loggers alongside distinct legacy providers while deduplicating a class published through both mechanisms. Import, protocol, and initialization boundaries fail closed. Thirteen focused IO/stat tests passed with one real-engine integration test deselected because host 112 cannot infer a CPU device; 26 manifest/startup regressions and every applicable pre-commit hook passed."},
         {"id": "extension-permission-policy", "status": "passed", "evidence": "Configured startup defaults to no non-empty permissions and accepts only an explicit strict host allowlist; blank, duplicate, aliased, unknown, and undeclared permissions fail closed. All 48 affected Bundle and KV tests passed with relevant pre-commit hooks."},
         {"id": "bidkv-unit", "status": "passed", "evidence": "All 400 BidKV tests passed with integration mode required against the editable core environment at BidKV revision 703108492cf3f1681fd0b5b8ccb116cfc778f1e8."},
         {"id": "cpu-image-bootstrap-failure-propagation", "status": "passed", "evidence": "Core revision 81d084d1df8f6fb42a082a79a01cd335e8eadb6e downloads the CPU image's uv installer before execution, retries transient downloads, and verifies the installed binary by absolute path. This prevents a failed curl in a pipeline from being cached as a successful image layer. All repository pre-commit hooks applicable to docker/Dockerfile.cpu passed."},

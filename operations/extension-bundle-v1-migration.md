@@ -155,8 +155,8 @@ during migration. They are separate from `VLLM_EXTENSION_MANIFESTS` and
 |---|---|---|
 | `vllm.general_plugins` | legacy import-time mutation compatibility | retained; not bundle-conformant |
 | `vllm.platform_plugins` | platform profile/component materialization | contract identity exists; materializer pending |
-| `vllm.io_processor_plugins` | API-plane IO processor | contract identity exists; behavior adapter pending |
-| `vllm.stat_logger_plugins` | telemetry/stat logger | contract identities exist; behavior adapter pending |
+| `vllm.io_processor_plugins` | API-plane IO processor | explicit qualified typed materializer implemented; unqualified legacy names retained |
+| `vllm.stat_logger_plugins` | telemetry/stat logger | typed API-plane fan-out implemented; distinct legacy providers retained and dual-published classes deduplicated |
 | model registry / out-of-tree model | model descriptor plus implementation registration | dedicated contract missing |
 | reasoning and tool parsers | explicit API-plane parser selection | dedicated contract missing |
 | LoRA resolvers | artifact/model resolution | dedicated contract missing |
@@ -191,6 +191,31 @@ Typed selection and legacy discovery MUST NOT both instantiate a victim
 selector in one scheduler process. BidKV now publishes a conforming experimental
 manifest, but its existing entry point remains the recommended path until the
 equivalence and rollback gates below pass.
+
+### 8.2 API-plane materialization profiles
+
+IO processors remain an exclusive model/API choice. An unqualified
+`io_processor_plugin` value keeps the existing `vllm.io_processor_plugins`
+entry-point behavior. A fully qualified `<bundle_id>/<component_id>` value
+instead selects exactly one admitted `vllm.io_processor.v1` component on the
+API execution plane. The host imports its `module:attribute` only after
+admission, requires an `IOProcessor` subclass, and constructs it through the
+existing `(vllm_config, renderer)` boundary. Missing selection, import, type,
+or constructor failures are terminal and never fall back to a legacy provider.
+
+Stat loggers have fan-out semantics rather than exclusive selection. Every
+admitted `vllm.stat_logger.v1` API-plane component is imported and required to
+resolve to a `StatLoggerBase` subclass. Distinct legacy entry-point loggers
+continue to run alongside typed providers. When one distribution publishes the
+same logger class through both mechanisms during migration, the host
+deduplicates that class to prevent double metrics and logs. Any admitted typed
+provider that fails import or type validation fails the domain closed instead
+of being silently omitted.
+
+Both profiles roll back on the next fresh process start by removing their
+Bundle manifest from `VLLM_EXTENSION_MANIFESTS` and restoring the existing
+unqualified legacy entry-point configuration. Neither profile changes worker,
+device, platform-detection, or native hot paths.
 
 ## 9. Non-breaking migration sequence
 
