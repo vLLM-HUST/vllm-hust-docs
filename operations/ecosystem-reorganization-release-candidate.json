@@ -16,14 +16,14 @@
       "name": "vllm-hust-docs",
       "url": "https://github.com/vLLM-HUST/vllm-hust-docs",
       "branch": "codex/ecosystem-architecture-reorganization",
-      "commit": "0eb502fe2d7320f3ea9d0535ca866d44d5e8e482",
+      "commit": "b98d9677b0ddabe32e1261565bb32131761bf425",
       "role": "documentation_source"
     },
     {
       "name": "vllm-hust-website",
       "url": "https://github.com/vLLM-HUST/vllm-hust-website",
       "branch": "codex/ecosystem-architecture-reorganization-20260828",
-      "commit": "b4df81a43f9f3aafa50c2f7b662e5cd44b78edd2",
+      "commit": "0dd82a3eb3d4015e5dce356806c84bada5ed15cd",
       "role": "public_registry_renderer"
     },
     {
@@ -102,6 +102,132 @@
       "branch": "docs/ecosystem-role-metadata",
       "commit": "cb515fad213bb34b8a0d98a71dadf32d3e9f12c2",
       "role": "workload_evidence_tool"
+    },
+    {
+      "name": ".github",
+      "url": "https://github.com/vLLM-HUST/.github",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "1f2107e31be6e8fc8e686cf7dd5cf476c8886732",
+      "role": "organization_governance"
+    },
+    {
+      "name": "ascend-runtime-manager",
+      "url": "https://github.com/vLLM-HUST/ascend-runtime-manager",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "3bdc02c7b60b0dc9ec30db0e29a8fa048f802c3f",
+      "role": "deployment_operations_tool"
+    },
+    {
+      "name": "cccf-domestic-inference-engine-survey",
+      "url": "https://github.com/vLLM-HUST/cccf-domestic-inference-engine-survey",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "7564eff879612388fc51c24811cbb4ce12da4471",
+      "role": "research_publication"
+    },
+    {
+      "name": "claude-code-hust",
+      "url": "https://github.com/vLLM-HUST/claude-code-hust",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "2e0239c2a5817fb800c7a7fa0c88cba3ebce5aac",
+      "role": "adjacent_application"
+    },
+    {
+      "name": "demo-repository",
+      "url": "https://github.com/vLLM-HUST/demo-repository",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "e653bf9d16ff9103c76fece94e21813df97281ab",
+      "role": "sandbox_experiment"
+    },
+    {
+      "name": "EvoScientist",
+      "url": "https://github.com/vLLM-HUST/EvoScientist",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "5ccee79943804ae9084ebd491c710f0bec0fdc4b",
+      "role": "adjacent_application"
+    },
+    {
+      "name": "fcs-domestic-chip-llm-recsys",
+      "url": "https://github.com/vLLM-HUST/fcs-domestic-chip-llm-recsys",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "8299e012ee5af7e64b45c56bfbd22a5e3753e199",
+      "role": "research_publication"
+    },
+    {
+      "name": "sglang-hust",
+      "url": "https://github.com/vLLM-HUST/sglang-hust",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "376d0bac2d2d6b639cc0444e301f21921ec0c9d1",
+      "role": "sibling_inference_runtime"
+    },
+    {
+      "name": "statesys-2026",
+      "url": "https://github.com/vLLM-HUST/statesys-2026",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "1710ee0267ae2c4fb25816d7c2bedc274d8f4b35",
+      "role": "public_application"
+    },
+    {
+      "name": "triton-ascend-hust",
+      "url": "https://github.com/vLLM-HUST/triton-ascend-hust",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "3b224cbb774ce582e6ab4d6135ba5cd9844c77b1",
+      "role": "compiler_runtime_substrate"
+    },
+    {
+      "name": "vllm-ascend",
+      "url": "https://github.com/vLLM-HUST/vllm-ascend",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "1fe782119971e00c7a9c88c41462bd97182a7800",
+      "role": "platform_profile"
+    },
+    {
+      "name": "vllm-ascend-hust-bidkv",
+      "url": "https://github.com/vLLM-HUST/vllm-ascend-hust-bidkv",
+      "branch": "main",
+      "commit": "5ee80256d263d58b1e512d9d436d47e9bac564ba",
+      "role": "archival_record"
+    },
+    {
+      "name": "vllm-ascend-quant-hust",
+      "url": "https://github.com/vLLM-HUST/vllm-ascend-quant-hust",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "a0b06d926ab1bdc7b2c6b496163126d5839d3e96",
+      "role": "model_artifact_preparation_tool"
+    },
+    {
+      "name": "vllm-hust.github.io",
+      "url": "https://github.com/vLLM-HUST/vllm-hust.github.io",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "355a8eef9d80545929000619161730853581c6e1",
+      "role": "registry_redirect"
+    },
+    {
+      "name": "vllm-hust-maintenance",
+      "url": "https://github.com/vLLM-HUST/vllm-hust-maintenance",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "2021a203737805d9287d3b71a8103d8bb709a8c4",
+      "role": "deployment_operations_tool"
+    },
+    {
+      "name": "vllm-hust-perf-analyzer",
+      "url": "https://github.com/vLLM-HUST/vllm-hust-perf-analyzer",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "bd215938fd447f507fe452419550166fb9573fda",
+      "role": "profiling_analysis_tool"
+    },
+    {
+      "name": "vllm-hust-profiling",
+      "url": "https://github.com/vLLM-HUST/vllm-hust-profiling",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "c068d8ddcf6afafe7b9268aa1be7d19ef12fa052",
+      "role": "profiling_analysis_tool"
+    },
+    {
+      "name": "vllm-hust-workstation",
+      "url": "https://github.com/vLLM-HUST/vllm-hust-workstation",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "926114df86838f6048573decf1e11128829256ab",
+      "role": "product_ui"
     }
   ],
   "compatibility_sets": [
@@ -120,18 +246,35 @@
         "vllm-ascend-hust-LatchMoE",
         "vllm-hust-benchmark",
         "vllm-hust-dev-hub",
-        "llm-serving-workloads"
+        "llm-serving-workloads",
+        ".github",
+        "ascend-runtime-manager",
+        "cccf-domestic-inference-engine-survey",
+        "claude-code-hust",
+        "demo-repository",
+        "EvoScientist",
+        "fcs-domestic-chip-llm-recsys",
+        "sglang-hust",
+        "statesys-2026",
+        "triton-ascend-hust",
+        "vllm-ascend",
+        "vllm-ascend-hust-bidkv",
+        "vllm-ascend-quant-hust",
+        "vllm-hust.github.io",
+        "vllm-hust-maintenance",
+        "vllm-hust-perf-analyzer",
+        "vllm-hust-profiling",
+        "vllm-hust-workstation"
       ],
       "validations": [
         {"id": "registry", "status": "passed", "evidence": "21 ecosystem components and 32 organization repositories validated"},
-        {"id": "repository-profiles", "status": "passed", "evidence": "14 repository profiles validated against the closed schema"},
+        {"id": "repository-profiles", "status": "passed", "evidence": "All 32 portfolio roles validated against the closed schema and canonical registry: 31 are published repository-local profiles; the GitHub-archived legacy BidKV repository is represented by its immutable main revision and a centrally validated read-only descriptor because the remote rejects writes."},
         {"id": "website-tests", "status": "passed", "evidence": "273 website tests passed; 3 environment-dependent tests were skipped"},
         {"id": "browser-desktop-mobile", "status": "passed", "evidence": "20 cards rendered at 1440px and 390px; zero horizontal overflow and zero console errors"},
-        {"id": "remote-branches", "status": "passed", "evidence": "All 14 isolated worktree branches were created on their canonical GitHub repositories without overwriting an existing branch."}
+        {"id": "remote-branches", "status": "passed", "evidence": "All 31 writable portfolio repositories have isolated role/profile branches on their canonical GitHub repositories without overwriting an existing branch; the remaining legacy BidKV repository is already archived and read-only."}
       ],
       "blockers": [
-        "Canonical registry URLs still point to architecture branches rather than a tagged registry release.",
-        "The 14 repositories in this release set publish local profiles, but repositories outside the release set still require profile coverage."
+        "Canonical registry URLs still point to architecture branches rather than a tagged registry release."
       ],
       "rollback": [
         "Restore the previous website registry mirror and asset version.",
@@ -230,7 +373,7 @@
   "publication_order": [
     {"sequence": 1, "status": "passed", "gate": "Publish opt-in core admission and scheduler materializer branches without changing default runtime behavior.", "repository_refs": ["vllm-hust"]},
     {"sequence": 2, "status": "passed", "gate": "Publish architecture, schemas, registries, design gates, and this draft record.", "repository_refs": ["vllm-hust-docs"]},
-    {"sequence": 3, "status": "passed", "gate": "Publish BidKV manifest and repository-local profiles; do not mark the typed path recommended.", "repository_refs": ["vllm-hust-bidkv", "pegaflow-hust", "LMCache-Ascend", "vllm-ascend-hust", "vllm-metal-hust", "vllm-ascend-kvcompress-hust", "vllm-ascend-hust-diffspec", "vllm-ascend-hust-LatchMoE", "vllm-hust-benchmark", "vllm-hust-dev-hub", "llm-serving-workloads"]},
+    {"sequence": 3, "status": "passed", "gate": "Publish repository-local profiles across every writable portfolio repository; retain a central-only classification for the read-only archived BidKV snapshot and do not mark experimental runtime paths recommended.", "repository_refs": ["vllm-hust-bidkv", "pegaflow-hust", "LMCache-Ascend", "vllm-ascend-hust", "vllm-metal-hust", "vllm-ascend-kvcompress-hust", "vllm-ascend-hust-diffspec", "vllm-ascend-hust-LatchMoE", "vllm-hust-benchmark", "vllm-hust-dev-hub", "llm-serving-workloads", ".github", "ascend-runtime-manager", "cccf-domestic-inference-engine-survey", "claude-code-hust", "demo-repository", "EvoScientist", "fcs-domestic-chip-llm-recsys", "sglang-hust", "statesys-2026", "triton-ascend-hust", "vllm-ascend", "vllm-ascend-hust-bidkv", "vllm-ascend-quant-hust", "vllm-hust.github.io", "vllm-hust-maintenance", "vllm-hust-perf-analyzer", "vllm-hust-profiling", "vllm-hust-workstation"]},
     {"sequence": 4, "status": "passed", "gate": "Publish the website mirror only from the exact docs registry and keep all experimental labels.", "repository_refs": ["vllm-hust-website"]},
     {"sequence": 5, "status": "blocked", "gate": "Run full CPU CI and matched BidKV legacy/typed tests in a complete core environment.", "repository_refs": ["vllm-hust", "vllm-hust-bidkv"]},
     {"sequence": 6, "status": "blocked", "gate": "Run real platform/hardware gates and update this record from draft to candidate only when evidence is attached.", "repository_refs": ["vllm-hust", "vllm-ascend-hust", "vllm-ascend-kvcompress-hust", "LMCache-Ascend", "pegaflow-hust"]},
@@ -238,7 +381,8 @@
   ],
   "known_limitations": [
     "The documentation repository revision records the parent snapshot because a release record cannot contain the hash of the commit that contains itself; the published branch head is the authoritative record revision.",
-    "All listed branches exist on GitHub, but no pull request is merged and no registry tag is published.",
+    "All listed writable branches exist on GitHub, but no pull request is merged and no registry tag is published.",
+    "The legacy vllm-ascend-hust-bidkv repository is GitHub-archived and rejects branch writes; its immutable main revision is classified centrally, while new BidKV integration belongs to vllm-hust-bidkv.",
     "One MultiConnector consistency test requires authenticated access to the gated meta-llama/Llama-3.2-1B-Instruct model and was not run.",
     "Typed single and ordered_multi KV materialization are experimental; real-system equivalence is not claimed, and the local same-UID control transport is not a production remote RIDE bridge.",
     "No completed serving request or benchmark was executed on NPU, GPU, or Apple Silicon for this draft. Accelerator startup evidence is limited to healthy real-model Mooncake prefiller/decoder processes before the corrected matrix, plus PegaFlow ACL/runtime initialization before its torch_npu gate failed; neither is connector-equivalence or performance evidence.",
