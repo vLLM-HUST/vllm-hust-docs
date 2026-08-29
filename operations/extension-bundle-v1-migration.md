@@ -154,7 +154,7 @@ during migration. They are separate from `VLLM_EXTENSION_MANIFESTS` and
 | Existing surface | Migration classification | Bundle v1 status |
 |---|---|---|
 | `vllm.general_plugins` | legacy import-time mutation compatibility | retained; not bundle-conformant |
-| `vllm.platform_plugins` | platform profile/component materialization | contract identity exists; materializer pending |
+| `vllm.platform_plugins` | platform probe plus coordinated profile materialization | descriptor identity exists; materializer blocked on the [platform/operator/model-runner design gate](../architecture/platform-operator-model-runner-boundaries.md) |
 | `vllm.io_processor_plugins` | API-plane IO processor | explicit qualified typed materializer implemented; unqualified legacy names retained |
 | `vllm.stat_logger_plugins` | telemetry/stat logger | typed API-plane fan-out implemented; distinct legacy providers retained and dual-published classes deduplicated |
 | model registry / out-of-tree model | model descriptor plus implementation registration | dedicated contract missing |
@@ -163,7 +163,7 @@ during migration. They are separate from `VLLM_EXTENSION_MANIFESTS` and
 | KV connectors | scheduler/worker integration with an external state system | scheduler, worker, and API-plane telemetry contracts; closed ordered selection topology; HMA, piecewise, and cache-layout declarations; `KVTransferConfig` mapping; and fail-closed typed `single`/`ordered_multi` factory materialization implemented; the four built-in Mooncake/LMCache names pass class, role, telemetry-codec, next-start rollback-name, and missing-optional-dependency equivalence, while matched real-system behavior, failure, shutdown, accelerator, and performance equivalence remain blocked on the [KV domain design gate](../architecture/kv-systems-and-connector-materialization.md) |
 | weight-transfer connectors | data-path integration | dedicated contract missing |
 | scheduler/victim selector | scheduler-local policy | typed materializer, exact legacy selection, and installed dual-path contract replay implemented; experimental while broader release gates remain open |
-| platform/operator/model runner | coordinated platform/runtime components | descriptor contracts implemented; materializers pending |
+| platform/operator/model runner | coordinated platform/runtime components | descriptor identities implemented; materializers blocked on the [domain design gate](../architecture/platform-operator-model-runner-boundaries.md) |
 | control plane | external decision system | external system stays outside vLLM; bridge materialization blocked on the [control-plane design gate](../architecture/control-plane-and-runtime-bridge.md) |
 
 “Contract identity exists” is not behavior compatibility. A legacy surface is
