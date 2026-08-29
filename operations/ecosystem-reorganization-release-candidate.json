@@ -9,14 +9,14 @@
       "name": "vllm-hust",
       "url": "https://github.com/vLLM-HUST/vllm-hust",
       "branch": "codex/ecosystem-architecture-reorganization-20260828",
-      "commit": "50746174f97c068e31fbc70ae807d2efeb022fae",
+      "commit": "b819e5a3e2c2c4322e3aa72cd028f82fc25605b1",
       "role": "runtime_core"
     },
     {
       "name": "vllm-hust-docs",
       "url": "https://github.com/vLLM-HUST/vllm-hust-docs",
       "branch": "codex/ecosystem-architecture-reorganization",
-      "commit": "5c46d0228a7fa6d40a4235bc677a9aceddba80be",
+      "commit": "ec02020001595f4bab5943cb105c0e8c7c54a2b1",
       "role": "documentation_source"
     },
     {
@@ -30,7 +30,7 @@
       "name": "vllm-hust-bidkv",
       "url": "https://github.com/vLLM-HUST/vllm-hust-bidkv",
       "branch": "docs/ecosystem-role-metadata",
-      "commit": "331b49a8a1291ab9688e8f42becdad503cedebff",
+      "commit": "703108492cf3f1681fd0b5b8ccb116cfc778f1e8",
       "role": "scheduler_policy"
     },
     {
@@ -291,7 +291,7 @@
         {"id": "extension-core-pytest", "status": "passed", "evidence": "43 manifest, admission, startup snapshot, KV selection/capability, and scheduler-policy compatibility tests passed in the repository-managed Python 3.12 environment."},
         {"id": "extension-core-hooks", "status": "passed", "evidence": "All pre-commit hooks for the new KV selection files passed, including Ruff, formatting, mypy, forbidden imports, SPDX, and configuration checks."},
         {"id": "extension-permission-policy", "status": "passed", "evidence": "Configured startup defaults to no non-empty permissions and accepts only an explicit strict host allowlist; blank, duplicate, aliased, unknown, and undeclared permissions fail closed. All 48 affected Bundle and KV tests passed with relevant pre-commit hooks."},
-        {"id": "bidkv-unit", "status": "passed", "evidence": "396 BidKV tests passed and 1 environment-dependent test skipped against the editable core environment."},
+        {"id": "bidkv-unit", "status": "passed", "evidence": "All 400 BidKV tests passed with integration mode required against the editable core environment at BidKV revision 703108492cf3f1681fd0b5b8ccb116cfc778f1e8."},
         {"id": "cpu-image-bootstrap-failure-propagation", "status": "passed", "evidence": "Core revision 81d084d1df8f6fb42a082a79a01cd335e8eadb6e downloads the CPU image's uv installer before execution, retries transient downloads, and verifies the installed binary by absolute path. This prevents a failed curl in a pipeline from being cached as a successful image layer. All repository pre-commit hooks applicable to docker/Dockerfile.cpu passed."},
         {"id": "rust-build-minimal-profile", "status": "passed", "evidence": "Core revision 81d084d1df8f6fb42a082a79a01cd335e8eadb6e installs Rust with the minimal profile and retries the rustup bootstrap download, eliminating non-build components such as rust-docs from vLLM artifact image construction. Bash syntax and all available repository hooks passed; the same file passed shellcheck on the A100 host, with only the pre-existing informational dynamic-source diagnostic."},
         {"id": "extension-wheel-contents", "status": "passed", "evidence": "At core revision 81d084d1df8f6fb42a082a79a01cd335e8eadb6e, an actual ARM64 CPython 3.12 VLLM_TARGET_DEVICE=empty wheel was built with the repository-managed environment and verified by tools/verify_extension_wheel.py. It carries both built-in Mooncake and LMCache Bundle manifests, all five plugin/selection/runtime/control schemas, the control-bridge host schema, vllm-rs, and a Rust extension; all required JSON parses successfully. Three positive, missing-member, and optional-Rust verifier tests passed with every applicable pre-commit hook."},
@@ -301,14 +301,14 @@
         {"id": "cpu-test-wheel-locked-install", "status": "passed", "evidence": "Core revision 50746174f97c068e31fbc70ae807d2efeb022fae installs the locally built CPU wheel into the already locked test environment with uv pip install --no-deps. The official image completed without asking the network resolver to reinterpret wheel dependencies, loaded version 0.0.0+cpu.ci.g50746174f97c, and entered all five kernel suites. The regression assertion is included in the four passing build-requirement tests."},
         {"id": "official-cpu-kernel-ci", "status": "failed", "evidence": "At core revision 50746174f97c068e31fbc70ae807d2efeb022fae, the official CPU image and wheel completed and the kernel suites produced: oneDNN 200 passed; attention 1206 passed and 1350 architecture-dependent skipped; activation 50 passed and 8 skipped; GDN 74 passed and 5 skipped. The full fused-MoE parameter matrix produced 79 passed and 17 failed. Its first SILU BF16 vec failure repeated three times and once with OMP_NUM_THREADS=1 and MKL_NUM_THREADS=1 with the same two elements, indexes, and maximum absolute difference 0.0015869140625 against atol 0.001, excluding random or thread-order fluctuation. The remaining failures include SWIGLUOAI, GELU, and GELU_TANH BF16 vec cases. After refreshing origin/main to 5eca5cd55147f36e5951f3cb7992cd45356fda20, the branch has no diff from upstream in cpu_fused_moe.cpp, this test, or the default tolerance helper; only CPU dependency alignment differs among those audited paths. No tolerance was widened and this gate remains failed."},
         {"id": "full-core-ci", "status": "not_run", "evidence": "The complete vLLM CPU test matrix has not been run. HF_TOKEN was intentionally absent, so the official script skipped model, offline-serving, and online-serving tests even though the reproducible CPU image and all five kernel files were exercised. A host-112 repository-wide collection was separately stopped after it initiated an unexpected multi-gigabyte Phi-4 Multimodal model download. The failed official-cpu-kernel-ci validation records the executed subset and must be resolved independently before this broader validation can pass."},
-        {"id": "legacy-typed-equivalence", "status": "not_run", "evidence": "Matched BidKV scheduler traces and hardware behavior are still required."}
+        {"id": "legacy-selector-explicit-selection", "status": "passed", "evidence": "Core revision b819e5a3e2c2c4322e3aa72cd028f82fc25605b1 preserves unspecified legacy auto-discovery while making an explicit additional_config.victim_selector_plugin select exactly one named entry point. Missing, duplicate, discovery, load, factory, and protocol failures fail closed instead of silently choosing another provider. Eleven focused selector tests and all applicable pre-commit hooks passed; 26 combined startup and selector tests passed."},
+        {"id": "legacy-typed-equivalence", "status": "passed", "evidence": "BidKV revision 703108492cf3f1681fd0b5b8ccb116cfc778f1e8 installs real vllm.victim_selector metadata and replays one versioned four-step scheduler contract trace through both the exact legacy entry point and the admitted real Bundle manifest. Victim sequence, exported metrics, and decision snapshots match exactly; invalid configuration preserves the same ValueError root cause through both fail-closed materializers; removing typed manifests on the next start resolves the same legacy class; and the emergency disable flag resolves NoOpVictimSelector. Four installed-distribution integration tests passed. This is deterministic contract replay, not a real online serving or hardware-performance claim."}
       ],
       "blockers": [
-        "The reproducible official CPU kernel gate fails 17 of 96 fused-MoE BF16 vec cases under the aligned PyTorch 2.11 environment. The deterministic numerical differences require an upstream CPU-kernel/reference-contract investigation; do not widen tolerance without matched accuracy analysis. Full model and serving CI additionally requires controlled model artifacts and credentials rather than side-effectful collection-time downloads.",
-        "BidKV legacy-versus-typed victim choices, metrics, failures, and rollback are not yet matched on real scheduler traces."
+        "The reproducible official CPU kernel gate fails 17 of 96 fused-MoE BF16 vec cases under the aligned PyTorch 2.11 environment. The deterministic numerical differences require an upstream CPU-kernel/reference-contract investigation; do not widen tolerance without matched accuracy analysis. Full model and serving CI additionally requires controlled model artifacts and credentials rather than side-effectful collection-time downloads."
       ],
       "rollback": [
-        "Unset VLLM_EXTENSION_MANIFESTS and VLLM_EXTENSION_BUNDLES, then restart to use the legacy vllm.victim_selector entry point.",
+        "Unset VLLM_EXTENSION_MANIFESTS and VLLM_EXTENSION_BUNDLES, retain additional_config.victim_selector_plugin=bidkv, then restart to resolve the exact legacy vllm.victim_selector entry point.",
         "Set additional_config.victim_selector_plugin_disabled=true and restart to bypass typed and legacy providers with NoOpVictimSelector."
       ]
     },
@@ -335,7 +335,7 @@
         {"id": "kv-ordered-materializer", "status": "passed", "evidence": "Typed ordered_multi constructs scheduler and worker children in declared order with connector-ID-scoped configuration; API telemetry composes by the same logical IDs and rejects unknown IDs without legacy registry lookup."},
         {"id": "kv-runtime-config-schema", "status": "passed", "evidence": "The closed typed_connectors host envelope is validated by a packaged Draft 2020-12 schema; all plugin schemas are included through plugins/*.schema.json package data."},
         {"id": "kv-config-rollback", "status": "passed", "evidence": "A typed import failure stops without consulting legacy discovery; replacing the next-start configuration with the existing external module-path form successfully resolves the legacy connector. All 34 typed factory, config, HMA, module-path, and rollback tests passed."},
-        {"id": "bidkv-post-factory-regression", "status": "passed", "evidence": "All 396 BidKV tests passed and 1 environment-dependent test skipped against the editable core after typed single/ordered factory changes."},
+        {"id": "bidkv-post-factory-regression", "status": "passed", "evidence": "All 400 BidKV tests passed with required installed-distribution integration against the editable core after typed single/ordered factory and explicit legacy selector changes."},
         {"id": "kvcompress-static-validation", "status": "passed", "evidence": "KVCompress source and test modules compile, and its repository profile validates against the organization schema."},
         {"id": "kvcompress-pytest", "status": "passed", "evidence": "All 44 KVCompress tests passed against the editable core after typed single/ordered factory changes."}
       ],
@@ -382,7 +382,7 @@
     {"sequence": 2, "status": "passed", "gate": "Publish architecture, schemas, registries, design gates, and this draft record.", "repository_refs": ["vllm-hust-docs"]},
     {"sequence": 3, "status": "passed", "gate": "Publish repository-local profiles across every writable portfolio repository; retain a central-only classification for the read-only archived BidKV snapshot and do not mark experimental runtime paths recommended.", "repository_refs": ["vllm-hust-bidkv", "pegaflow-hust", "LMCache-Ascend", "vllm-ascend-hust", "vllm-metal-hust", "vllm-ascend-kvcompress-hust", "vllm-ascend-hust-diffspec", "vllm-ascend-hust-LatchMoE", "vllm-hust-benchmark", "vllm-hust-dev-hub", "llm-serving-workloads", ".github", "ascend-runtime-manager", "cccf-domestic-inference-engine-survey", "claude-code-hust", "demo-repository", "EvoScientist", "fcs-domestic-chip-llm-recsys", "sglang-hust", "statesys-2026", "triton-ascend-hust", "vllm-ascend", "vllm-ascend-hust-bidkv", "vllm-ascend-quant-hust", "vllm-hust.github.io", "vllm-hust-maintenance", "vllm-hust-perf-analyzer", "vllm-hust-profiling", "vllm-hust-workstation"]},
     {"sequence": 4, "status": "passed", "gate": "Publish the website mirror only from the exact docs registry and keep all experimental labels.", "repository_refs": ["vllm-hust-website"]},
-    {"sequence": 5, "status": "blocked", "gate": "Run full CPU CI and matched BidKV legacy/typed tests in a complete core environment.", "repository_refs": ["vllm-hust", "vllm-hust-bidkv"]},
+    {"sequence": 5, "status": "blocked", "gate": "Keep the completed BidKV legacy/typed contract replay green and resolve the failed fused-MoE gate before running the remaining full CPU model and serving CI in a controlled environment.", "repository_refs": ["vllm-hust", "vllm-hust-bidkv"]},
     {"sequence": 6, "status": "blocked", "gate": "Run real platform/hardware gates and update this record from draft to candidate only when evidence is attached.", "repository_refs": ["vllm-hust", "vllm-ascend-hust", "vllm-ascend-kvcompress-hust", "LMCache-Ascend", "pegaflow-hust"]},
     {"sequence": 7, "status": "pending", "gate": "Tag the canonical docs registry, replace branch URLs in repository profiles, and then consider supported labels.", "repository_refs": ["vllm-hust-docs", "vllm-hust-website"]}
   ],
@@ -390,6 +390,7 @@
     "The documentation repository revision records the parent snapshot because a release record cannot contain the hash of the commit that contains itself; the published branch head is the authoritative record revision.",
     "All listed writable branches exist on GitHub, but no pull request is merged and no registry tag is published.",
     "The legacy vllm-ascend-hust-bidkv repository is GitHub-archived and rejects branch writes; its immutable main revision is classified centrally, while new BidKV integration belongs to vllm-hust-bidkv.",
+    "BidKV legacy/typed equivalence is proven for a versioned deterministic scheduler contract trace, metrics, snapshots, initialization failure, and next-start rollback; no real online workload, accelerator behavior, or performance equivalence is inferred from that replay.",
     "One MultiConnector consistency test requires authenticated access to the gated meta-llama/Llama-3.2-1B-Instruct model and was not run.",
     "Typed single and ordered_multi KV materialization are experimental; real-system equivalence is not claimed, and the local same-UID control transport is not a production remote RIDE bridge.",
     "The official CPU image is reproducible and ABI-aligned, but its fused-MoE BF16 vec matrix currently has 17 deterministic numerical failures out of 96 cases; no supported or candidate label may rely on this gate until the kernel/reference contract is resolved and rerun.",

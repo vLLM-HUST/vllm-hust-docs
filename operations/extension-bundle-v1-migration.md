@@ -162,7 +162,7 @@ during migration. They are separate from `VLLM_EXTENSION_MANIFESTS` and
 | LoRA resolvers | artifact/model resolution | dedicated contract missing |
 | KV connectors | scheduler/worker integration with an external state system | scheduler, worker, and API-plane telemetry contracts; closed ordered selection topology; HMA, piecewise, and cache-layout declarations; `KVTransferConfig` mapping; and fail-closed typed `single`/`ordered_multi` factory materialization implemented; the four built-in Mooncake/LMCache names pass class, role, telemetry-codec, next-start rollback-name, and missing-optional-dependency equivalence, while matched real-system behavior, failure, shutdown, accelerator, and performance equivalence remain blocked on the [KV domain design gate](../architecture/kv-systems-and-connector-materialization.md) |
 | weight-transfer connectors | data-path integration | dedicated contract missing |
-| scheduler/victim selector | scheduler-local policy | typed materializer implemented; experimental until BidKV equivalence gates pass |
+| scheduler/victim selector | scheduler-local policy | typed materializer, exact legacy selection, and installed dual-path contract replay implemented; experimental while broader release gates remain open |
 | platform/operator/model runner | coordinated platform/runtime components | descriptor contracts implemented; materializers pending |
 | control plane | external decision system | external system stays outside vLLM; bridge materialization blocked on the [control-plane design gate](../architecture/control-plane-and-runtime-bridge.md) |
 
@@ -254,6 +254,11 @@ of static admission.
 The experimental scheduler-policy materializer additionally requires:
 
 - zero typed providers preserves the legacy entry-point behavior;
+- an explicit `victim_selector_plugin` must select exactly one legacy entry
+  point, while omitting it preserves historical auto-discovery during the
+  compatibility window;
+- discovery, load, factory, and protocol failures for an explicitly selected
+  legacy provider fail closed instead of silently choosing another provider;
 - one typed provider is imported only after the immutable snapshot exists;
 - ambiguity requires an exact `<bundle_id>/<component_id>` selection;
 - missing selection, import failure, factory failure, and protocol mismatch
@@ -263,6 +268,14 @@ The experimental scheduler-policy materializer additionally requires:
   failure behavior under the same scheduler traces before recommendation;
 - a release record names the tested core and BidKV revisions and the exact
   rollback command/configuration.
+
+Core `b819e5a3e2c2c4322e3aa72cd028f82fc25605b1` and BidKV
+`703108492cf3f1681fd0b5b8ccb116cfc778f1e8` satisfy the software-equivalence
+gate with the installed distribution metadata, the packaged Bundle manifest,
+and a versioned four-step scheduler contract trace. Victim choices, exported
+metrics, decision snapshots, invalid-configuration root causes, next-start
+rollback, and emergency disable behavior match. This evidence does not claim a
+real online serving run, accelerator behavior, or performance equivalence.
 
 ## 11. Validation and rollback
 
@@ -277,9 +290,12 @@ tests/v1/core/test_victim_selector_extensions.py
 ```
 
 For scheduler-policy rollback, unset `VLLM_EXTENSION_MANIFESTS` (and
-`VLLM_EXTENSION_BUNDLES`) and keep the existing BidKV package and
-`vllm.victim_selector` entry point installed. The next process start then has no
-typed provider and follows the legacy path. For an emergency rollback to
+`VLLM_EXTENSION_BUNDLES`), keep the existing BidKV package and
+`vllm.victim_selector` entry point installed, and retain
+`additional_config.victim_selector_plugin=bidkv`. The next process start then
+has no typed provider and resolves that exact legacy entry point. Omitting the
+name retains historical auto-discovery only for compatibility and is not the
+recommended deterministic deployment form. For an emergency rollback to
 upstream-compatible selection, set
 `additional_config.victim_selector_plugin_disabled=true`; this bypasses both
 typed and legacy victim-selector providers and constructs `NoOpVictimSelector`.
