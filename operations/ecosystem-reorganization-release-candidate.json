@@ -9,14 +9,14 @@
       "name": "vllm-hust",
       "url": "https://github.com/vLLM-HUST/vllm-hust",
       "branch": "codex/ecosystem-architecture-reorganization-20260828",
-      "commit": "fa5e2bcbb1814435cc7e5ac7a9cfc655d273af3a",
+      "commit": "81d084d1df8f6fb42a082a79a01cd335e8eadb6e",
       "role": "runtime_core"
     },
     {
       "name": "vllm-hust-docs",
       "url": "https://github.com/vLLM-HUST/vllm-hust-docs",
       "branch": "codex/ecosystem-architecture-reorganization",
-      "commit": "67d047c511240f1b5f3e40a155d13acb3f3fc316",
+      "commit": "5a0176b9e3d4f1a7765cd5bf297a1c1a0913f602",
       "role": "documentation_source"
     },
     {
@@ -292,14 +292,15 @@
         {"id": "extension-core-hooks", "status": "passed", "evidence": "All pre-commit hooks for the new KV selection files passed, including Ruff, formatting, mypy, forbidden imports, SPDX, and configuration checks."},
         {"id": "extension-permission-policy", "status": "passed", "evidence": "Configured startup defaults to no non-empty permissions and accepts only an explicit strict host allowlist; blank, duplicate, aliased, unknown, and undeclared permissions fail closed. All 48 affected Bundle and KV tests passed with relevant pre-commit hooks."},
         {"id": "bidkv-unit", "status": "passed", "evidence": "396 BidKV tests passed and 1 environment-dependent test skipped against the editable core environment."},
-        {"id": "cpu-image-bootstrap-failure-propagation", "status": "passed", "evidence": "Core revision fa5e2bcbb1814435cc7e5ac7a9cfc655d273af3a downloads the CPU image's uv installer before execution, retries transient downloads, and verifies the installed binary by absolute path. This prevents a failed curl in a pipeline from being cached as a successful image layer. All repository pre-commit hooks applicable to docker/Dockerfile.cpu passed."},
+        {"id": "cpu-image-bootstrap-failure-propagation", "status": "passed", "evidence": "Core revision 81d084d1df8f6fb42a082a79a01cd335e8eadb6e downloads the CPU image's uv installer before execution, retries transient downloads, and verifies the installed binary by absolute path. This prevents a failed curl in a pipeline from being cached as a successful image layer. All repository pre-commit hooks applicable to docker/Dockerfile.cpu passed."},
+        {"id": "rust-build-minimal-profile", "status": "passed", "evidence": "Core revision 81d084d1df8f6fb42a082a79a01cd335e8eadb6e installs Rust with the minimal profile and retries the rustup bootstrap download, eliminating non-build components such as rust-docs from vLLM artifact image construction. Bash syntax and all available repository hooks passed; the same file passed shellcheck on the A100 host, with only the pre-existing informational dynamic-source diagnostic."},
+        {"id": "extension-wheel-contents", "status": "passed", "evidence": "At core revision 81d084d1df8f6fb42a082a79a01cd335e8eadb6e, an actual ARM64 CPython 3.12 VLLM_TARGET_DEVICE=empty wheel was built with the repository-managed environment and verified by tools/verify_extension_wheel.py. It carries both built-in Mooncake and LMCache Bundle manifests, all five plugin/selection/runtime/control schemas, the control-bridge host schema, vllm-rs, and a Rust extension; all required JSON parses successfully. Three positive, missing-member, and optional-Rust verifier tests passed with every applicable pre-commit hook."},
         {"id": "full-core-ci", "status": "not_run", "evidence": "The complete vLLM CPU test matrix has not been run. On an isolated x86_64 A100 host worktree at core revision fa5e2bcbb1814435cc7e5ac7a9cfc655d273af3a, the official .buildkite/scripts/hardware_ci/run-cpu-test-arm.sh entry failed during Docker image construction before vLLM C++ compilation or pytest because container DNS could not resolve static.rust-lang.org while rustup downloaded rust-docs 1.95.0. HF_TOKEN was intentionally absent, so even a successful script run would cover the CPU image and five kernel suites but skip model, offline, and online serving tests. A host-112 full pytest collection was also stopped after it initiated an unexpected multi-gigabyte Phi-4 Multimodal model download; no collection or test result is claimed."},
         {"id": "legacy-typed-equivalence", "status": "not_run", "evidence": "Matched BidKV scheduler traces and hardware behavior are still required."}
       ],
       "blockers": [
         "Full core pytest remains unavailable: the official CPU Docker entry is currently blocked before compilation by intermittent container DNS failures, and repository-wide collection is side-effectful because it downloads model weights.",
-        "BidKV legacy-versus-typed victim choices, metrics, failures, and rollback are not yet matched on real scheduler traces.",
-        "Wheel-content verification could not run because the available system build backend is too old for the project metadata."
+        "BidKV legacy-versus-typed victim choices, metrics, failures, and rollback are not yet matched on real scheduler traces."
       ],
       "rollback": [
         "Unset VLLM_EXTENSION_MANIFESTS and VLLM_EXTENSION_BUNDLES, then restart to use the legacy vllm.victim_selector entry point.",
