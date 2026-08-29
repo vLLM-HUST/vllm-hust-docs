@@ -4,6 +4,13 @@
 
 这条链决定了 fork 是否还能持续与 upstream 合并。
 
+术语边界：本文中的“插件”专指 `importlib.metadata` entry point 所发现的
+Python 扩展，尤其是 `vllm.platform_plugins`，不是组织级系统分类。一个
+平台 profile 可以交付平台插件，但 profile 还包含运行时、算子、构建与
+发布约束；Mooncake、LMCache、PegaFlow、KV connector、control plane 也
+不能因为存在 Python 适配器就被归入这一窄义插件类别。组织级规范以
+[`ecosystem-architecture.md`](ecosystem-architecture.md) 为准。
+
 ## 1. 先看 4 个关键锚点
 
 1. `vllm/platforms/interface.py`

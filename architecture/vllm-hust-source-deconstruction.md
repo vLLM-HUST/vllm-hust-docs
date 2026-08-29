@@ -8,6 +8,11 @@
 - 它仍然以 upstream vLLM 的主干架构为骨架。
 - 与国产硬件和 AGI4S 场景相关的增强，优先通过插件、平台探测、启动预检、运行时修复工具和模型/解析器扩展来落地，而不是粗暴地改写共享热路径。
 
+这里的“插件”是代码层的窄义 entry-point 扩展面，不是系统角色或仓库
+总称。平台 profile、KV state system、KV connector bridge、control plane
+和 Extension Bundle 分别描述运行责任、集成契约与交付方式，不能互相
+替代；完整分类见 [`ecosystem-architecture.md`](ecosystem-architecture.md)。
+
 这意味着分析 `vllm-hust` 时，最重要的不是“哪里改过”，而是“它把哪些问题留在主干架构里解决，哪些问题放到 fork 外围或插件层解决”。
 
 ## 1. 总体分层

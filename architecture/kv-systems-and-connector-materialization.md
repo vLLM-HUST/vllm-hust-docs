@@ -247,17 +247,23 @@ or the typed selection, and typed mode declares its bundle and the explicit
 configuration and import compatibility only.
 
 The same runner has a safe real-run preflight and runbook. At revision
-`bb39b7fb28f46a919ab1dae3efd78b938531da75`, one explicit controlled
-interpreter and core checkout are used by both preflight and every later vLLM
-process; the root-owned hard-coded Conda activation has been removed. It labels
-preflight separately from `real-online`, requires a fresh output directory,
-records exact command/environment/model/hardware/core/provider revision inputs,
-and stops only process groups it created. The 2026-08-29 host-112 typed rerun
-verified exact vLLM source and engine imports, exact PegaFlow and connector
-source, the runnable vLLM CLI, manifest, model, ports, and eight idle 910B2
-devices. It correctly refused to launch only because `pegaflow-server` was not
-built. This is readiness evidence, not connector equivalence or a negative
-performance result.
+`9d7070d4202487848e1f65750699d0229c45619b`, one explicit controlled
+interpreter and core checkout are used by preflight, every later vLLM process,
+and the embedded-Python PegaFlow server. The root-owned hard-coded Conda
+activation has been removed. The protobuf compiler is vendored, and the ARM
+Ascend debug server builds reproducibly against the selected interpreter. The
+runner materializes that interpreter's virtual-environment, site-package, and
+shared-library paths, then verifies the server's exact Python ABI and an
+available `torch.npu` runtime before claiming readiness.
+
+The 2026-08-29 host-112 server probe initialized ACL and detected Ascend runtime
+1.17.0. It then correctly exposed that the selected core environment contains
+CUDA-only Torch; the other installed NPU environments cannot load `torch_npu`
+because this CANN installation lacks `libhccl.so`. The final typed preflight
+passes exact sources, engine/connector imports, CLI, manifest, model, ports,
+eight idle 910B2 devices, built server, and Python ABI, but fails the explicit
+platform runtime gate. This is build and fail-closed readiness evidence, not
+connector equivalence or a negative performance result.
 
 LMCache-Ascend now publishes a wheel-carried Bundle v1 manifest for a separate
 scheduler component, worker/device component, and lightweight API telemetry
