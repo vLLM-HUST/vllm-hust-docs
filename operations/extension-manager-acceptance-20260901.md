@@ -8,7 +8,7 @@
 | 范围 | 结果 | 证据 |
 |---|---:|---|
 | Extension Manager | 通过 | 43 个 pytest；新增 unverified/incompatible 启动拒绝 |
-| BidKV 历史接口边界 | 通过 | 主发行包不再注册私有 `vllm.victim_selector`；旧 adapter 仅 import-only |
+| BidKV 历史接口边界 | 通过 | 379 个 pytest；主包不注册私有 selector；旧 adapter 仅 import-only |
 | 网站多维分类 | 通过 | `tests/test_plugins_page.py` 11 个 pytest |
 | LMCache profile metadata | 通过 | wheel 精确依赖 `vllm-hust-ext==0.2.0.dev0` |
 | LMCache-Ascend adapter metadata | 通过 | 独立 profile wheel；动态 connector/module 精确配对 |
@@ -89,6 +89,13 @@ ServiceAccount。该步骤只做本地渲染，没有 kube context，也没有�
 112 没有可用的上述宿主环境且 Docker socket 无访问权限。91 宿主全局环境没有
 LMCache、Mooncake、Helm 或 kubectl；其现有 vLLM 容器不能提供 BidKV 所需协议。
 必须在可访问的真实环境重复验收后才能解除发布冻结。
+
+上游契约审计进一步确认：draft PR #51601 的代码 head
+`f8b7db61e446911e0d62fcb8220f863d6098c471` 只有 registry-only 的单一
+`PreemptionPlugin`，而同一提交的设计文档描述未来可组合的批量
+`PreemptionScore` 和 out-of-tree descriptor；RFC #51608 也把 out-of-tree 支持
+放在接口稳定以后。BidKV 首期迁移只接受“核心批准候选后的 victim ranking”，
+不恢复主动抢占、waiting queue 修改或私有 scheduler 方法调用。
 
 补充审计：91 实际存在空闲 Ascend 910B2 和一个属于 shuhao 的 vLLM-HUST 0.23
 容器，但其源码和已安装分发都没有 `vllm.victim_selector`。Manager 已取消“按版本

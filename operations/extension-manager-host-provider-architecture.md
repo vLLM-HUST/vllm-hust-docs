@@ -47,6 +47,14 @@ legacy experimental，只有宿主提供协议存在和版本证据时才能报�
 Manager 的 `run` 会拒绝 unverified/incompatible scheduler policy；后续应作为
 上游框架消费者迁移，而不是把整个策略写进核心。
 
+截至 draft PR #51601 head
+`f8b7db61e446911e0d62fcb8220f863d6098c471`，代码仍是单一
+`PreemptionPlugin.preemption_key(Request, position)` 和进程内 registry；同一提交的
+设计文档却描述可组合、加权、批量、只读 feature 的 `PreemptionScore` 以及未来
+`vllm.scheduler_plugins` descriptor。RFC 还明确把 out-of-tree 支持放在接口稳定
+之后。BidKV 首期只映射“核心已批准候选后的 victim ranking”；主动触发抢占、修改
+waiting queue、KV cleanup 和 reinsertion 仍归核心，不能通过 monkey patch 带回。
+
 ### 3.2 Mooncake / LMCache
 
 Mooncake 本体是外部 KV 状态、传输和存储系统；`MooncakeConnector` 与
