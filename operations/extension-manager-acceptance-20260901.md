@@ -19,6 +19,7 @@
 | Production Stack chart render | 通过 | 官方 commit `1b87c11a24c144f6b63a64dbae4fc8c875059731`，Helm `v4.2.4` |
 | Production Stack server dry-run | 通过 | 临时 kind `v0.33.0`、Kubernetes `v1.34.11`，8/8 资源通过 |
 | Production Stack Helm rollout/rollback | 通过 | 实际 install/upgrade/rollback/failure rollback/uninstall |
+| Production Stack controller/Router/HPA | 通过（无真实模型） | 官方 controller 调谐、Router 转发、Metrics API 1→3；双写冲突已验证 |
 | vLLM 0.23/BidKV compatibility | 正确拒绝 | 真实容器报告 `installed + discovered + incompatible` |
 
 本轮未发布的构建物 SHA-256：
@@ -86,9 +87,8 @@ ServiceAccount。该步骤只做本地渲染，没有 kube context，也没有�
 1. BidKV 在真实 vLLM scheduler 中被加载、调用并完成进程重启回退；
 2. Mooncake 的真实 vLLM connector KV 命中；官方 NPU master 健康/中断/恢复、
    non-CUDA TransferEngine TCP 和 Store 对象 put/get/remove 已分别通过；
-3. Production Stack 官方 controller 业务 reconciliation 和实际 autoscaling 决策；
-   chart render、server dry-run、隔离集群 Router/controller fixture rollout、CRD API、
-   HPA target 引用和 Helm 回滚已通过；
+3. Production Stack 官方 controller 业务 reconciliation、Router 到外部后端转发和
+   实际 autoscaling 决策已通过；真实模型后端和发布支持矩阵仍待完成；
 4. 真实宿主版本/API/协议矩阵和权限拒绝。
 
 112 没有可用的上述宿主环境且 Docker socket 无访问权限。91 宿主全局环境没有
@@ -257,10 +257,46 @@ disable/forget，外部 operator 单独删除临时容器；没有 clear、evict
 隐式服务启停。临时 SHM 与目录已清理，官方镜像仅作为缓存保留。
 
 这使 LMCache 0.5.4 MP gate 通过，但不解除 alpha 冻结：BidKV 上游 scheduler
-契约、Mooncake vLLM connector 命中、Production Stack 官方 controller/metrics/traffic 以及
-更完整的宿主与权限矩阵仍未完成。
+契约、Mooncake vLLM connector 命中、Production Stack 真实模型后端及发布支持矩阵，
+以及更完整的宿主与权限矩阵仍未完成。
 
-## 9. A100 上 Mooncake 0.3.12.post1 真实数据路径
+## 9. 91 上 Production Stack 官方 controller、Router 与 Metrics HPA
+
+在 `ascend91-host` 创建唯一隔离 kind 集群 `vllmhust-ps-e2e-20260901`，只使用隔离
+kubeconfig。固定官方 Production Stack commit 为
+`1b87c11a24c144f6b63a64dbae4fc8c875059731`，Kubernetes 为 1.34.11，kind 为
+0.33.0，metrics-server 为官方 0.9.0 manifest。由于上游 distroless registry 不可达，
+controller 使用 exact source 编译出的官方 Go 二进制和测试专用 `scratch` carrier；
+该 carrier 不冒充官方 release image。Router 则按官方 Dockerfile 从同一 commit 构建。
+
+实际结果：
+
+1. 官方 controller 从 `VLLMRouter` CR 创建并拥有 ServiceAccount、Role、RoleBinding、
+   Service 与 Deployment；Deployment/Service 的 ownerReference 均指回 CR；
+2. CR 的 replicas 1→2→1 均被真实调谐，2/2 与 1/1 rollout 成功，CR status 为 Ready；
+3. 官方 Router 将 `POST /v1/completions` 转发到外部 OpenAI-compatible 测试后端，
+   返回 HTTP 200 和 `forwarded-by-vllmhust-e2e`，后端日志独立记录 POST；
+4. 完全移除外部后端并等待 Pod/Endpoint 消失后，UUID 唯一请求返回 HTTP 500；恢复
+   后端后无需重装 Router 即恢复 200；
+5. 官方 metrics-server 的 Metrics API 返回真实 CPU；独立所有权的 Router Deployment
+   在负载下从 1 扩到 3，HPA 记录 87m/87%、`ScalingActive=True`、
+   `AbleToScale=True`；
+6. 负向冲突测试把 HPA 指向 `VLLMRouter` 所有的 Deployment：HPA desired=2，官方
+   controller 随即按 CR 改回 1。当前上游实现存在确定的副本双写冲突，因此 Provider
+   新增 `ownership_conflicts`，一旦报告即投影为 `incompatible + degraded`；
+7. 删除 CR 后所有 owner-controlled 资源均被垃圾回收；独立 HPA/Deployment 由外部
+   operator 显式删除。Manager 全程仍只有 plan/render/check，没有 cluster mutation API。
+
+这次还暴露了两个必须进入验收标准的细节：Router 的 URL validator 拒绝单 label
+Kubernetes Service 名称，需使用完整 `svc.cluster.local` FQDN；controller status 曾在
+固定延迟 liveness 暴露错误前短暂报告 Ready。因此健康不能再只靠
+`rollout_healthy + rollout_evidence`，现在还必须分别给出
+`controller_reconciliation`、`router_traffic`、`autoscaler_decision` 三项结构化证据。
+
+完整固定输入、image ID 与逐项结果同步在 Manager 的
+`docs/evidence/production-stack-1b87c11-ascend91-2026-09-01.md`。
+
+## 10. A100 上 Mooncake 0.3.12.post1 真实数据路径
 
 在 `a100-dev` 使用官方
 `mooncake-transfer-engine-non-cuda==0.3.12.post1` cp311 manylinux wheel，SHA-256

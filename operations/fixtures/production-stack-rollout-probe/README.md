@@ -30,7 +30,19 @@ Expected sequence:
 6. Uninstall and require all release-labelled resources to be absent.
 7. Delete the isolated cluster, test image tags, and staging directory.
 
-Passing this fixture does not satisfy the remaining controller/autoscaler
-business-logic or Router-to-model traffic gates. Without a metrics server, HPA
-object/controller reconciliation can be checked, but an actual CPU-driven scale
-decision cannot be claimed.
+The newer files in this directory extend the historical Helm fixture:
+
+- `Dockerfile.operator-arm64` carries the exact upstream Go controller binary
+  in `scratch` for the isolated arm64 test;
+- `vllmrouter-e2e.yaml` exercises official CR reconciliation;
+- `mock_backend.py`, `Dockerfile.mock-backend`, and `mock-backend.yaml` provide
+  a deterministic OpenAI-compatible external endpoint;
+- `router-hpa-deployment.yaml`, `router-hpa.yaml`, and `router-load.yaml`
+  exercise real Metrics API scaling without claiming model inference; and
+- `operator-hpa-conflict.yaml` is a negative-only two-writer ownership test.
+
+The extended run passes controller business reconciliation, Router-to-external
+backend traffic, and a real CPU-driven 1-to-3 scaling decision. It does not
+claim real model inference. The HPA is intentionally attached to a separately
+owned Router Deployment: the negative fixture proves the current controller
+will fight an HPA that also writes its owned Deployment's replica count.

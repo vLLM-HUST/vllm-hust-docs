@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vllmhust-e2e-router-hpa
+  namespace: vllmhust-production-stack-e2e
+  labels:
+    app.kubernetes.io/name: vllmhust-e2e-router-hpa
+    app.kubernetes.io/part-of: vllmhust-production-stack-e2e
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vllmhust-e2e-router-hpa
+  template:
+    metadata:
+      labels:
+        app: vllmhust-e2e-router-hpa
+    spec:
+      containers:
+        - name: router
+          image: vllmhust/production-stack-router:1b87c11-arm64
+          imagePullPolicy: IfNotPresent
+          args:
+            - --host
+            - 0.0.0.0
+            - --port
+            - "8000"
+            - --service-discovery
+            - static
+            - --static-backends
+            - http://vllmhust-e2e-backend.vllmhust-production-stack-e2e.svc.cluster.local:8000
+            - --static-models
+            - vllmhust-e2e-model
+            - --routing-logic
+            - roundrobin
+            - --engine-stats-interval
+            - "5"
+          ports:
+            - name: http
+              containerPort: 8000
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 5
+          resources:
+            requests:
+              cpu: 10m
+              memory: 128Mi
+            limits:
+              cpu: "1"
+              memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vllmhust-e2e-router-hpa
+  namespace: vllmhust-production-stack-e2e
+spec:
+  selector:
+    app: vllmhust-e2e-router-hpa
+  ports:
+    - name: http
+      port: 80
+      targetPort: http

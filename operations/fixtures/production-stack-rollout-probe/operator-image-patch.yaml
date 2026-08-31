@@ -1,0 +1,7 @@
+spec:
+  template:
+    spec:
+      containers:
+        - name: manager
+          image: vllmhust/production-stack-operator:1b87c11-arm64
+          imagePullPolicy: IfNotPresent

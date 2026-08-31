@@ -92,6 +92,10 @@ Manager，冻结兼容契约后再改为稳定的版本范围。
 Kubernetes manifest、CRD、controller、router、autoscaler 和 OCI 载体。第一阶段
 只生成 values、`helm template` 计划、server dry-run 输入和 rollout 检查；实际
 apply/uninstall 必须由拥有 kube context 和审批的 Kubernetes operator 执行。
+Provider 的健康证据必须拆成 controller reconciliation、Router traffic 和
+autoscaler decision。`VLLMRouter.spec.replicas` 与 HPA 对同一 Deployment 的
+`spec.replicas` 是双写冲突；除非上游 controller 明确委托副本所有权，否则 Manager
+必须投影为 `incompatible + degraded`，不得自动选择胜者。
 
 ## 4. Manifest 0.2-experimental
 
@@ -121,7 +125,9 @@ alpha：
 plan/render/check smoke、LMCache 0.5.4 官方 CPU-SHM MP 数据路径，以及官方
 Mooncake 0.3.12.post1 TransferEngine TCP 与 Store 对象数据路径，以及官方
 Production Stack chart 的本地 Helm template 和隔离 kind API server dry-run。
-仍未完成 Mooncake 的真实 vLLM connector 命中、真实生产 Kubernetes
-controller/metrics/Router traffic 或 BidKV scheduler 验收。
+已在隔离 Kubernetes 1.34.11 中完成 Production Stack 官方 controller 调谐、官方
+Router 到外部测试后端的真实转发，以及真实 Metrics API 驱动的 1→3 扩容；同时验证
+controller/HPA 双写冲突。仍未完成 Mooncake 的真实 vLLM connector 命中、真实模型
+后端流量、Production Stack 发布镜像矩阵或 BidKV scheduler 验收。
 
 逐项执行证据见 [2026-09-01 验收记录](extension-manager-acceptance-20260901.md)。
