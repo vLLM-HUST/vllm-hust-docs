@@ -12,7 +12,7 @@
 | Ascend 规范 fork | `vLLM-HUST/vllm-ascend-hust` | fork of `vllm-project/vllm-ascend` | `main` 与上游逐 SHA 一致 |
 | 旧 vLLM-HUST | `intellistream/vllm-hust-legacy-20260831` | 保留原 fork network | 已归档、只读 |
 | 旧 Ascend 主线 | `intellistream/vllm-ascend-hust-legacy-20260831` | 保留原 network | 已归档、只读 |
-| 插件生命周期管理 | `vLLM-HUST/vllmhust` | 独立 Python distribution | 已建立可运行基线 |
+| 扩展发现与启用管理 | `vLLM-HUST/extension-manager` | 独立 Python distribution `vllm-hust-ext` | 已建立可运行基线 |
 
 迁移前 metadata、分支引用、Issue/PR 清单和校验和保存在：
 
@@ -51,9 +51,9 @@ vllm.victim_selector (API version 1)
 
 它只负责显式调用 scheduler-local selector。没有配置时保持官方 FCFS/priority 行为且不扫描 entry point；显式选择时校验唯一性、API 版本、初始化结果和返回 request 身份。
 
-### 2.4 `vllmhust` 生命周期管理器
+### 2.4 vLLM-HUST Extension Manager
 
-独立 `vllmhust` 包负责：
+独立 `vllm-hust-ext` 包负责：
 
 - 从 installed distribution metadata 静态发现 manifest；
 - 在 import 实现前校验 identity、版本和 manifest；
@@ -69,11 +69,11 @@ vllm.victim_selector (API version 1)
 插件是可独立构建、安装、启用、禁用和卸载的发行包。安装只表示可发现，不自动改变服务行为。manifest 描述 bundle/components；activation 描述实际 entry point、环境和 vLLM 配置。
 
 ```bash
-pip install vllmhust
+pip install vllm-hust-ext
 pip install bidkv
-vllmhust plugin list
-vllmhust plugin enable org.vllm-hust.bidkv
-vllmhust run -- vllm serve MODEL
+vllm-hust-ext extension list
+vllm-hust-ext extension enable org.vllm-hust.bidkv
+vllm-hust-ext run -- vllm serve MODEL
 ```
 
 ### 2.6 KV 系统与 connector
@@ -92,7 +92,7 @@ connector 可以由 distribution 或 bundle 交付，但系统、connector、交
 
 ### 2.7 Control plane 与 bridge
 
-control plane 负责跨实例 admission、placement、routing 和全局策略，必须位于引擎之外。vLLM 只提供有界、本地、可授权、可回执的 bridge contract。通用 sidecar 编排属于 `vllmhust` 或独立 bridge 包，不进入默认核心启动路径。
+control plane 负责跨实例 admission、placement、routing 和全局策略，必须位于引擎之外。vLLM 只提供有界、本地、可授权、可回执的 bridge contract。Extension Manager 只管理已安装 bridge adapter 的发现与启动配置；通用 sidecar 和 control-plane 服务编排属于独立系统，不进入管理器或默认核心启动路径。
 
 ## 3. 核心补丁预算
 
@@ -122,7 +122,7 @@ control plane 负责跨实例 admission、placement、routing 和全局策略，
 
 1. 保持两个新 fork 的 `main` 与官方同步；
 2. 在 `feature/unified-plugin-api-v1` 逐个重写必需薄 hook；
-3. 完成并发布 `vllmhust`；
+3. 完成并发布 vLLM-HUST Extension Manager（`vllm-hust-ext`）；
 4. 用 BidKV 验证 install → discover → enable → run → disable → uninstall；
 5. 依次迁移 KV compression、DiffSpec、LatchMoE 和其他旧能力；
 6. 为 Mooncake、LMCache、PegaFlow 分离 system 与 connector 清单；
