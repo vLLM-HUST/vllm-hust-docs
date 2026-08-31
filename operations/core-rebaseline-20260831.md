@@ -43,13 +43,15 @@ manifest、安装状态、enable/disable、配置持久化、进程管理、side
 
 ### 2.3 薄领域 hook
 
-核心 hook 是引擎机制，不是 bundle。首个重基线 hook 为：
+核心 hook 是引擎机制，不是 bundle。旧归档 fork 曾验证：
 
 ```text
 vllm.victim_selector (API version 1)
 ```
 
-它只负责显式调用 scheduler-local selector。没有配置时保持官方 FCFS/priority 行为且不扫描 entry point；显式选择时校验唯一性、API 版本、初始化结果和返回 request 身份。
+该私有 hook 只属于归档实验基线，不进入新的官方 fork。新的 scheduler 扩展必须
+跟踪上游 RFC #51608 / PR #51601，在 Preemption 等契约冻结后以最窄改动接入；
+不能因旧回放通过就宣称当前核心兼容。
 
 ### 2.4 vLLM-HUST Extension Manager（Core + Host Provider）
 
@@ -78,9 +80,11 @@ vllm.victim_selector (API version 1)
 pip install vllm-hust-ext
 pip install bidkv
 vllm-hust-ext extension list
-vllm-hust-ext extension enable org.vllm-hust.bidkv
-vllm-hust-ext run -- vllm serve MODEL
+vllm-hust-ext extension status org.vllm-hust.bidkv
 ```
+
+当前 BidKV 主包只静态注册实验 manifest，不注册私有 `vllm.victim_selector`；
+Manager `run` 会拒绝 unverified/incompatible 的进程内 scheduler policy。
 
 ### 2.6 KV 系统与 connector
 

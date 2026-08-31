@@ -7,8 +7,8 @@
 
 | 范围 | 结果 | 证据 |
 |---|---:|---|
-| Extension Manager | 通过 | ruff、format、39 个 pytest；Python 3.10/3.12 |
-| BidKV vLLM 接口 | 通过 | `tests/test_vllm_plugin.py` 8 个 pytest |
+| Extension Manager | 通过 | 43 个 pytest；新增 unverified/incompatible 启动拒绝 |
+| BidKV 历史接口边界 | 通过 | 主发行包不再注册私有 `vllm.victim_selector`；旧 adapter 仅 import-only |
 | 网站多维分类 | 通过 | `tests/test_plugins_page.py` 11 个 pytest |
 | LMCache profile metadata | 通过 | wheel 精确依赖 `vllm-hust-ext==0.2.0.dev0` |
 | LMCache-Ascend adapter metadata | 通过 | 独立 profile wheel；动态 connector/module 精确配对 |
@@ -21,7 +21,8 @@
 
 本轮未发布的构建物 SHA-256：
 
-- Manager（180 验收所用未发布 wheel）：`b16bb11347b5b31279e7ae2a8d6f2a124b0879445aaaf9ac1c136ba724771924`
+- Manager（本轮 fail-closed 验收所用未发布 wheel）：`cc87c686f1ad04adf66d79c082e2867a3480f7cd61fb2cda01c26d7fb5cfa35d`
+- BidKV（本轮移除私有 entry point 后的未发布 wheel）：`c664cf2cf61772a20c9f189f691c8867935cce739993319eef0ca4e2bd439ea3`
 - LMCache profile：`f74f3bddb9672a2bdf900a76876b5dec26ab63007ccba594ad6c22c0604141ed`
 - Mooncake profile（本轮最新临时构建）：`46b735b8b56a9c8d787ffc9af49130dcec9331d8c5973805e4315ecd88a307ff`
 - Production Stack profile：`05d024ec9dda0a3a9403d72c1705ab98ddb9c86022548b229eda4c0fd54b742a`
@@ -42,6 +43,11 @@ CLI 按 Provider 声明的 `kv_transfer_config` 能力生成 vLLM 参数，不�
 名称硬编码。Mooncake 与 LMCache 同时 enabled 时对同一参数发生冲突，CLI fail
 closed，退出码为 2。
 
+另在 Windows 临时虚拟环境实际安装上述 Manager 与 BidKV wheel：静态 discovery
+成功，已安装 metadata 中 `vllm.victim_selector` entry point 为零；保存 enabled
+意图后状态为 `installed + discovered + configured + enabled + degraded`，由于宿主
+版本和协议证据缺失，`run --dry-run` 在生成命令前以退出码 2 拒绝启动。
+
 ## 3. 已验证失败与安全边界
 
 - Mooncake、LMCache 的虚构/不可达健康地址投影为 `degraded`，enabled 意图保留；
@@ -51,6 +57,8 @@ closed，退出码为 2。
 - Production Stack 输出 Helm values 和 operator plan，`apply` 为 `null`；
 - Core 拒绝 Provider 生成的 mutating action；
 - Manager 不提供 service stop/delete、cache clear/evict 或 Kubernetes apply API。
+- Manager `run` 对 `incompatible` 扩展一律拒绝；对 vLLM 进程内
+  `scheduler_policy` 还要求明确的 compatible 证据，不能凭 enabled 意图启动。
 
 Production Stack Provider 的示例 values 已实际输入官方 `helm/` chart，`helm
 dependency build` 固定取得 `kube-prometheus-stack 82.4.3` 和
