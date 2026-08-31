@@ -36,6 +36,15 @@ BidKV 是 `scheduler_policy`，运行在 vLLM scheduler 进程中，生命周期
 进程持有。Manager 生成 entry-point 选择、环境变量和 `additional_config`，实际
 加载仍由 vLLM 执行。核心只保留通用 `vllm.victim_selector` 窄 hook。
 
+2026-09-01 实机审计确认：fresh vLLM-HUST 0.23 不包含上述旧 HUST hook，远端也
+不存在此前文档假设的 `feature/unified-plugin-api-v1`。上游已有
+[Scheduler Plugin RFC #51608](https://github.com/vllm-project/vllm/issues/51608)
+和 [draft PR #51601](https://github.com/vllm-project/vllm/pull/51601)，目标是
+`vllm.scheduler_plugins`、只读 feature 和独立 PreemptionScore。新 fork 不应再
+创建竞争的私有接口。BidKV 当前 manifest 必须保留为 legacy experimental，只有
+宿主提供协议存在和版本证据时才能报告 compatible；后续应作为上游框架消费者
+迁移，而不是把整个策略写进核心。
+
 ### 3.2 Mooncake / LMCache
 
 Mooncake 本体是外部 KV 状态、传输和存储系统；`MooncakeConnector` 与

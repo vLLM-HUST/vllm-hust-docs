@@ -61,6 +61,11 @@ ServiceAccount。该步骤只做本地渲染，没有 kube context，也没有�
    的本地 Helm template 已通过；
 5. 真实宿主版本/API/协议矩阵和权限拒绝。
 
-当前 112/91 没有可用的上述宿主环境；112 的 Docker socket 无访问权限，91 没有
-vLLM、LMCache、Mooncake、Helm 或 kubectl。必须在可访问的真实环境重复验收后才能
-解除发布冻结。
+112 没有可用的上述宿主环境且 Docker socket 无访问权限。91 宿主全局环境没有
+LMCache、Mooncake、Helm 或 kubectl；其现有 vLLM 容器不能提供 BidKV 所需协议。
+必须在可访问的真实环境重复验收后才能解除发布冻结。
+
+补充审计：91 实际存在空闲 Ascend 910B2 和一个属于 shuhao 的 vLLM-HUST 0.23
+容器，但其源码和已安装分发都没有 `vllm.victim_selector`。Manager 已取消“按版本
+默认假定协议存在”的错误逻辑。BidKV 真正端到端验收需等待/跟踪上游 #51601 的
+可评审契约，或由人审明确固定一个临时上游 commit；不能靠恢复私有 hook 绕过门禁。
