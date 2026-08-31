@@ -1,5 +1,11 @@
 # vLLM-HUST 统一插件 API v1 标准化改造交接书
 
+> **边界变更（2026-08-31）：** 本文保留为早期设计审计资料，但不再是当前
+> 实施入口。核心仓库已经从官方重新建立规范 fork；manifest discovery、安装状态、
+> enable/disable、配置持久化和生命周期管理迁移到独立 `vLLM-HUST/vllmhust` 包。
+> vLLM 核心只保留外部组件不可替代的薄领域 hook。当前执行规范见
+> `operations/core-rebaseline-20260831.md`。
+
 > 状态：待专用实现线程接管
 >
 > 编写日期：2026-08-28
