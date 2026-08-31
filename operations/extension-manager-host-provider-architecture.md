@@ -51,6 +51,11 @@ values。LMCache 内部 backend、transport、runtime plugin、controller 以及
 和 [vLLM dynamic connector 说明](https://docs.lmcache.ai/api_reference/dynamic_connector.html)
 为准；`LMCacheConnectorV1` 属于兼容路径，新增部署默认使用 MP 模式。
 
+Mooncake 与 LMCache Provider 都可把标准 `kv_transfer_config` 委托给 `vllm-hust-ext
+run`。单个 vLLM 进程只能接受一份该配置；若两者同时 enabled，Manager 必须报告
+冲突并拒绝启动，不能按 Provider 名称硬编码优先级。实验 profile 精确依赖同版本
+Manager，冻结兼容契约后再改为稳定的版本范围。
+
 ### 3.3 Production Stack / Kubernetes
 
 该 Provider 描述 `control_plane_extension`，支持 Helm values、渲染后的
