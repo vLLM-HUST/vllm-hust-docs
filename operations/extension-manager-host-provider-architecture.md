@@ -24,6 +24,9 @@ Core 只提供：
 
 Provider factory 使用 `vllm_hust_ext.providers`。第一阶段协议没有 `apply`、
 `delete` 或 `uninstall_service`；Core 拒绝 Provider 生成的隐式 mutating action。
+包卸载由 pip 等包管理器负责。标准顺序是宿主回退/重启、`disable`、`forget`、
+`pip uninstall`；`forget` 仅删除 Manager 保存的配置和启用意图，并拒绝仍处于
+enabled 的扩展，防止重装后意外恢复陈旧状态。
 
 ## 3. 三类宿主
 
