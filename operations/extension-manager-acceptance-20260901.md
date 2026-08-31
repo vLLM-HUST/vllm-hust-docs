@@ -7,7 +7,7 @@
 
 | 范围 | 结果 | 证据 |
 |---|---:|---|
-| Extension Manager | 通过 | 51 个 pytest；含 Mooncake NPU transport、操作证据和降级测试 |
+| Extension Manager | 通过 | 53 个 pytest；新增 Production Stack 真实模型、5xx→2xx 和 arm64 发布缺口投影 |
 | BidKV 历史接口边界 | 通过 | 379 个 pytest；主包不注册私有 selector；旧 adapter 仅 import-only |
 | 网站多维分类 | 通过 | `tests/test_plugins_page.py` 11 个 pytest |
 | LMCache profile metadata | 通过 | wheel 精确依赖 `vllm-hust-ext==0.2.0.dev0` |
@@ -20,7 +20,8 @@
 | Production Stack chart render | 通过 | 官方 commit `1b87c11a24c144f6b63a64dbae4fc8c875059731`，Helm `v4.2.4` |
 | Production Stack server dry-run | 通过 | 临时 kind `v0.33.0`、Kubernetes `v1.34.11`，8/8 资源通过 |
 | Production Stack Helm rollout/rollback | 通过 | 实际 install/upgrade/rollback/failure rollback/uninstall |
-| Production Stack controller/Router/HPA | 通过（无真实模型） | 官方 controller 调谐、Router 转发、Metrics API 1→3；双写冲突已验证 |
+| Production Stack controller/Router/HPA | 通过 | 官方 controller 调谐、真实 GLM Router 转发、Metrics API 1→3；双写冲突已验证 |
+| Production Stack v0.1.12 arm64 release image | 未通过 | 官方 GHCR manifest 无 `linux/arm64/v8`；同提交源码构建可运行但投影 degraded |
 | vLLM 0.23/BidKV compatibility | 正确拒绝 | 真实容器报告 `installed + discovered + incompatible` |
 
 本轮未发布的构建物 SHA-256：
@@ -29,6 +30,7 @@
 - Manager（LMCache 0.5.4 远端版本修正后的未发布 wheel）：`3954fa13d8130af877fecdeebd4fabb1b4c28268fa70197920a66af23369073e`
 - Manager（Mooncake unversioned schema 修正后的未发布 wheel）：`31de65b5edfc09484e8a955bea52e1e5db323a397b39783ce574c3c5d966879a`
 - Manager（Mooncake Ascend connector 操作证据检查）：`6a7961240e45462ccf88de01e4f33de661dbf09656189ce0f3de448eb42dceb1`
+- Manager（Production Stack 真实模型与发布镜像缺口检查）：`48172a83869e364e48c5163760f9394d9618da271b3414b7820ac5bcfbc0d931`
 - BidKV（本轮移除私有 entry point 后的未发布 wheel）：`c664cf2cf61772a20c9f189f691c8867935cce739993319eef0ca4e2bd439ea3`
 - LMCache profile：`f74f3bddb9672a2bdf900a76876b5dec26ab63007ccba594ad6c22c0604141ed`
 - LMCache 0.5.4 profile（精确 `>=0.5.4,<0.6` manifest）：`ef2146f3ac33c506e59126c724a47f0d64ba09816bea72f534920fe652079033`
@@ -36,6 +38,7 @@
 - Mooncake 0.3.12.post1 profile（修正 package range 与载体后）：`dadab019c5800ac386f3165f472672a3af3228e22fdba16a15c2c62115324350`
 - Mooncake profile（Ascend 0.3.11.post1 支持范围）：`97f707c487e0bdf708eaddf45921181917c110fff4c745bbee0890effb7bc29a`
 - Production Stack profile：`05d024ec9dda0a3a9403d72c1705ab98ddb9c86022548b229eda4c0fd54b742a`
+- Production Stack profile（增加 vLLM backend required service）：`9d7269a64155e7f3edfd89ecfb39b5226185ef2a1943206082f3e24dae1dba77`
 - LMCache-Ascend adapter profile（本轮临时构建）：`947549095322eb3e4a9d410950ece2bccb1eb377b3bfd42782e6216486a209dd`
 
 ## 2. 112 与 91 包生命周期
@@ -90,8 +93,9 @@ ServiceAccount。该步骤只做本地渲染，没有 kube context，也没有�
 1. BidKV 在真实 vLLM scheduler 中被加载、调用并完成进程重启回退；
 2. Mooncake 官方 NPU master、non-CUDA TransferEngine/Store，以及真实 vLLM
    connector save/load 命中均已通过；仍需扩充跨版本/跨节点支持矩阵；
-3. Production Stack 官方 controller 业务 reconciliation、Router 到外部后端转发和
-   实际 autoscaling 决策已通过；真实模型后端和发布支持矩阵仍待完成；
+3. Production Stack 官方 controller 业务 reconciliation、Router 到外部后端转发、
+   真实 GLM 模型请求和实际 autoscaling 决策已通过；官方 release image 的 arm64
+   支持仍缺失，发布支持矩阵仍待完成；
 4. 真实宿主版本/API/协议矩阵和权限拒绝。
 
 112 没有可用的上述宿主环境且 Docker socket 无访问权限。91 宿主全局环境没有
@@ -258,7 +262,7 @@ disable/forget，外部 operator 单独删除临时容器；没有 clear、evict
 隐式服务启停。临时 SHM 与目录已清理，官方镜像仅作为缓存保留。
 
 这使 LMCache 0.5.4 MP gate 通过，但不解除 alpha 冻结：BidKV 上游 scheduler
-契约、Mooncake vLLM connector 命中、Production Stack 真实模型后端及发布支持矩阵，
+契约、Production Stack 发布支持矩阵，
 以及更完整的宿主与权限矩阵仍未完成。
 
 ## 9. 91 上 Production Stack 官方 controller、Router 与 Metrics HPA
@@ -351,5 +355,30 @@ vLLM-HUST 分支 `feature/mooncake-store-ascend-kv-cache` 的提交 `aa2781f7bc`
 
 完整固定输入和结果同时记录在 Extension Manager 的
 `docs/evidence/mooncake-store-vllm-ascend-180-2026-09-01.md`。Mooncake 这一宿主门
-已经通过，但 BidKV scheduler 的上游稳定 hook、Production Stack 真实模型支持矩阵
+已经通过，但 BidKV scheduler 的上游稳定 hook、Production Stack 发布镜像支持矩阵
 及整体跨版本矩阵仍阻塞 alpha 发布。
+
+## 12. 180 上 Production Stack Router 真实 GLM 数据面
+
+`180-ascend-bench` 为 arm64。既有生产容器持续提供
+`zai-org/GLM-4-32B-0414`，监听 `127.0.0.1:8001`，验收没有重启或修改它。官方
+`ghcr.io/vllm-project/production-stack/router:v0.1.12` 拉取返回
+`no matching manifest for linux/arm64/v8`，因此不能把该 release image 记为通过。
+
+验收锁定官方 Production Stack commit
+`1b87c11a24c144f6b63a64dbae4fc8c875059731`，在 arm64 上构建隔离 Router。宿主没有
+BuildKit/buildx，故只去掉 Dockerfile 的 cache-mount 注解；源码、安装命令和 entry
+point 保持不变，可执行文件报告 `0.1.dev1+g1b87c11a2.d20260831`。语义缓存和 LMCache
+可选依赖没有安装，因为它们不属于这条 control-plane Router 验收。
+
+Router 首先连接不存在的 `127.0.0.1:65534`：自身 `/health` 为 200，但有效
+chat-completions 请求返回 500，日志记录 connection refused。外部 operator 只删除
+并重建这个隔离 Router，将后端换为 `127.0.0.1:8001`；同一请求随即返回 200、模型
+ID 和 `ROUTER_OK`。直接模型端点在前后都报告相同 model ID/root，生产容器保持
+running 且启动时间不变。测试 Router、源码、响应文件、测试 image 和临时 base tag
+已精确清理，生产模型仍可访问。
+
+Manager 因此新增 `router_data_plane_evidence`：只有 `backend_kind=real_model`，同时
+给出 5xx 失败、2xx 恢复、响应标记、Router 版本、架构和 release image 支持状态，
+才允许 `rollout_healthy=true`。Mock backend 只算 smoke。此次 arm64 源码构建链为
+`healthy + degraded`：真实数据面通过，但官方 v0.1.12 发布物不支持该架构。
