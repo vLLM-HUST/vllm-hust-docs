@@ -132,7 +132,7 @@ control plane 负责跨实例 admission、placement、routing 和全局策略，
 2. 在 `feature/unified-plugin-api-v1` 逐个重写必需薄 hook；
 3. 完成 Extension Manager Core、实验 schema 和 Provider 协议；
 4. 用 BidKV 验证 vLLM 宿主链；
-5. 用 Mooncake 验证外部 KV service + 官方 connector 链，并设计 LMCache 对照；
+5. 分别用 Mooncake 与 LMCache 验证外部 KV service + 官方 connector 链；
 6. 用 Production Stack 验证 Helm/CRD/controller/router/autoscaler/OCI 链；
 7. 完成冲突、降级、不可达、回滚和无隐式外部变更测试；
 8. 更新网站 registry、文档、CI 和兼容矩阵；

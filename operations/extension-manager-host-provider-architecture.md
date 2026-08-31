@@ -41,9 +41,15 @@ Mooncake 本体是外部 KV 状态、传输和存储系统；`MooncakeConnector`
 停止、升级 Mooncake，不删除 KV 数据，也不立即引入自维护 Mooncake Fork 或 C++
 动态插件 ABI。
 
-LMCache 采用相同边界：优先复用官方 connector、server 和 Production Stack 的
-LMCache values；LMCache 内部 backend、transport 和 controller 仍由 LMCache
-管理。
+LMCache 采用独立的无侵入 Provider，而不是 Mooncake Provider 的别名。它优先生成
+官方 `LMCacheMPConnector`（也可显式选择兼容的 V1/dynamic connector）配置，检查
+外部 MP HTTP 服务的 `/healthcheck`，并可输出 Production Stack 所需的 LMCache
+values。LMCache 内部 backend、transport、runtime plugin、controller 以及 KV 数据
+仍由 LMCache 管理；Manager 不调用 clear、evict 或 delete 接口。
+
+实现以 LMCache 官方的 [MP 配置说明](https://docs.lmcache.ai/mp/configuration.html)
+和 [vLLM dynamic connector 说明](https://docs.lmcache.ai/api_reference/dynamic_connector.html)
+为准；`LMCacheConnectorV1` 属于兼容路径，新增部署默认使用 MP 模式。
 
 ### 3.3 Production Stack / Kubernetes
 
@@ -69,7 +75,8 @@ Kubernetes manifest、CRD 或 controller。非官方注册不得占用新 `vllm.
 alpha：
 
 1. BidKV 安装、发现、配置、启用、真实 vLLM 加载、回退；
-2. Mooncake 官方 connector、真实外部服务健康/中断/恢复，且无隐式服务变更；
+2. Mooncake 与 LMCache 各自使用官方 connector，完成真实外部服务
+   健康/中断/恢复，且无隐式服务或 KV 数据变更；
 3. Production Stack 对官方 chart 渲染、server dry-run、rollout 检查，且无
    apply/uninstall；
 4. 冲突、版本不兼容、缺服务、不可达、部分健康、降级、禁用、重启回退；
