@@ -7,13 +7,14 @@
 
 | 范围 | 结果 | 证据 |
 |---|---:|---|
-| Extension Manager | 通过 | 47 个 pytest；含 LMCache 远端版本隔离和 Mooncake unversioned surface 测试 |
+| Extension Manager | 通过 | 51 个 pytest；含 Mooncake NPU transport、操作证据和降级测试 |
 | BidKV 历史接口边界 | 通过 | 379 个 pytest；主包不注册私有 selector；旧 adapter 仅 import-only |
 | 网站多维分类 | 通过 | `tests/test_plugins_page.py` 11 个 pytest |
 | LMCache profile metadata | 通过 | wheel 精确依赖 `vllm-hust-ext==0.2.0.dev0` |
 | LMCache-Ascend adapter metadata | 通过 | 独立 profile wheel；动态 connector/module 精确配对 |
 | Mooncake/Production profiles | 通过 | wheel 构建及相同 Manager 精确依赖 |
 | Mooncake NPU service health lifecycle | 通过 | 180 官方 NPU wheel；healthy → degraded → healthy |
+| Mooncake Store/vLLM/Ascend connector | 通过 | NPU 4；9 keys save、9 keys load，故障降级及原进程恢复 |
 | Mooncake 0.3.12.post1 data paths | 通过 | A100 官方 non-CUDA wheel；1 MiB TransferEngine TCP + Store REST put/get/remove |
 | LMCache 0.5.4 MP data path | 通过 | A100 官方固定摘要镜像；CPU-SHM LOOKUP/STORE/RETRIEVE/CHECKSUM 100% |
 | Production Stack chart render | 通过 | 官方 commit `1b87c11a24c144f6b63a64dbae4fc8c875059731`，Helm `v4.2.4` |
@@ -27,11 +28,13 @@
 - Manager（本轮 fail-closed 验收所用未发布 wheel）：`cc87c686f1ad04adf66d79c082e2867a3480f7cd61fb2cda01c26d7fb5cfa35d`
 - Manager（LMCache 0.5.4 远端版本修正后的未发布 wheel）：`3954fa13d8130af877fecdeebd4fabb1b4c28268fa70197920a66af23369073e`
 - Manager（Mooncake unversioned schema 修正后的未发布 wheel）：`31de65b5edfc09484e8a955bea52e1e5db323a397b39783ce574c3c5d966879a`
+- Manager（Mooncake Ascend connector 操作证据检查）：`6a7961240e45462ccf88de01e4f33de661dbf09656189ce0f3de448eb42dceb1`
 - BidKV（本轮移除私有 entry point 后的未发布 wheel）：`c664cf2cf61772a20c9f189f691c8867935cce739993319eef0ca4e2bd439ea3`
 - LMCache profile：`f74f3bddb9672a2bdf900a76876b5dec26ab63007ccba594ad6c22c0604141ed`
 - LMCache 0.5.4 profile（精确 `>=0.5.4,<0.6` manifest）：`ef2146f3ac33c506e59126c724a47f0d64ba09816bea72f534920fe652079033`
 - Mooncake profile（本轮最新临时构建）：`46b735b8b56a9c8d787ffc9af49130dcec9331d8c5973805e4315ecd88a307ff`
 - Mooncake 0.3.12.post1 profile（修正 package range 与载体后）：`dadab019c5800ac386f3165f472672a3af3228e22fdba16a15c2c62115324350`
+- Mooncake profile（Ascend 0.3.11.post1 支持范围）：`97f707c487e0bdf708eaddf45921181917c110fff4c745bbee0890effb7bc29a`
 - Production Stack profile：`05d024ec9dda0a3a9403d72c1705ab98ddb9c86022548b229eda4c0fd54b742a`
 - LMCache-Ascend adapter profile（本轮临时构建）：`947549095322eb3e4a9d410950ece2bccb1eb377b3bfd42782e6216486a209dd`
 
@@ -85,8 +88,8 @@ ServiceAccount。该步骤只做本地渲染，没有 kube context，也没有�
 以下项目没有真实证据，因此不能发布 alpha 或冻结 Manifest v1：
 
 1. BidKV 在真实 vLLM scheduler 中被加载、调用并完成进程重启回退；
-2. Mooncake 的真实 vLLM connector KV 命中；官方 NPU master 健康/中断/恢复、
-   non-CUDA TransferEngine TCP 和 Store 对象 put/get/remove 已分别通过；
+2. Mooncake 官方 NPU master、non-CUDA TransferEngine/Store，以及真实 vLLM
+   connector save/load 命中均已通过；仍需扩充跨版本/跨节点支持矩阵；
 3. Production Stack 官方 controller 业务 reconciliation、Router 到外部后端转发和
    实际 autoscaling 决策已通过；真实模型后端和发布支持矩阵仍待完成；
 4. 真实宿主版本/API/协议矩阵和权限拒绝。
@@ -172,11 +175,9 @@ CLI 同时生成官方
 Provider 已补充检测所有官方互斥 wheel 变体（CUDA、CUDA 13、non-CUDA、NPU、
 MUSA、EFA）；同一环境发现多个变体时 fail closed。
 
-本轮没有把 Mooncake NPU KV 数据路径标记为通过。`put/get` 客户端在初始化 NPU
-Transfer Engine 时因 ACL context 为空失败；该生产容器的 4 张 NPU 均已由现有
-vLLM TP workers 占用约 46.9 GiB，未为验收创建额外 device context，也未中断现有
-推理服务。Store 与 TransferEngine 数据路径随后已在官方 non-CUDA wheel 上通过；
-NPU 路径和 vLLM connector 命中仍需独立验证。
+该轮健康生命周期没有验证 NPU 数据路径；随后在同一主机的空闲 NPU 4 上完成了
+独立的真实 connector 验收，见第 11 节。早期 ACL context 失败仍是“没有创建设备
+上下文的客户端探针”结论，不能覆盖后续 vLLM worker 内的成功证据。
 
 验收完成后已终止临时 master，确认三个 loopback 端口关闭，并删除容器与宿主的
 全部本轮临时目录；现有 vLLM worker 和认证代理未被修改。
@@ -318,10 +319,37 @@ GPU 72,091 MiB；Mooncake 验收只使用 CPU DRAM、TCP 和 loopback 测试端�
 
 这一结果同时修正实验 schema：Mooncake Store REST 与 vLLM
 `kv_transfer_config` 没有独立上游 semver，manifest 使用 `version_range: null`，
-而不是虚构 `>=1,<2`；Mooncake host/package 范围收窄为
-`>=0.3.12.post1,<0.4`。Manager/profile clean-wheel discovery 通过，未安装本地
+而不是虚构 `>=1,<2`；通过 NPU `0.3.11.post1` 后，实验 host/package 范围为
+`>=0.3.11.post1,<0.4`。Manager/profile clean-wheel discovery 通过，未安装本地
 Mooncake runtime 时正确显示 host version unverified，而不会伪造兼容。
 
-全部一次性容器和进程均已退出，随机 Store key 已删除。该证据仍不等于真实
-vLLM 请求的 `MooncakeConnector`/`MooncakeStoreConnector` cache hit；该项继续
-阻塞 alpha。
+全部一次性容器和进程均已退出，随机 Store key 已删除。真实 vLLM connector
+命中由后续第 11 节的独立 Ascend 验收补齐。
+
+## 11. 180 上 MooncakeStoreConnector 真实 NPU 命中
+
+验收使用空闲 Ascend NPU 4，既有 vLLM 服务继续独占 NPU 0–3。隔离容器固定
+vLLM `0.23.0`、vLLM Ascend `0.19.1.post1.dev474+g4edbc9258`、
+`mooncake-transfer-engine-npu==0.3.11.post1` 和 Qwen3-0.6B；API 仅监听
+`127.0.0.1:18084`，本地 prefix cache 关闭。
+
+首次启动暴露真实兼容缺口：Ascend 把每层 K/V 表示为两个独立存储的 tuple，
+Mooncake Store worker 只接受 Tensor/list。不能只取 tuple 首项，否则会漏掉 V。
+vLLM-HUST 分支 `feature/mooncake-store-ascend-kv-cache` 的提交 `aa2781f7bc`
+逐段注册所有非空 tuple 成员，并保留物理存储去重；完整 worker 单测 75 项通过。
+
+修复后，Store 注册 56 个 K/V 段。同一 1,153-token prompt 请求两次，指标为：
+`lookup_exists=18 keys`、`save_put=9 keys/133191072 bytes`、
+`load_get=9 keys/133191072 bytes`，failed keys 为 0。TCP transport 曾对 NPU 地址
+返回 `Bad address`，切换 NPU wheel 明确提供的 `ascend` transport 后通过；该版本
+执行路径还要求 `load_async=true`。两者已进入 Provider 配置检查。
+
+中断隔离 master 后，新请求仍返回 HTTP 200，但 4 个异步保存 key 变为
+`partial_failure`，证明不能只看 vLLM `/health`。不重启 vLLM、恢复 master 后，
+新 prompt 成功保存 4 个 key，重复请求成功加载同一 4 个 key。Manager 只读取并
+投影这些证据，master 的停启由测试 operator 执行。
+
+完整固定输入和结果同时记录在 Extension Manager 的
+`docs/evidence/mooncake-store-vllm-ascend-180-2026-09-01.md`。Mooncake 这一宿主门
+已经通过，但 BidKV scheduler 的上游稳定 hook、Production Stack 真实模型支持矩阵
+及整体跨版本矩阵仍阻塞 alpha 发布。
