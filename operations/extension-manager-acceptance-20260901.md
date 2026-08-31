@@ -7,10 +7,11 @@
 
 | 范围 | 结果 | 证据 |
 |---|---:|---|
-| Extension Manager | 通过 | ruff、format、31 个 pytest；Python 3.10/3.12 |
+| Extension Manager | 通过 | ruff、format、35 个 pytest；Python 3.10/3.12 |
 | BidKV vLLM 接口 | 通过 | `tests/test_vllm_plugin.py` 8 个 pytest |
 | 网站多维分类 | 通过 | `tests/test_plugins_page.py` 11 个 pytest |
 | LMCache profile metadata | 通过 | wheel 精确依赖 `vllm-hust-ext==0.2.0.dev0` |
+| LMCache-Ascend adapter metadata | 通过 | 独立 profile wheel；动态 connector/module 精确配对 |
 | Mooncake/Production profiles | 通过 | wheel 构建及相同 Manager 精确依赖 |
 | Production Stack chart render | 通过 | 官方 commit `1b87c11a24c144f6b63a64dbae4fc8c875059731`，Helm `v4.2.4` |
 | Production Stack server dry-run | 通过 | 临时 kind `v0.33.0`、Kubernetes `v1.34.11`，8/8 资源通过 |
@@ -22,6 +23,7 @@
 - LMCache profile：`f74f3bddb9672a2bdf900a76876b5dec26ab63007ccba594ad6c22c0604141ed`
 - Mooncake profile：`b8eeac953900c5ea4c3a98655968ff8b60f9f88b9beab9149fd31445d5d06b4c`
 - Production Stack profile：`05d024ec9dda0a3a9403d72c1705ab98ddb9c86022548b229eda4c0fd54b742a`
+- LMCache-Ascend adapter profile（本轮临时构建）：`947549095322eb3e4a9d410950ece2bccb1eb377b3bfd42782e6216486a209dd`
 
 ## 2. 112 与 91 包生命周期
 
@@ -42,6 +44,8 @@ closed，退出码为 2。
 
 - Mooncake、LMCache 的虚构/不可达健康地址投影为 `degraded`，enabled 意图保留；
 - LMCache 非官方 dynamic connector module path 被拒绝；
+- LMCache connector 与 module 必须精确配对；`LMCacheMPConnector` 不再生成
+  实际不存在的 `lmcache.integration.vllm.lmcache_mp_connector`；
 - Production Stack 输出 Helm values 和 operator plan，`apply` 为 `null`；
 - Core 拒绝 Provider 生成的 mutating action；
 - Manager 不提供 service stop/delete、cache clear/evict 或 Kubernetes apply API。
@@ -81,3 +85,36 @@ LMCache、Mooncake、Helm 或 kubectl；其现有 vLLM 容器不能提供 BidKV 
 未发布 Manager 与 BidKV wheel 已通过容器内 `/tmp` 隔离前缀实际检查，检测到
 `vllm 0.23.0+empty` 位于 BidKV 声明的 `>=0.18,<0.20` 范围之外并返回
 `incompatible`；没有启动模型或占用 NPU，临时目录随后已清理。
+
+## 5. 91 上 LMCache / LMCache-Ascend 实探结论
+
+本轮只在 shuhao 自有容器
+`vllm-hust-shuhao-spec-23rc-20260825` 的 `/tmp` 隔离目录内操作，没有修改
+全局 Python、模型服务或 NPU 状态。容器为 Python 3.12、vLLM
+`0.23.0+empty`、`vllm_ascend 0.23.0rc1`，8 张 910B2 均保持空闲。
+
+实际下载并检查 LMCache 0.4.3 源码后确认：该版本把
+`NO_CUDA_EXT=1` 解释为“完全不构建扩展”，会同时缺失 MP HTTP server 所需的
+`lmcache.native_storage_ops`。为隔离诊断，仅从同一 0.4.3 源码在 `/tmp` 编译了
+通用 CPU C++ 模块；`TTLLock` 导入和 `http_server --help` 均成功。随后以
+loopback-only 的 `127.0.0.1:15555/18080` 尝试启动真实 MP server，服务在启动期
+因无条件导入 `cupy` 失败，`/healthcheck` 从未就绪。
+
+这不是 Extension Manager 可通过伪健康服务掩盖的问题。当前组织内
+LMCache-Ascend commit `578d833f1b2b74311650740ae2dbed5ca1ff4c60` 的 MP 目录同样明确
+未完成：`NPUCacheContext` 直接抛出 `NotImplementedError`，并且测试配置跳过全部
+MP 测试。因此 91 不能作为“真实 LMCache MP healthy/recovery”通过证据；禁止安装
+CuPy stub 或把 legacy CPU/ZMQ server 冒充 MP `/healthcheck`。
+
+同时修正了建模：
+
+- LMCache MP server 仍是 LMCache 自己管理的外部服务；
+- LMCache-Ascend 是 LMCache 内部的平台后端，其
+  `LMCacheAscendConnector[V1Dynamic]` 是加载到 vLLM 的 adapter；
+- 新增独立 `vllm-hust-lmcache-ascend-adapter` profile，无
+  `requires_services`，不再把它错误声明为 MP 服务；
+- 通用与 Ascend dynamic connector 只允许各自官方精确模块路径。
+
+发布门禁保持不变：应在 CUDA LMCache MP 支持环境完成真实
+healthy → outage/degraded → recovery/healthy，再在 Ascend 环境分别完成
+LMCache-Ascend in-process connector 的真实 KV 命中验证。
