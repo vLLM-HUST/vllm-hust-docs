@@ -64,14 +64,14 @@ Mooncake 本体是外部 KV 状态、传输和存储系统；`MooncakeConnector`
 动态插件 ABI。
 
 LMCache 采用独立的无侵入 Provider，而不是 Mooncake Provider 的别名。它优先生成
-官方 `LMCacheMPConnector`（也可显式选择兼容的 V1/dynamic connector）配置，检查
-外部 MP HTTP 服务的 `/healthcheck`，并可输出 Production Stack 所需的 LMCache
+官方 `LMCacheMPConnector`（也可显式选择 `LMCacheConnectorV1Dynamic`）配置，读取
+外部 MP HTTP 服务的 `/lmc_version` 并检查 `/healthcheck`，且可输出 Production Stack 所需的 LMCache
 values。LMCache 内部 backend、transport、runtime plugin、controller 以及 KV 数据
 仍由 LMCache 管理；Manager 不调用 clear、evict 或 delete 接口。
 
 实现以 LMCache 官方的 [MP 配置说明](https://docs.lmcache.ai/mp/configuration.html)
 和 [vLLM dynamic connector 说明](https://docs.lmcache.ai/api_reference/dynamic_connector.html)
-为准；`LMCacheConnectorV1` 属于兼容路径，新增部署默认使用 MP 模式。
+为准；0.5.x 的动态路径是 `LMCacheConnectorV1Dynamic`，新增部署默认使用 MP 模式。
 
 Mooncake 与 LMCache Provider 都可把标准 `kv_transfer_config` 委托给 `vllm-hust-ext
 run`。单个 vLLM 进程只能接受一份该配置；若两者同时 enabled，Manager 必须报告
@@ -109,9 +109,10 @@ alpha：
 4. 冲突、版本不兼容、缺服务、不可达、部分健康、降级、禁用、重启回退；
 5. 112 与 91 clean environment 安装/卸载和宿主一致性。
 
-当前完成的是 Provider 原型、静态 schema、单元测试、clean-environment
-plan/render/check smoke、官方 Production Stack chart 的本地 Helm template 和
-隔离 kind API server dry-run；不等于真实 Mooncake、LMCache 或生产 Kubernetes
-rollout 验收。
+当前已完成 Provider 原型、静态 schema、单元测试、clean-environment
+plan/render/check smoke、LMCache 0.5.4 官方 CPU-SHM MP 数据路径，以及官方
+Production Stack chart 的本地 Helm template 和隔离 kind API server dry-run；
+仍不等于 Mooncake put/get、真实生产 Kubernetes rollout/controller/traffic 或
+BidKV scheduler 验收。
 
 逐项执行证据见 [2026-09-01 验收记录](extension-manager-acceptance-20260901.md)。

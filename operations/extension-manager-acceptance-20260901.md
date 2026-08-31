@@ -7,13 +7,14 @@
 
 | 范围 | 结果 | 证据 |
 |---|---:|---|
-| Extension Manager | 通过 | 43 个 pytest；新增 unverified/incompatible 启动拒绝 |
+| Extension Manager | 通过 | 46 个 pytest；含远端 LMCache 版本与本地版本隔离测试 |
 | BidKV 历史接口边界 | 通过 | 379 个 pytest；主包不注册私有 selector；旧 adapter 仅 import-only |
 | 网站多维分类 | 通过 | `tests/test_plugins_page.py` 11 个 pytest |
 | LMCache profile metadata | 通过 | wheel 精确依赖 `vllm-hust-ext==0.2.0.dev0` |
 | LMCache-Ascend adapter metadata | 通过 | 独立 profile wheel；动态 connector/module 精确配对 |
 | Mooncake/Production profiles | 通过 | wheel 构建及相同 Manager 精确依赖 |
 | Mooncake NPU service health lifecycle | 通过 | 180 官方 NPU wheel；healthy → degraded → healthy |
+| LMCache 0.5.4 MP data path | 通过 | A100 官方固定摘要镜像；CPU-SHM LOOKUP/STORE/RETRIEVE/CHECKSUM 100% |
 | Production Stack chart render | 通过 | 官方 commit `1b87c11a24c144f6b63a64dbae4fc8c875059731`，Helm `v4.2.4` |
 | Production Stack server dry-run | 通过 | 临时 kind `v0.33.0`、Kubernetes `v1.34.11`，8/8 资源通过 |
 | Production Stack Helm rollout/rollback | 通过 | 实际 install/upgrade/rollback/failure rollback/uninstall |
@@ -22,8 +23,10 @@
 本轮未发布的构建物 SHA-256：
 
 - Manager（本轮 fail-closed 验收所用未发布 wheel）：`cc87c686f1ad04adf66d79c082e2867a3480f7cd61fb2cda01c26d7fb5cfa35d`
+- Manager（LMCache 0.5.4 远端版本修正后的未发布 wheel）：`3954fa13d8130af877fecdeebd4fabb1b4c28268fa70197920a66af23369073e`
 - BidKV（本轮移除私有 entry point 后的未发布 wheel）：`c664cf2cf61772a20c9f189f691c8867935cce739993319eef0ca4e2bd439ea3`
 - LMCache profile：`f74f3bddb9672a2bdf900a76876b5dec26ab63007ccba594ad6c22c0604141ed`
+- LMCache 0.5.4 profile（精确 `>=0.5.4,<0.6` manifest）：`ef2146f3ac33c506e59126c724a47f0d64ba09816bea72f534920fe652079033`
 - Mooncake profile（本轮最新临时构建）：`46b735b8b56a9c8d787ffc9af49130dcec9331d8c5973805e4315ecd88a307ff`
 - Production Stack profile：`05d024ec9dda0a3a9403d72c1705ab98ddb9c86022548b229eda4c0fd54b742a`
 - LMCache-Ascend adapter profile（本轮临时构建）：`947549095322eb3e4a9d410950ece2bccb1eb377b3bfd42782e6216486a209dd`
@@ -80,11 +83,10 @@ ServiceAccount。该步骤只做本地渲染，没有 kube context，也没有�
 1. BidKV 在真实 vLLM scheduler 中被加载、调用并完成进程重启回退；
 2. Mooncake connector 的真实 KV 数据路径；官方 NPU master 的健康、中断、恢复
    已通过；
-3. 真实 LMCache MP server 的 `/healthcheck`、KV 命中和中断恢复；
-4. Production Stack 官方 controller 业务 reconciliation 和实际 autoscaling 决策；
+3. Production Stack 官方 controller 业务 reconciliation 和实际 autoscaling 决策；
    chart render、server dry-run、隔离集群 Router/controller fixture rollout、CRD API、
    HPA target 引用和 Helm 回滚已通过；
-5. 真实宿主版本/API/协议矩阵和权限拒绝。
+4. 真实宿主版本/API/协议矩阵和权限拒绝。
 
 112 没有可用的上述宿主环境且 Docker socket 无访问权限。91 宿主全局环境没有
 LMCache、Mooncake、Helm 或 kubectl；其现有 vLLM 容器不能提供 BidKV 所需协议。
@@ -137,6 +139,10 @@ CuPy stub 或把 legacy CPU/ZMQ server 冒充 MP `/healthcheck`。
 发布门禁保持不变：应在 CUDA LMCache MP 支持环境完成真实
 healthy → outage/degraded → recovery/healthy，再在 Ascend 环境分别完成
 LMCache-Ascend in-process connector 的真实 KV 命中验证。
+
+其中 CUDA/CPU-SHM MP 门禁已随后在 A100 主机使用官方 0.5.4 固定摘要镜像通过；
+91 的结论仍然有效，它说明 Ascend MP 与 LMCache-Ascend in-process 数据路径不能被
+CUDA 侧证据替代。
 
 ## 6. 180 上 Mooncake NPU 实际健康生命周期
 
@@ -226,3 +232,27 @@ Helm uninstall 后 release-owned Router/controller/HPA/RBAC 资源均消失，�
 
 剩余控制面门禁是官方 controller 业务 reconciliation、带 metrics-server 的真实
 autoscaling 决策及真实 Router/模型后端联通；轻量 fixture 不覆盖这些数据面行为。
+
+## 8. A100 上 LMCache 0.5.4 MP 真实数据路径
+
+在 `a100-dev` 拉取官方 `lmcache/standalone:v0.5.4-cu129`，固定 digest 为
+`sha256:8d6d27db4c9b12dc247d3e0a15f851ee5c968cba39af4b7762e3dfab69d6b1a8`。
+服务仅绑定 loopback，L1 为 0.03 GiB、单 worker、chunk size 4；没有传入 GPU
+设备，官方日志明确报告 `accelerator available: False`。
+
+官方 `lmcache bench server` 使用 CPU POSIX-SHM 和 `lmcache_driven` 模式执行两次
+小型请求，覆盖 REGISTER、LOOKUP、STORE、warm LOOKUP、RETRIEVE、HTTP CHECKSUM
+和 UNREGISTER。第二次 warm lookup 命中 2/2 chunks，RETRIEVE 返回 8 tokens；两次
+checksum 均匹配，`checksum_ok=2`、`checksum_fail=0`、pass rate 100%。
+
+Manager 从 profile wheel 完成 discovery/configure/enable，运行态投影为
+`installed + discovered + compatible + configured + enabled + reachable + healthy`；
+兼容版本来自远端 `/lmc_version=0.5.4`，不是 Manager 本地 wheel。外部 operator
+停止服务后投影保留 `configured + enabled` 并进入 `degraded`，兼容性改为 unverified；
+重启后无需重装、重配或重新 enable 即恢复七个健康状态。随后 Manager 只执行
+disable/forget，外部 operator 单独删除临时容器；没有 clear、evict、删除 KV 或
+隐式服务启停。临时 SHM 与目录已清理，官方镜像仅作为缓存保留。
+
+这使 LMCache 0.5.4 MP gate 通过，但不解除 alpha 冻结：BidKV 上游 scheduler
+契约、Mooncake put/get、Production Stack 官方 controller/metrics/traffic 以及
+更完整的宿主与权限矩阵仍未完成。
