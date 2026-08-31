@@ -7,21 +7,22 @@
 
 | 范围 | 结果 | 证据 |
 |---|---:|---|
-| Extension Manager | 通过 | ruff、format、35 个 pytest；Python 3.10/3.12 |
+| Extension Manager | 通过 | ruff、format、37 个 pytest；Python 3.10/3.12 |
 | BidKV vLLM 接口 | 通过 | `tests/test_vllm_plugin.py` 8 个 pytest |
 | 网站多维分类 | 通过 | `tests/test_plugins_page.py` 11 个 pytest |
 | LMCache profile metadata | 通过 | wheel 精确依赖 `vllm-hust-ext==0.2.0.dev0` |
 | LMCache-Ascend adapter metadata | 通过 | 独立 profile wheel；动态 connector/module 精确配对 |
 | Mooncake/Production profiles | 通过 | wheel 构建及相同 Manager 精确依赖 |
+| Mooncake NPU service health lifecycle | 通过 | 180 官方 NPU wheel；healthy → degraded → healthy |
 | Production Stack chart render | 通过 | 官方 commit `1b87c11a24c144f6b63a64dbae4fc8c875059731`，Helm `v4.2.4` |
 | Production Stack server dry-run | 通过 | 临时 kind `v0.33.0`、Kubernetes `v1.34.11`，8/8 资源通过 |
 | vLLM 0.23/BidKV compatibility | 正确拒绝 | 真实容器报告 `installed + discovered + incompatible` |
 
 本轮未发布的构建物 SHA-256：
 
-- Manager：`cd9641984137e28a0a833dbacc9d09200f363d4e928dd9fcbcac2cd0ade61fda`
+- Manager（本轮最新未发布 wheel）：`b16bb11347b5b31279e7ae2a8d6f2a124b0879445aaaf9ac1c136ba724771924`
 - LMCache profile：`f74f3bddb9672a2bdf900a76876b5dec26ab63007ccba594ad6c22c0604141ed`
-- Mooncake profile：`b8eeac953900c5ea4c3a98655968ff8b60f9f88b9beab9149fd31445d5d06b4c`
+- Mooncake profile（本轮最新临时构建）：`46b735b8b56a9c8d787ffc9af49130dcec9331d8c5973805e4315ecd88a307ff`
 - Production Stack profile：`05d024ec9dda0a3a9403d72c1705ab98ddb9c86022548b229eda4c0fd54b742a`
 - LMCache-Ascend adapter profile（本轮临时构建）：`947549095322eb3e4a9d410950ece2bccb1eb377b3bfd42782e6216486a209dd`
 
@@ -68,7 +69,8 @@ ServiceAccount。该步骤只做本地渲染，没有 kube context，也没有�
 以下项目没有真实证据，因此不能发布 alpha 或冻结 Manifest v1：
 
 1. BidKV 在真实 vLLM scheduler 中被加载、调用并完成进程重启回退；
-2. 真实 Mooncake 服务的健康、中断、恢复与 connector 数据路径；
+2. Mooncake connector 的真实 KV 数据路径；官方 NPU master 的健康、中断、恢复
+   已通过；
 3. 真实 LMCache MP server 的 `/healthcheck`、KV 命中和中断恢复；
 4. Production Stack 在 operator 管理的真实部署上的 rollout 检查；官方 chart
    本地 Helm template 与隔离 Kubernetes API server dry-run 已通过；
@@ -118,3 +120,37 @@ CuPy stub 或把 legacy CPU/ZMQ server 冒充 MP `/healthcheck`。
 发布门禁保持不变：应在 CUDA LMCache MP 支持环境完成真实
 healthy → outage/degraded → recovery/healthy，再在 Ascend 环境分别完成
 LMCache-Ascend in-process connector 的真实 KV 命中验证。
+
+## 6. 180 上 Mooncake NPU 实际健康生命周期
+
+在用户自有容器 `sage-mate-vllm-shuhao-sage-mate` 中，以 `/tmp` 隔离前缀安装
+官方 `mooncake-transfer-engine-npu==0.3.13.post1`，wheel SHA-256 为
+`ba134f2cc99784aa32404c3a1406e3c85400792fb2c62bb458cd4757a07cc4bb`。
+没有修改容器全局包。临时 master 仅绑定 loopback：RPC `127.0.0.1:25051`、
+metadata `127.0.0.1:28088`、admin/health `127.0.0.1:29003`。
+
+实际观察到 master `/health` 返回 HTTP 200、`role=leader`、
+`ha_state=serving`、`service_ready=true`。把未发布 Manager 与 Mooncake profile
+装入另一 `/tmp` prefix 后，CLI 投影为：
+
+1. 服务运行：`installed + discovered + compatible + configured + enabled +
+   reachable + healthy`；
+2. 测试夹具终止临时 master：enabled 意图保留，投影为 `degraded`，证据是
+   connection refused；
+3. 以同一配置恢复 master：重新投影为 `reachable + healthy`；
+4. 执行 Manager `disable` 和 `forget` 后，master 仍返回 HTTP 200，证明 Manager
+   没有接管外部服务生命周期。
+
+CLI 同时生成官方
+`--kv-transfer-config {"kv_connector":"MooncakeStoreConnector","kv_role":"kv_both"}`。
+Provider 已补充检测所有官方互斥 wheel 变体（CUDA、CUDA 13、non-CUDA、NPU、
+MUSA、EFA）；同一环境发现多个变体时 fail closed。
+
+本轮没有把 Mooncake KV 数据路径标记为通过。`put/get` 客户端在初始化 NPU
+Transfer Engine 时因 ACL context 为空失败；该生产容器的 4 张 NPU 均已由现有
+vLLM TP workers 占用约 46.9 GiB，未为验收创建额外 device context，也未中断现有
+推理服务。应在空闲 NPU 或官方允许的 CPU/non-CUDA 环境重做 store `put/get` 和
+vLLM connector 命中测试。
+
+验收完成后已终止临时 master，确认三个 loopback 端口关闭，并删除容器与宿主的
+全部本轮临时目录；现有 vLLM worker 和认证代理未被修改。
