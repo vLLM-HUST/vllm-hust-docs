@@ -7,7 +7,7 @@
 
 | 范围 | 结果 | 证据 |
 |---|---:|---|
-| Extension Manager | 通过 | ruff、format、37 个 pytest；Python 3.10/3.12 |
+| Extension Manager | 通过 | ruff、format、39 个 pytest；Python 3.10/3.12 |
 | BidKV vLLM 接口 | 通过 | `tests/test_vllm_plugin.py` 8 个 pytest |
 | 网站多维分类 | 通过 | `tests/test_plugins_page.py` 11 个 pytest |
 | LMCache profile metadata | 通过 | wheel 精确依赖 `vllm-hust-ext==0.2.0.dev0` |
@@ -16,6 +16,7 @@
 | Mooncake NPU service health lifecycle | 通过 | 180 官方 NPU wheel；healthy → degraded → healthy |
 | Production Stack chart render | 通过 | 官方 commit `1b87c11a24c144f6b63a64dbae4fc8c875059731`，Helm `v4.2.4` |
 | Production Stack server dry-run | 通过 | 临时 kind `v0.33.0`、Kubernetes `v1.34.11`，8/8 资源通过 |
+| Production Stack Helm rollout/rollback | 通过 | 实际 install/upgrade/rollback/failure rollback/uninstall |
 | vLLM 0.23/BidKV compatibility | 正确拒绝 | 真实容器报告 `installed + discovered + incompatible` |
 
 本轮未发布的构建物 SHA-256：
@@ -72,8 +73,8 @@ ServiceAccount。该步骤只做本地渲染，没有 kube context，也没有�
 2. Mooncake connector 的真实 KV 数据路径；官方 NPU master 的健康、中断、恢复
    已通过；
 3. 真实 LMCache MP server 的 `/healthcheck`、KV 命中和中断恢复；
-4. Production Stack 在 operator 管理的真实部署上的 rollout 检查；官方 chart
-   本地 Helm template 与隔离 Kubernetes API server dry-run 已通过；
+4. Production Stack controller/autoscaler 的真实 reconciliation；官方 chart
+   render、server dry-run、隔离集群 Router Deployment rollout 和 Helm 回滚已通过；
 5. 真实宿主版本/API/协议矩阵和权限拒绝。
 
 112 没有可用的上述宿主环境且 Docker socket 无访问权限。91 宿主全局环境没有
@@ -154,3 +155,40 @@ vLLM connector 命中测试。
 
 验收完成后已终止临时 master，确认三个 loopback 端口关闭，并删除容器与宿主的
 全部本轮临时目录；现有 vLLM worker 和认证代理未被修改。
+
+## 7. Production Stack 实际 Helm 生命周期
+
+在 91 创建了唯一的临时 kind `v0.33.0` 集群，node image 固定为 Kubernetes
+`v1.34.11` digest
+`sha256:44e222ee2132dab25ff87301682f89eb82c7880ea3a1bf543bfe9708fd08d67d`。
+验收使用官方 Production Stack commit
+`1b87c11a24c144f6b63a64dbae4fc8c875059731` 的 chart
+`vllm-stack-0.1.12` 和 Helm `v4.2.4`。
+
+为了不下载模型、不占用 GPU/NPU，也不把模拟 workload 冒充真实 vLLM，新增了可复现
+fixture `operations/fixtures/production-stack-rollout-probe/`。它只启用官方 Router
+Deployment/Service/RBAC 模板，关闭 serving engine 和 Prometheus，并使用一个仅提供
+`/health` 的 BusyBox 测试 OCI image。该 fixture 验证的是 Production Stack/Kubernetes
+控制面生命周期，不证明真实 Router 路由算法或模型数据面。
+
+实际执行结果：
+
+1. Helm revision 1：安装成功，Router Deployment `1/1` available，image `v1`；
+2. revision 2：升级到 `2/2` available，image `v2`；
+3. revision 3：显式 `helm rollback` 回到 `1/1` 和 image `v1`；
+4. revision 4：指定不存在且 `imagePullPolicy=Never` 的 image，升级以退出码 1 失败；
+5. `--rollback-on-failure` 自动创建 revision 5，恢复到 `1/1` 和 image `v1`；
+6. `helm uninstall --wait` 后，release 及其 Deployment、Service、ServiceAccount、
+   Role、RoleBinding 均不存在。
+
+随后删除了临时 kind 控制面、测试 image 两个 tag、固定 node image 和远端 staging
+目录，并逐项确认不存在。未接触任何现有 Kubernetes 集群。
+
+Manager 仍没有执行上述变更的 API。Production Stack Provider 只生成非变更的
+template/server-dry-run/rollout-history argv；install、upgrade、rollback、uninstall
+在 operator plan 中均保持 `null`。同时修复了状态证据漏洞：
+`cluster_reachable=true` 和 `rollout_healthy=true` 现在必须分别提供非空证据，且
+healthy 不能与 unreachable 并存，防止仅靠布尔配置伪造健康状态。
+
+剩余控制面门禁是实际 controller/autoscaler reconciliation 及真实 Router/模型后端
+联通；本轮轻量 fixture 不覆盖这些数据面行为。
