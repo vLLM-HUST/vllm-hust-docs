@@ -13,10 +13,11 @@
 | LMCache profile metadata | 通过 | wheel 精确依赖 `vllm-hust-ext==0.2.0.dev0` |
 | Mooncake/Production profiles | 通过 | wheel 构建及相同 Manager 精确依赖 |
 | Production Stack chart render | 通过 | 官方 commit `1b87c11a24c144f6b63a64dbae4fc8c875059731`，Helm `v4.2.4` |
+| vLLM 0.23/BidKV compatibility | 正确拒绝 | 真实容器报告 `installed + discovered + incompatible` |
 
 本轮未发布的构建物 SHA-256：
 
-- Manager：`9778b6f6ed1262a660fcae9844bd1a9330be3be780d618ee2e0be9ec789d571c`
+- Manager：`cd9641984137e28a0a833dbacc9d09200f363d4e928dd9fcbcac2cd0ade61fda`
 - LMCache profile：`f74f3bddb9672a2bdf900a76876b5dec26ab63007ccba594ad6c22c0604141ed`
 - Mooncake profile：`b8eeac953900c5ea4c3a98655968ff8b60f9f88b9beab9149fd31445d5d06b4c`
 - Production Stack profile：`05d024ec9dda0a3a9403d72c1705ab98ddb9c86022548b229eda4c0fd54b742a`
@@ -69,3 +70,6 @@ LMCache、Mooncake、Helm 或 kubectl；其现有 vLLM 容器不能提供 BidKV 
 容器，但其源码和已安装分发都没有 `vllm.victim_selector`。Manager 已取消“按版本
 默认假定协议存在”的错误逻辑。BidKV 真正端到端验收需等待/跟踪上游 #51601 的
 可评审契约，或由人审明确固定一个临时上游 commit；不能靠恢复私有 hook 绕过门禁。
+未发布 Manager 与 BidKV wheel 已通过容器内 `/tmp` 隔离前缀实际检查，检测到
+`vllm 0.23.0+empty` 位于 BidKV 声明的 `>=0.18,<0.20` 范围之外并返回
+`incompatible`；没有启动模型或占用 NPU，临时目录随后已清理。
