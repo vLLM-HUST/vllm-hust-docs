@@ -100,7 +100,8 @@ alpha：
 5. 112 与 91 clean environment 安装/卸载和宿主一致性。
 
 当前完成的是 Provider 原型、静态 schema、单元测试、clean-environment
-plan/render/check smoke 和官方 Production Stack chart 的本地 Helm template；
-不等于真实 Mooncake、LMCache 或 Kubernetes 集群验收。
+plan/render/check smoke、官方 Production Stack chart 的本地 Helm template 和
+隔离 kind API server dry-run；不等于真实 Mooncake、LMCache 或生产 Kubernetes
+rollout 验收。
 
 逐项执行证据见 [2026-09-01 验收记录](extension-manager-acceptance-20260901.md)。

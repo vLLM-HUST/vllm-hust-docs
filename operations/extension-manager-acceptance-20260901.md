@@ -13,6 +13,7 @@
 | LMCache profile metadata | 通过 | wheel 精确依赖 `vllm-hust-ext==0.2.0.dev0` |
 | Mooncake/Production profiles | 通过 | wheel 构建及相同 Manager 精确依赖 |
 | Production Stack chart render | 通过 | 官方 commit `1b87c11a24c144f6b63a64dbae4fc8c875059731`，Helm `v4.2.4` |
+| Production Stack server dry-run | 通过 | 临时 kind `v0.33.0`、Kubernetes `v1.34.11`，8/8 资源通过 |
 | vLLM 0.23/BidKV compatibility | 正确拒绝 | 真实容器报告 `installed + discovered + incompatible` |
 
 本轮未发布的构建物 SHA-256：
@@ -51,6 +52,13 @@ dependency build` 固定取得 `kube-prometheus-stack 82.4.3` 和
 Deployment、PersistentVolumeClaim、Role、RoleBinding、Secret、两个 Service 和
 ServiceAccount。该步骤只做本地渲染，没有 kube context，也没有执行 apply。
 
+随后在 91 创建了唯一命名的 CPU-only 临时 kind 集群，使用独立 kubeconfig 对同一
+渲染结果执行 `kubectl apply --dry-run=server`。Kubernetes 1.34.11 API 接受全部
+8 个资源：ServiceAccount、Secret、PersistentVolumeClaim、Role、RoleBinding、
+两个 Service 和 Deployment；每项均返回 `created (server dry run)`。没有 apply
+实际 workload、没有挂载 NPU，也没有接触任何现有集群。验收后已确认删除 kind
+控制面容器、临时 kubeconfig/目录和本次新拉取的 node image。
+
 ## 4. 尚未通过的发布门禁
 
 以下项目没有真实证据，因此不能发布 alpha 或冻结 Manifest v1：
@@ -58,8 +66,8 @@ ServiceAccount。该步骤只做本地渲染，没有 kube context，也没有�
 1. BidKV 在真实 vLLM scheduler 中被加载、调用并完成进程重启回退；
 2. 真实 Mooncake 服务的健康、中断、恢复与 connector 数据路径；
 3. 真实 LMCache MP server 的 `/healthcheck`、KV 命中和中断恢复；
-4. Production Stack 的 Kubernetes server dry-run 与 rollout 检查；官方 chart
-   的本地 Helm template 已通过；
+4. Production Stack 在 operator 管理的真实部署上的 rollout 检查；官方 chart
+   本地 Helm template 与隔离 Kubernetes API server dry-run 已通过；
 5. 真实宿主版本/API/协议矩阵和权限拒绝。
 
 112 没有可用的上述宿主环境且 Docker socket 无访问权限。91 宿主全局环境没有
