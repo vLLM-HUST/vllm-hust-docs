@@ -63,6 +63,14 @@ Mooncake 本体是外部 KV 状态、传输和存储系统；`MooncakeConnector`
 停止、升级 Mooncake，不删除 KV 数据，也不立即引入自维护 Mooncake Fork 或 C++
 动态插件 ABI。
 
+`mooncake-transfer-engine-non-cuda==0.3.12.post1` 已在 A100 主机用无 GPU
+一次性容器完成两条相互独立的真实数据路径：两个 TransferEngine 进程通过
+TCP/P2PHANDSHAKE 写入并逐字节校验 1 MiB，以及隔离 Master、内置 HTTP metadata
+和 Store REST 的 put/exist/get/remove。普通 remove 受对象 lease 约束，Manager
+因此不得把删除 KV 当作 adapter disable/uninstall。上游没有为 Store REST 与
+`kv_transfer_config` 单独发布协议 semver，实验 manifest 将其明确标为 unversioned，
+不再虚构 `1.0`；兼容性由 Mooncake package/host 范围和可执行验收证据约束。
+
 LMCache 采用独立的无侵入 Provider，而不是 Mooncake Provider 的别名。它优先生成
 官方 `LMCacheMPConnector`（也可显式选择 `LMCacheConnectorV1Dynamic`）配置，读取
 外部 MP HTTP 服务的 `/lmc_version` 并检查 `/healthcheck`，且可输出 Production Stack 所需的 LMCache
@@ -111,8 +119,9 @@ alpha：
 
 当前已完成 Provider 原型、静态 schema、单元测试、clean-environment
 plan/render/check smoke、LMCache 0.5.4 官方 CPU-SHM MP 数据路径，以及官方
-Production Stack chart 的本地 Helm template 和隔离 kind API server dry-run；
-仍不等于 Mooncake put/get、真实生产 Kubernetes rollout/controller/traffic 或
-BidKV scheduler 验收。
+Mooncake 0.3.12.post1 TransferEngine TCP 与 Store 对象数据路径，以及官方
+Production Stack chart 的本地 Helm template 和隔离 kind API server dry-run。
+仍未完成 Mooncake 的真实 vLLM connector 命中、真实生产 Kubernetes
+controller/metrics/Router traffic 或 BidKV scheduler 验收。
 
 逐项执行证据见 [2026-09-01 验收记录](extension-manager-acceptance-20260901.md)。

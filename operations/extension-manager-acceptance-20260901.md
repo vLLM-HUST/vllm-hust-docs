@@ -7,13 +7,14 @@
 
 | 范围 | 结果 | 证据 |
 |---|---:|---|
-| Extension Manager | 通过 | 46 个 pytest；含远端 LMCache 版本与本地版本隔离测试 |
+| Extension Manager | 通过 | 47 个 pytest；含 LMCache 远端版本隔离和 Mooncake unversioned surface 测试 |
 | BidKV 历史接口边界 | 通过 | 379 个 pytest；主包不注册私有 selector；旧 adapter 仅 import-only |
 | 网站多维分类 | 通过 | `tests/test_plugins_page.py` 11 个 pytest |
 | LMCache profile metadata | 通过 | wheel 精确依赖 `vllm-hust-ext==0.2.0.dev0` |
 | LMCache-Ascend adapter metadata | 通过 | 独立 profile wheel；动态 connector/module 精确配对 |
 | Mooncake/Production profiles | 通过 | wheel 构建及相同 Manager 精确依赖 |
 | Mooncake NPU service health lifecycle | 通过 | 180 官方 NPU wheel；healthy → degraded → healthy |
+| Mooncake 0.3.12.post1 data paths | 通过 | A100 官方 non-CUDA wheel；1 MiB TransferEngine TCP + Store REST put/get/remove |
 | LMCache 0.5.4 MP data path | 通过 | A100 官方固定摘要镜像；CPU-SHM LOOKUP/STORE/RETRIEVE/CHECKSUM 100% |
 | Production Stack chart render | 通过 | 官方 commit `1b87c11a24c144f6b63a64dbae4fc8c875059731`，Helm `v4.2.4` |
 | Production Stack server dry-run | 通过 | 临时 kind `v0.33.0`、Kubernetes `v1.34.11`，8/8 资源通过 |
@@ -24,10 +25,12 @@
 
 - Manager（本轮 fail-closed 验收所用未发布 wheel）：`cc87c686f1ad04adf66d79c082e2867a3480f7cd61fb2cda01c26d7fb5cfa35d`
 - Manager（LMCache 0.5.4 远端版本修正后的未发布 wheel）：`3954fa13d8130af877fecdeebd4fabb1b4c28268fa70197920a66af23369073e`
+- Manager（Mooncake unversioned schema 修正后的未发布 wheel）：`31de65b5edfc09484e8a955bea52e1e5db323a397b39783ce574c3c5d966879a`
 - BidKV（本轮移除私有 entry point 后的未发布 wheel）：`c664cf2cf61772a20c9f189f691c8867935cce739993319eef0ca4e2bd439ea3`
 - LMCache profile：`f74f3bddb9672a2bdf900a76876b5dec26ab63007ccba594ad6c22c0604141ed`
 - LMCache 0.5.4 profile（精确 `>=0.5.4,<0.6` manifest）：`ef2146f3ac33c506e59126c724a47f0d64ba09816bea72f534920fe652079033`
 - Mooncake profile（本轮最新临时构建）：`46b735b8b56a9c8d787ffc9af49130dcec9331d8c5973805e4315ecd88a307ff`
+- Mooncake 0.3.12.post1 profile（修正 package range 与载体后）：`dadab019c5800ac386f3165f472672a3af3228e22fdba16a15c2c62115324350`
 - Production Stack profile：`05d024ec9dda0a3a9403d72c1705ab98ddb9c86022548b229eda4c0fd54b742a`
 - LMCache-Ascend adapter profile（本轮临时构建）：`947549095322eb3e4a9d410950ece2bccb1eb377b3bfd42782e6216486a209dd`
 
@@ -81,8 +84,8 @@ ServiceAccount。该步骤只做本地渲染，没有 kube context，也没有�
 以下项目没有真实证据，因此不能发布 alpha 或冻结 Manifest v1：
 
 1. BidKV 在真实 vLLM scheduler 中被加载、调用并完成进程重启回退；
-2. Mooncake connector 的真实 KV 数据路径；官方 NPU master 的健康、中断、恢复
-   已通过；
+2. Mooncake 的真实 vLLM connector KV 命中；官方 NPU master 健康/中断/恢复、
+   non-CUDA TransferEngine TCP 和 Store 对象 put/get/remove 已分别通过；
 3. Production Stack 官方 controller 业务 reconciliation 和实际 autoscaling 决策；
    chart render、server dry-run、隔离集群 Router/controller fixture rollout、CRD API、
    HPA target 引用和 Helm 回滚已通过；
@@ -169,11 +172,11 @@ CLI 同时生成官方
 Provider 已补充检测所有官方互斥 wheel 变体（CUDA、CUDA 13、non-CUDA、NPU、
 MUSA、EFA）；同一环境发现多个变体时 fail closed。
 
-本轮没有把 Mooncake KV 数据路径标记为通过。`put/get` 客户端在初始化 NPU
+本轮没有把 Mooncake NPU KV 数据路径标记为通过。`put/get` 客户端在初始化 NPU
 Transfer Engine 时因 ACL context 为空失败；该生产容器的 4 张 NPU 均已由现有
 vLLM TP workers 占用约 46.9 GiB，未为验收创建额外 device context，也未中断现有
-推理服务。应在空闲 NPU 或官方允许的 CPU/non-CUDA 环境重做 store `put/get` 和
-vLLM connector 命中测试。
+推理服务。Store 与 TransferEngine 数据路径随后已在官方 non-CUDA wheel 上通过；
+NPU 路径和 vLLM connector 命中仍需独立验证。
 
 验收完成后已终止临时 master，确认三个 loopback 端口关闭，并删除容器与宿主的
 全部本轮临时目录；现有 vLLM worker 和认证代理未被修改。
@@ -254,5 +257,35 @@ disable/forget，外部 operator 单独删除临时容器；没有 clear、evict
 隐式服务启停。临时 SHM 与目录已清理，官方镜像仅作为缓存保留。
 
 这使 LMCache 0.5.4 MP gate 通过，但不解除 alpha 冻结：BidKV 上游 scheduler
-契约、Mooncake put/get、Production Stack 官方 controller/metrics/traffic 以及
+契约、Mooncake vLLM connector 命中、Production Stack 官方 controller/metrics/traffic 以及
 更完整的宿主与权限矩阵仍未完成。
+
+## 9. A100 上 Mooncake 0.3.12.post1 真实数据路径
+
+在 `a100-dev` 使用官方
+`mooncake-transfer-engine-non-cuda==0.3.12.post1` cp311 manylinux wheel，SHA-256
+为 `691b4df2a74e32fd9b1877317097d26fd8c5f48692fba920caf5e3a518f36911`。
+一次性容器没有传入 GPU device，最终探针前后既有用户 vLLM workload 均占用每张
+GPU 72,091 MiB；Mooncake 验收只使用 CPU DRAM、TCP 和 loopback 测试端口。
+
+第一条路径由两个独立 `TransferEngine` 进程完成。双方使用官方
+`P2PHANDSHAKE` metadata 和 TCP transport，注册 1 MiB buffer；sender 执行
+`transfer_sync_write` 返回 0，receiver 对全部字节及首尾字节校验为 1，随后双方
+注销 buffer 和 segment。这证明 TransferEngine 的真实跨进程 TCP 数据搬移。
+
+第二条路径启动隔离的官方 `mooncake_master`、Master 内置 HTTP metadata server
+和 `mc_store_rest_server`。Store 使用 64 MiB global segment、16 MiB local buffer
+和 UUID-scoped key。PUT 返回 200，exist 返回 true，GET 的 57 字节与写入值完全
+一致；读取会刷新 hard lease，第一次立即普通 remove 按官方语义返回 500。最终
+验收把测试 lease 设为 1,000 ms，等待 1.25 秒后只删除该随机 key，remove 返回
+200，再 GET 返回 404。探针从未调用 `remove_all` 或 force delete。
+
+这一结果同时修正实验 schema：Mooncake Store REST 与 vLLM
+`kv_transfer_config` 没有独立上游 semver，manifest 使用 `version_range: null`，
+而不是虚构 `>=1,<2`；Mooncake host/package 范围收窄为
+`>=0.3.12.post1,<0.4`。Manager/profile clean-wheel discovery 通过，未安装本地
+Mooncake runtime 时正确显示 host version unverified，而不会伪造兼容。
+
+全部一次性容器和进程均已退出，随机 Store key 已删除。该证据仍不等于真实
+vLLM 请求的 `MooncakeConnector`/`MooncakeStoreConnector` cache hit；该项继续
+阻塞 alpha。
