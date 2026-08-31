@@ -51,7 +51,7 @@ vllm.victim_selector (API version 1)
 
 它只负责显式调用 scheduler-local selector。没有配置时保持官方 FCFS/priority 行为且不扫描 entry point；显式选择时校验唯一性、API 版本、初始化结果和返回 request 身份。
 
-### 2.4 vLLM-HUST Extension Manager
+### 2.4 vLLM-HUST Extension Manager（Core + Host Provider）
 
 独立 `vllm-hust-ext` 包负责：
 
@@ -60,7 +60,13 @@ vllm.victim_selector (API version 1)
 - 保存显式 enable/disable 状态；
 - 合并插件声明的环境和 `additional_config`；
 - 生成或执行 vLLM 启动命令；
-- 后续承载 install/uninstall、服务、health、rollback 和诊断。
+- 通过 Host Provider 承载 plan/render/check、health、rollback evidence 和诊断。
+
+2026-09-01 起，Manager 不再按单一 vLLM/Python Bundle 建模。Core 负责发现、
+兼容性、配置、状态和委托；vLLM、Mooncake/LMCache、Production Stack/Kubernetes
+分别由自己的 Host Provider 管理运行时边界。当前 schema 为
+`0.2-experimental`，旧 Bundle v1 仅作为未承诺兼容的迁移输入。Manager 默认不
+启停共享外部服务、不修改驱动、不删除 KV 数据，也不 apply 生产集群资源。
 
 它不得覆盖全局 `VLLM_PLUGINS` 而意外禁用 `ascend` 等平台插件。
 
@@ -107,24 +113,28 @@ control plane 负责跨实例 admission、placement、routing 和全局策略，
 - benchmark/docs/evidence：迁移到工具或文档仓库；
 - 无消费者或无证据：仅保留在 legacy archive。
 
-## 4. 插件迁移验收
+## 4. 多宿主扩展迁移验收
 
 1. clean environment wheel 安装成功；
 2. 静态 manifest 发现不 import 实现；
-3. 未启用时核心默认行为不变；
-4. enable 后真实 hook 被调用，而非仅解析 manifest；
-5. 配置冲突和缺失 hook fail closed；
-6. start、health、stop、disable、uninstall、baseline restart 均有记录；
-7. 性能声明使用 matched baseline；
-8. 文档和网站区分插件、connector、外部系统、control plane、平台和工具。
+3. 状态区分 compatible/configured/enabled/reachable/healthy/degraded；
+4. vLLM enable 后真实 hook 被调用，而非仅解析 manifest；
+5. Mooncake/LMCache 服务不可达进入 degraded，但不隐式变更服务；
+6. Production Stack 只做 plan/render/check 和 server dry-run，不默认 apply；
+7. 配置冲突、宿主/API/协议不兼容和缺失 hook fail closed；
+8. health、disable、uninstall、baseline restart 和 operator rollback 均有记录；
+9. 性能声明使用 matched baseline；
+10. 文档和网站区分插件、connector、外部系统、control plane、平台和工具。
 
 ## 5. 修订版执行顺序
 
 1. 保持两个新 fork 的 `main` 与官方同步；
 2. 在 `feature/unified-plugin-api-v1` 逐个重写必需薄 hook；
-3. 完成并发布 vLLM-HUST Extension Manager（`vllm-hust-ext`）；
-4. 用 BidKV 验证 install → discover → enable → run → disable → uninstall；
-5. 依次迁移 KV compression、DiffSpec、LatchMoE 和其他旧能力；
-6. 为 Mooncake、LMCache、PegaFlow 分离 system 与 connector 清单；
-7. 更新网站 registry、文档、CI 和兼容矩阵；
-8. 修正所有语义上属于 legacy PR 的历史链接。
+3. 完成 Extension Manager Core、实验 schema 和 Provider 协议；
+4. 用 BidKV 验证 vLLM 宿主链；
+5. 用 Mooncake 验证外部 KV service + 官方 connector 链，并设计 LMCache 对照；
+6. 用 Production Stack 验证 Helm/CRD/controller/router/autoscaler/OCI 链；
+7. 完成冲突、降级、不可达、回滚和无隐式外部变更测试；
+8. 更新网站 registry、文档、CI 和兼容矩阵；
+9. 在 112/91 完成三类端到端验收；
+10. 通过后修订并冻结 v1，再发布 `vllm-hust-ext` alpha。

@@ -1,0 +1,79 @@
+# vLLM-HUST Extension Manager：Core + Host Provider 重构基线
+
+状态：实施中，禁止发布 alpha 或宣称 Manifest v1 稳定。
+
+## 1. 产品边界
+
+正式产品名为 **vLLM-HUST Extension Manager**，仓库为
+`vLLM-HUST/extension-manager`，候选 PyPI 包和 CLI 为 `vllm-hust-ext`。
+
+它统一处理安装态发现、静态校验、兼容性证据、配置、启停意图、状态投影、冲突
+检查以及向宿主委托。它不是 vLLM 发行版、control plane、Kubernetes 部署系统，
+也不取得外部 KV 服务的生命周期所有权。
+
+## 2. Core 与 Provider
+
+Core 只提供：
+
+- `vllm_hust.extension_bundles` 静态 manifest 发现；
+- 实验 schema 解析与 host/protocol version range 校验；
+- 配置持久化和 enabled intent；
+- `installed`、`discovered`、`compatible`、`configured`、`enabled`、
+  `reachable`、`healthy`、`degraded`、`incompatible` 状态证据；
+- plan 冲突检查，以及 `plan`、`render`、`check` 委托。
+
+Provider factory 使用 `vllm_hust_ext.providers`。第一阶段协议没有 `apply`、
+`delete` 或 `uninstall_service`；Core 拒绝 Provider 生成的隐式 mutating action。
+
+## 3. 三类宿主
+
+### 3.1 vLLM / BidKV
+
+BidKV 是 `scheduler_policy`，运行在 vLLM scheduler 进程中，生命周期由 vLLM
+进程持有。Manager 生成 entry-point 选择、环境变量和 `additional_config`，实际
+加载仍由 vLLM 执行。核心只保留通用 `vllm.victim_selector` 窄 hook。
+
+### 3.2 Mooncake / LMCache
+
+Mooncake 本体是外部 KV 状态、传输和存储系统；`MooncakeConnector` 与
+`MooncakeStoreConnector` 是 vLLM connector。无侵入 Provider 只生成官方
+`kv_transfer_config`、检查服务 API，并把服务不可达投影为 `degraded`。它不启动、
+停止、升级 Mooncake，不删除 KV 数据，也不立即引入自维护 Mooncake Fork 或 C++
+动态插件 ABI。
+
+LMCache 采用相同边界：优先复用官方 connector、server 和 Production Stack 的
+LMCache values；LMCache 内部 backend、transport 和 controller 仍由 LMCache
+管理。
+
+### 3.3 Production Stack / Kubernetes
+
+该 Provider 描述 `control_plane_extension`，支持 Helm values、渲染后的
+Kubernetes manifest、CRD、controller、router、autoscaler 和 OCI 载体。第一阶段
+只生成 values、`helm template` 计划、server dry-run 输入和 rollout 检查；实际
+apply/uninstall 必须由拥有 kube context 和审批的 Kubernetes operator 执行。
+
+## 4. Manifest 0.2-experimental
+
+当前单一 Python Bundle v1 假设冻结为未承诺兼容的历史实验。新实验 manifest
+必须显式声明 `kind`、`host`、`runtime`、`lifecycle_owner`、`protocols`、
+`implementation` 和 `requires_services`，并可附带 typed components 与
+activation。
+
+载体可为 Python entry point、host builtin、外部服务、OCI image、Helm values、
+Kubernetes manifest、CRD 或 controller。非官方注册不得占用新 `vllm.*`
+命名空间。
+
+## 5. 发布门禁
+
+只有以下三条真实端到端链和横向失败测试全部通过后，才能修订并冻结 v1，再发布
+alpha：
+
+1. BidKV 安装、发现、配置、启用、真实 vLLM 加载、回退；
+2. Mooncake 官方 connector、真实外部服务健康/中断/恢复，且无隐式服务变更；
+3. Production Stack 对官方 chart 渲染、server dry-run、rollout 检查，且无
+   apply/uninstall；
+4. 冲突、版本不兼容、缺服务、不可达、部分健康、降级、禁用、重启回退；
+5. 112 与 91 clean environment 安装/卸载和宿主一致性。
+
+当前完成的是 Provider 原型、静态 schema、单元测试和 clean-environment
+plan/render/check smoke；不等于真实 Mooncake 或 Kubernetes 集群验收。

@@ -5,6 +5,12 @@
 > extension 发现、enable/disable、配置持久化和启动期激活迁移到独立 `vLLM-HUST/extension-manager`（PyPI/CLI：`vllm-hust-ext`）。外部 KV 系统和 control plane 的服务生命周期不归该管理器所有。
 > vLLM 核心只保留外部组件不可替代的薄领域 hook。当前执行规范见
 > `operations/core-rebaseline-20260831.md`。
+>
+> **2026-09-01 再冻结：** 本文的单一 Python Bundle v1、core-owned loader 和
+> materializer 假设不再作为实施目标，也没有兼容性承诺。当前规范是
+> `operations/extension-manager-host-provider-architecture.md`：Core + Host
+> Provider、Manifest `0.2-experimental`、九态状态证据和三类宿主验收。三条真实
+> 端到端链通过前不得发布 alpha 或冻结 v1。
 
 > 状态：待专用实现线程接管
 >
