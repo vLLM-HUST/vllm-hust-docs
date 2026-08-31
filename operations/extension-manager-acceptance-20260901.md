@@ -20,7 +20,7 @@
 
 本轮未发布的构建物 SHA-256：
 
-- Manager（本轮最新未发布 wheel）：`b16bb11347b5b31279e7ae2a8d6f2a124b0879445aaaf9ac1c136ba724771924`
+- Manager（180 验收所用未发布 wheel）：`b16bb11347b5b31279e7ae2a8d6f2a124b0879445aaaf9ac1c136ba724771924`
 - LMCache profile：`f74f3bddb9672a2bdf900a76876b5dec26ab63007ccba594ad6c22c0604141ed`
 - Mooncake profile（本轮最新临时构建）：`46b735b8b56a9c8d787ffc9af49130dcec9331d8c5973805e4315ecd88a307ff`
 - Production Stack profile：`05d024ec9dda0a3a9403d72c1705ab98ddb9c86022548b229eda4c0fd54b742a`
