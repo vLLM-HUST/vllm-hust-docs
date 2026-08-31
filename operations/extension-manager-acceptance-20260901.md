@@ -73,8 +73,9 @@ ServiceAccount。该步骤只做本地渲染，没有 kube context，也没有�
 2. Mooncake connector 的真实 KV 数据路径；官方 NPU master 的健康、中断、恢复
    已通过；
 3. 真实 LMCache MP server 的 `/healthcheck`、KV 命中和中断恢复；
-4. Production Stack controller/autoscaler 的真实 reconciliation；官方 chart
-   render、server dry-run、隔离集群 Router Deployment rollout 和 Helm 回滚已通过；
+4. Production Stack 官方 controller 业务 reconciliation 和实际 autoscaling 决策；
+   chart render、server dry-run、隔离集群 Router/controller fixture rollout、CRD API、
+   HPA target 引用和 Helm 回滚已通过；
 5. 真实宿主版本/API/协议矩阵和权限拒绝。
 
 112 没有可用的上述宿主环境且 Docker socket 无访问权限。91 宿主全局环境没有
@@ -190,5 +191,23 @@ template/server-dry-run/rollout-history argv；install、upgrade、rollback、un
 `cluster_reachable=true` 和 `rollout_healthy=true` 现在必须分别提供非空证据，且
 healthy 不能与 unreachable 并存，防止仅靠布尔配置伪造健康状态。
 
-剩余控制面门禁是实际 controller/autoscaler reconciliation 及真实 Router/模型后端
-联通；本轮轻量 fixture 不覆盖这些数据面行为。
+第二个唯一临时集群启用了 LoRA controller 和 Router HPA，共渲染 12 个资源。Router
+和 controller probe Deployment 均为 `1/1` available；
+`loraadapters.production-stack.vllm.ai` CRD 的 `Established=True`、
+`NamesAccepted=True`，合法 `LoraAdapter` 对象通过 API server dry-run。HPA 成功读取
+Deployment scale subresource（`AbleToScale=True/SucceededGetScale`），但由于该最小
+kind 集群刻意没有 metrics-server，`ScalingActive=False/FailedGetResourceMetric`；
+因此不能声称发生了真实 CPU 扩缩容。
+
+这次实测还纠正了 manifest 中两个事实错误：官方 chart 当前 CRD 是
+`LoraAdapter`，不是此前声明的 `Model/Router`；且 Helm 4.2.4 已实际成功，
+`helm-values` 协议范围从 `>=3,<4` 修为 `>=3,<5`。官方 controller image 的 registry
+查询在该环境超时，因此运行的是明确标注的健康 probe image，不声称验证 controller
+业务逻辑。
+
+Helm uninstall 后 release-owned Router/controller/HPA/RBAC 资源均消失，而 chart
+`crds/` 安装的 `LoraAdapter` CRD 按 Helm 语义保留；Manager 不应擅自删除它。随后
+删除整个隔离集群，CRD、测试 image、node image 和 staging 目录一并清理。
+
+剩余控制面门禁是官方 controller 业务 reconciliation、带 metrics-server 的真实
+autoscaling 决策及真实 Router/模型后端联通；轻量 fixture 不覆盖这些数据面行为。

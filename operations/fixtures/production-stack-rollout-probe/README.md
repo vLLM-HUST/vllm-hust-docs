@@ -9,6 +9,11 @@ two pods tagged `v2`. The OCI fixture ignores the chart's Router arguments and
 serves `/health` on port 8000 so Kubernetes startup, readiness, and liveness
 probes are deterministic.
 
+`values-controller-hpa.yaml` additionally enables the LoRA controller
+Deployment and the Router CPU HorizontalPodAutoscaler. The probe image exposes
+the controller's `/healthz` and `/readyz` endpoints on port 8081 and runs as
+UID/GID 65532 so the chart's non-root security context remains effective.
+
 An external test operator performs the lifecycle. Extension Manager must only
 render and check evidence; it must never execute these commands itself.
 
@@ -26,4 +31,6 @@ Expected sequence:
 7. Delete the isolated cluster, test image tags, and staging directory.
 
 Passing this fixture does not satisfy the remaining controller/autoscaler
-reconciliation or Router-to-model traffic gates.
+business-logic or Router-to-model traffic gates. Without a metrics server, HPA
+object/controller reconciliation can be checked, but an actual CPU-driven scale
+decision cannot be claimed.
