@@ -90,7 +90,8 @@ alpha：
 4. 冲突、版本不兼容、缺服务、不可达、部分健康、降级、禁用、重启回退；
 5. 112 与 91 clean environment 安装/卸载和宿主一致性。
 
-当前完成的是 Provider 原型、静态 schema、单元测试和 clean-environment
-plan/render/check smoke；不等于真实 Mooncake 或 Kubernetes 集群验收。
+当前完成的是 Provider 原型、静态 schema、单元测试、clean-environment
+plan/render/check smoke 和官方 Production Stack chart 的本地 Helm template；
+不等于真实 Mooncake、LMCache 或 Kubernetes 集群验收。
 
 逐项执行证据见 [2026-09-01 验收记录](extension-manager-acceptance-20260901.md)。

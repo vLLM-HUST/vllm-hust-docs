@@ -12,6 +12,7 @@
 | 网站多维分类 | 通过 | `tests/test_plugins_page.py` 11 个 pytest |
 | LMCache profile metadata | 通过 | wheel 精确依赖 `vllm-hust-ext==0.2.0.dev0` |
 | Mooncake/Production profiles | 通过 | wheel 构建及相同 Manager 精确依赖 |
+| Production Stack chart render | 通过 | 官方 commit `1b87c11a24c144f6b63a64dbae4fc8c875059731`，Helm `v4.2.4` |
 
 本轮未发布的构建物 SHA-256：
 
@@ -43,6 +44,12 @@ closed，退出码为 2。
 - Core 拒绝 Provider 生成的 mutating action；
 - Manager 不提供 service stop/delete、cache clear/evict 或 Kubernetes apply API。
 
+Production Stack Provider 的示例 values 已实际输入官方 `helm/` chart，`helm
+dependency build` 固定取得 `kube-prometheus-stack 82.4.3` 和
+`prometheus-adapter 5.3.0`，随后 `helm template` 成功生成 5,889 bytes、8 个资源：
+Deployment、PersistentVolumeClaim、Role、RoleBinding、Secret、两个 Service 和
+ServiceAccount。该步骤只做本地渲染，没有 kube context，也没有执行 apply。
+
 ## 4. 尚未通过的发布门禁
 
 以下项目没有真实证据，因此不能发布 alpha 或冻结 Manifest v1：
@@ -50,8 +57,8 @@ closed，退出码为 2。
 1. BidKV 在真实 vLLM scheduler 中被加载、调用并完成进程重启回退；
 2. 真实 Mooncake 服务的健康、中断、恢复与 connector 数据路径；
 3. 真实 LMCache MP server 的 `/healthcheck`、KV 命中和中断恢复；
-4. 官方 Production Stack chart 的 Helm template、Kubernetes server dry-run 与
-   rollout 检查；
+4. Production Stack 的 Kubernetes server dry-run 与 rollout 检查；官方 chart
+   的本地 Helm template 已通过；
 5. 真实宿主版本/API/协议矩阵和权限拒绝。
 
 当前 112/91 没有可用的上述宿主环境；112 的 Docker socket 无访问权限，91 没有
