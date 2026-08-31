@@ -92,3 +92,5 @@ alpha：
 
 当前完成的是 Provider 原型、静态 schema、单元测试和 clean-environment
 plan/render/check smoke；不等于真实 Mooncake 或 Kubernetes 集群验收。
+
+逐项执行证据见 [2026-09-01 验收记录](extension-manager-acceptance-20260901.md)。
