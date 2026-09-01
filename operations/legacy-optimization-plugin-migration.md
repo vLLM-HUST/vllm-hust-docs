@@ -93,8 +93,8 @@ The remaining feature-bearing work is classified below.
 
 | Historical work | Pull requests | Disposition | Remaining action |
 | --- | --- | --- | --- |
-| StateHarbor / request-owned runtime | core [#253](https://github.com/intellistream/vllm-hust-legacy-20260831/pull/253) and linear DSpark [#239](https://github.com/intellistream/vllm-hust-legacy-20260831/pull/239) | Existing [`vllm-hust-stateharbor`](https://github.com/vLLM-HUST/vllm-hust-stateharbor) carrier | The owner must separate request-owned implementation in #239 from upstream DSpark compatibility fixes. Do not create a second DSpark repository. |
-| Mapped-host KV offload | Ascend [#52](https://github.com/intellistream/vllm-ascend-hust-legacy-20260831/pull/52), [#67](https://github.com/intellistream/vllm-ascend-hust-legacy-20260831/pull/67), [#153](https://github.com/intellistream/vllm-ascend-hust-legacy-20260831/pull/153), core [#150](https://github.com/intellistream/vllm-hust-legacy-20260831/pull/150) | Existing [`vllm-ascend-mapped-kv-offload-hust`](https://github.com/vLLM-HUST/vllm-ascend-mapped-kv-offload-hust) carrier | Provenance is recorded; migrate bounded implementation and real Ascend validation before activation. |
+| StateHarbor / request-owned runtime | core [#253](https://github.com/intellistream/vllm-hust-legacy-20260831/pull/253) and linear DSpark [#239](https://github.com/intellistream/vllm-hust-legacy-20260831/pull/239) | Existing [`vllm-hust-stateharbor`](https://github.com/vLLM-HUST/vllm-hust-stateharbor) carrier | The dependency-neutral protocol, reference state machines, window policy, provenance map, and CPU tests were migrated in [PR #2](https://github.com/vLLM-HUST/vllm-hust-stateharbor/pull/2). Scheduler/worker/Ascend/DSpark integration remains owner work; #239 must still be split from upstream compatibility fixes. |
+| Mapped-host KV offload | Ascend [#52](https://github.com/intellistream/vllm-ascend-hust-legacy-20260831/pull/52), [#67](https://github.com/intellistream/vllm-ascend-hust-legacy-20260831/pull/67), [#153](https://github.com/intellistream/vllm-ascend-hust-legacy-20260831/pull/153), core [#150](https://github.com/intellistream/vllm-hust-legacy-20260831/pull/150) | Existing [`vllm-ascend-mapped-kv-offload-hust`](https://github.com/vLLM-HUST/vllm-ascend-mapped-kv-offload-hust) carrier | The dependency-neutral layout and native-capability contracts were migrated in [PR #2](https://github.com/vLLM-HUST/vllm-ascend-mapped-kv-offload-hust/pull/2). Worker, torch, native operator/build glue, and real Ascend validation remain owner work. |
 | MoE expert offload | Ascend [#65](https://github.com/intellistream/vllm-ascend-hust-legacy-20260831/pull/65), [#81](https://github.com/intellistream/vllm-ascend-hust-legacy-20260831/pull/81), and seam [#214](https://github.com/intellistream/vllm-ascend-hust-legacy-20260831/pull/214) | Existing [`vllm-ascend-hust-LatchMoE`](https://github.com/vLLM-HUST/vllm-ascend-hust-LatchMoE) carrier | Reconcile semantics and provenance with LatchMoE issue #4; preserve `@Li-changwu` attribution. |
 | msModelSlim and serving-time quantization | core [#29](https://github.com/intellistream/vllm-hust-legacy-20260831/pull/29) | Existing offline/runtime split in [`vllm-ascend-quant-hust`](https://github.com/vLLM-HUST/vllm-ascend-quant-hust) | Treat msModelSlim as an external/offline dependency. Record source and license; copy only HUST-owned adapter code after review. |
 | Continuing-prefill C8 graph proof | Ascend [#271](https://github.com/intellistream/vllm-ascend-hust-legacy-20260831/pull/271) and open [#279](https://github.com/intellistream/vllm-ascend-hust-legacy-20260831/pull/279) | Existing [`vllm-ascend-adaptive-quantized-kv-hust`](https://github.com/vLLM-HUST/vllm-ascend-adaptive-quantized-kv-hust) carrier | Keep as evidence for the existing observer/graph-lifecycle contract; no new repository. |
@@ -111,6 +111,18 @@ The actionable gaps are provenance reconciliation, implementation extraction
 inside an existing carrier, and owner-owned hardware evidence. A public plugin
 card is added only after its `vLLM-HUST` repository and discoverable manifest
 exist without activation side effects.
+
+Owner notifications for still-needed host seams are consolidated in the fresh
+forks rather than scattered across archived PRs:
+
+- [vLLM core host-seam follow-up](https://github.com/vLLM-HUST/vllm-hust/issues/1)
+- [vLLM Ascend host-seam follow-up](https://github.com/vLLM-HUST/vllm-ascend-hust/issues/1)
+
+Both issues require contributors to check current upstream first and re-submit
+only the smallest default-off host contract. EAGLE/DSpark, QkNorm-RoPE,
+Mooncake, MC2, general fallbacks, bulk upstream synchronization, and ordinary
+hot-path/CI fixes are already present or remain upstream work and are not
+requested again.
 
 ## Required repository shape
 
