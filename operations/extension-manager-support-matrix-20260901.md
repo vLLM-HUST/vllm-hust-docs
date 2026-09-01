@@ -12,7 +12,7 @@
 | 宿主/扩展 | 固定版本与环境 | 已通过 | 未通过或未验证 | 当前投影 |
 |---|---|---|---|---|
 | Extension Manager Core | `0.2.0.dev0`；Windows Python 3.12、112 Python 3.12、91 Python 3.10 | wheel 安装、静态发现、validate、configure/enable/disable/forget、非变更 plan/render/check | 尚未发布；Manifest `0.2-experimental` 未冻结 | experimental，发布冻结 |
-| vLLM-HUST / BidKV | vLLM-HUST `87096bd3d`；BidKV `2b55997`；Manager `b4f221f`；91 Ascend/Qwen3-0.6B | 干净 wheel/carrier 安装；真实加载；KV 100% 下 3 次 `UTILITY_ACTIVE`；3×1,400-token 请求完成；disable→新进程→内置策略；forget/uninstall | 需在 112 重复干净安装门禁；官方 vLLM 上游契约未冻结 | vLLM-HUST 固定组合通过；官方 vLLM unsupported；alpha 仍冻结 |
+| vLLM-HUST / BidKV | vLLM-HUST `87096bd3d`；BidKV `2b55997`；Manager `b4f221f`；91/Qwen3-0.6B 与 112/Qwen2.5-3B | 两台目标宿主均从相同哈希的干净 wheel/carrier 完成真实加载、KV 100% 下 3 次 `UTILITY_ACTIVE`、3×1,400-token 请求、disable→新进程→内置策略、forget/uninstall | 官方 vLLM 上游契约未冻结；更宽版本/平台矩阵仍 experimental | vLLM-HUST 固定组合 cross-host 通过；官方 vLLM unsupported；alpha 仍冻结 |
 | Mooncake standalone | 官方 non-CUDA `0.3.12.post1`，A100 host、CPU DRAM/TCP | 两进程 1 MiB TransferEngine；Store REST put/exist/get/lease-aware remove | 未覆盖跨节点、RDMA、CUDA wheel 与版本回归 | 固定点通过，范围仍 experimental |
 | Mooncake + vLLM Ascend | NPU wheel `0.3.11.post1`；vLLM `0.23.0`；vLLM Ascend `0.19.1.post1.dev474+g4edbc9258`；Ascend 910B，NPU 4 | `MooncakeStoreConnector` 9-key save/load；master 中断降级及原 vLLM 进程恢复 | 此路径要求 `transport_protocol=ascend`、`load_async=true`；未覆盖声明范围 `>=0.3.11.post1,<0.4` 的全部版本 | healthy（固定组合），矩阵未冻结 |
 | Production Stack 控制面 | 官方 commit `1b87c11…`、chart `0.1.12`、Helm `4.2.4`、Kubernetes `1.34.11`、metrics-server `0.9.0` | template/server dry-run；Helm install/upgrade/explicit+automatic rollback/uninstall；controller reconciliation；独立所有权 HPA 1→3；双写冲突 | 只验证一个 Kubernetes/Helm 组合；controller/HPA 不能共同写 replicas | integration-tested，矩阵未冻结 |
@@ -36,13 +36,13 @@
 
 阻塞项按优先级为：
 
-1. BidKV 已在 91 从干净 pushed-commit carrier/wheel 重复在线抢占、进程回退、
-   forget 与 uninstall；仍需在 112 重复。官方 vLLM 继续明确为 unsupported。
+1. BidKV 已在 91 与 112 从相同哈希的干净 pushed-commit carrier/wheel 重复
+   在线抢占、进程回退、forget 与 uninstall；官方 vLLM 继续明确为 unsupported。
 2. Production Stack arm64 载体已通过 GitHub-hosted 发布并在 91 拉取验收；
    仍需补版本与权限矩阵，不以 amd64 或 self-hosted 基础设施作为门槛。
 3. Mooncake/Production Stack 目前是固定版本点验证，不是跨版本、跨架构、
    权限拒绝与升级矩阵。
 
-满足以下条件后才能重新评估：BidKV 干净门禁在 112 重复；每个
-拟支持宿主至少有一个发布载体；固定矩阵可重复；缺权限、冲突、不可达、部分
+满足以下条件后才能重新评估：每个拟支持宿主至少有一个发布载体；固定矩阵
+可重复；缺权限、冲突、不可达、部分
 失败、升级和回滚均有机器可判定结果；clean install/uninstall 不留下 enabled intent。

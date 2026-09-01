@@ -8,7 +8,7 @@
 | 范围 | 结果 | 证据 |
 |---|---:|---|
 | Extension Manager | 通过 | Core + Host Provider 单元测试、静态发现、配置、状态与非变更 plan/render/check |
-| vLLM-HUST / BidKV | 91 干净载体通过 | pushed commits `87096bd3d`/`2b55997`/`b4f221f`；Qwen3-0.6B 在 KV 满载下三次 `UTILITY_ACTIVE`；3×1,400-token 请求完成；disable 后新进程恢复内置策略；forget/uninstall 无残留 |
+| vLLM-HUST / BidKV | 91/112 干净载体通过 | 相同 pushed commits `87096bd3d`/`2b55997`/`b4f221f`；Qwen3-0.6B 与 Qwen2.5-3B 均在 KV 满载下三次 `UTILITY_ACTIVE`；各自 3×1,400-token 请求完成；disable 后新进程恢复内置策略；forget/uninstall 无残留 |
 | Mooncake standalone | 通过 | 官方 non-CUDA 0.3.12.post1；两进程 1 MiB TransferEngine TCP；Store REST put/exist/get/lease-aware remove |
 | Mooncake / vLLM Ascend | 固定组合通过 | NPU 4；`MooncakeStoreConnector` 9-key save/load；master 中断后推理保持可用，原 vLLM 进程在服务恢复后重新命中 |
 | Mooncake HUST fork | 已建立，零核心补丁 | [`vLLM-HUST/mooncake-hust`](https://github.com/vLLM-HUST/mooncake-hust) 直接 fork 官方 Mooncake；上游现有 Ascend/arm64 发布能力继续作为实现基线 |
@@ -30,8 +30,8 @@
 
 ## 尚未通过
 
-1. BidKV 的 91 干净 wheel/carrier 门禁已通过，仍需在 112 重复；官方 vLLM 在
-   上游 scheduler contract 冻结前仍不支持。
+1. BidKV 的 91/112 干净 wheel/carrier 门禁均已通过；官方 vLLM 在上游
+   scheduler contract 冻结前仍不支持，更宽版本/平台矩阵仍未冻结。
 2. Mooncake 需要补跨版本、跨节点和传输矩阵。
 3. Production Stack 的 HUST arm64 workflow 已完成发布并在 91 拉取验收；仍需
    补跨版本与权限拒绝矩阵。产品不要求 amd64 或 self-hosted 基础设施。
