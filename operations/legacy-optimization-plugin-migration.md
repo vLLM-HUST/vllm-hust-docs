@@ -83,6 +83,35 @@ implementation and stable seam are demonstrated:
 These should be rebased and proposed upstream, retained as host-seam commits,
 or kept in research carriers. Packaging a patch does not make it a plugin.
 
+## 2026-09-01 full PR reconciliation
+
+The reconciliation reviewed all 231 pull requests in each immutable legacy
+repository (462 pull requests total), then compared feature-bearing changes
+with provenance ledgers and public repositories in `vLLM-HUST`. It found no
+additional, clearly independent plugin family that requires a new repository.
+The remaining feature-bearing work is classified below.
+
+| Historical work | Pull requests | Disposition | Remaining action |
+| --- | --- | --- | --- |
+| StateHarbor / request-owned runtime | core [#253](https://github.com/intellistream/vllm-hust-legacy-20260831/pull/253) and linear DSpark [#239](https://github.com/intellistream/vllm-hust-legacy-20260831/pull/239) | Existing [`vllm-hust-stateharbor`](https://github.com/vLLM-HUST/vllm-hust-stateharbor) carrier | The owner must separate request-owned implementation in #239 from upstream DSpark compatibility fixes. Do not create a second DSpark repository. |
+| Mapped-host KV offload | Ascend [#52](https://github.com/intellistream/vllm-ascend-hust-legacy-20260831/pull/52), [#67](https://github.com/intellistream/vllm-ascend-hust-legacy-20260831/pull/67), [#153](https://github.com/intellistream/vllm-ascend-hust-legacy-20260831/pull/153), core [#150](https://github.com/intellistream/vllm-hust-legacy-20260831/pull/150) | Existing [`vllm-ascend-mapped-kv-offload-hust`](https://github.com/vLLM-HUST/vllm-ascend-mapped-kv-offload-hust) carrier | Provenance is recorded; migrate bounded implementation and real Ascend validation before activation. |
+| MoE expert offload | Ascend [#65](https://github.com/intellistream/vllm-ascend-hust-legacy-20260831/pull/65), [#81](https://github.com/intellistream/vllm-ascend-hust-legacy-20260831/pull/81), and seam [#214](https://github.com/intellistream/vllm-ascend-hust-legacy-20260831/pull/214) | Existing [`vllm-ascend-hust-LatchMoE`](https://github.com/vLLM-HUST/vllm-ascend-hust-LatchMoE) carrier | Reconcile semantics and provenance with LatchMoE issue #4; preserve `@Li-changwu` attribution. |
+| msModelSlim and serving-time quantization | core [#29](https://github.com/intellistream/vllm-hust-legacy-20260831/pull/29) | Existing offline/runtime split in [`vllm-ascend-quant-hust`](https://github.com/vLLM-HUST/vllm-ascend-quant-hust) | Treat msModelSlim as an external/offline dependency. Record source and license; copy only HUST-owned adapter code after review. |
+| Continuing-prefill C8 graph proof | Ascend [#271](https://github.com/intellistream/vllm-ascend-hust-legacy-20260831/pull/271) and open [#279](https://github.com/intellistream/vllm-ascend-hust-legacy-20260831/pull/279) | Existing [`vllm-ascend-adaptive-quantized-kv-hust`](https://github.com/vLLM-HUST/vllm-ascend-adaptive-quantized-kv-hust) carrier | Keep as evidence for the existing observer/graph-lifecycle contract; no new repository. |
+| Prefix-route generation fence | open core [#272](https://github.com/intellistream/vllm-hust-legacy-20260831/pull/272) | Existing [`vllm-hust-prefix-router`](https://github.com/vLLM-HUST/vllm-hust-prefix-router) carrier | Owner must classify the fence as router protocol or host cache-event seam before migration. |
+| Fused MC2 communication kernels | Ascend [#199](https://github.com/intellistream/vllm-ascend-hust-legacy-20260831/pull/199), [#203](https://github.com/intellistream/vllm-ascend-hust-legacy-20260831/pull/203), merged [#226](https://github.com/intellistream/vllm-ascend-hust-legacy-20260831/pull/226), [#253](https://github.com/intellistream/vllm-ascend-hust-legacy-20260831/pull/253), [#254](https://github.com/intellistream/vllm-ascend-hust-legacy-20260831/pull/254), and [#277](https://github.com/intellistream/vllm-ascend-hust-legacy-20260831/pull/277) | Host/device kernels; possible optional backend for [`vllm-hust-unified-comm`](https://github.com/vLLM-HUST/vllm-hust-unified-comm) | Do not create one repository per kernel. Use a narrow backend provider or propose upstream. |
+| SAGE Semantic MapReduce readiness | Ascend [#101](https://github.com/intellistream/vllm-ascend-hust-legacy-20260831/pull/101) | Project-specific host compatibility profile | Upstream generally useful fallbacks; keep workload/deployment configuration with SAGE unless it gains a reusable provider contract. |
+| EAGLE/EAGLE3/DeepSeek proposer support | core [#59](https://github.com/intellistream/vllm-hust-legacy-20260831/pull/59), merged [#121](https://github.com/intellistream/vllm-hust-legacy-20260831/pull/121), [#246](https://github.com/intellistream/vllm-hust-legacy-20260831/pull/246), Ascend [#56](https://github.com/intellistream/vllm-ascend-hust-legacy-20260831/pull/56), [#140](https://github.com/intellistream/vllm-ascend-hust-legacy-20260831/pull/140) | Normal model/speculative-decoding host support | Upstream or retain in the synchronized fork. A model capability is not automatically a plugin. |
+| QkNorm-RoPE pattern registration | merged Ascend [#123](https://github.com/intellistream/vllm-ascend-hust-legacy-20260831/pull/123) | vLLM Ascend compilation/platform pass | Keep upstream. It is unrelated to the KNorm KV-compression extension despite the similar name. |
+| Bulk Ascend operator synchronization | Ascend [#79](https://github.com/intellistream/vllm-ascend-hust-legacy-20260831/pull/79) | Batch of 62 upstream vLLM Ascend changes | Synchronize the fork; never present this batch as a HUST plugin. |
+| Performance-gate, benchmark, CI, and hot-path fixes | core #55/#69/#77/#99/#113/#167 and related fixes | Benchmark/CI or host patches | Keep in the benchmark system or upstream host. They do not need extension repositories. |
+
+Therefore “not copied into a plugin repository” is not itself an audit defect.
+The actionable gaps are provenance reconciliation, implementation extraction
+inside an existing carrier, and owner-owned hardware evidence. A public plugin
+card is added only after its `vLLM-HUST` repository and discoverable manifest
+exist without activation side effects.
+
 ## Required repository shape
 
 Every extracted extension repository must contain:
