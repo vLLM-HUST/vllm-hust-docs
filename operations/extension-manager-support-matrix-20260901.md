@@ -12,7 +12,7 @@
 | 宿主/扩展 | 固定版本与环境 | 已通过 | 未通过或未验证 | 当前投影 |
 |---|---|---|---|---|
 | Extension Manager Core | `0.2.0.dev0`；Windows Python 3.12、112 Python 3.12、91 Python 3.10 | wheel 安装、静态发现、validate、configure/enable/disable/forget、非变更 plan/render/check | 尚未发布；Manifest `0.2-experimental` 未冻结 | experimental，发布冻结 |
-| vLLM-HUST / BidKV | vLLM-HUST `0.23.x` typed `vllm.scheduler.policy.v1`；91 Ascend 宿主 | 8 个核心契约测试；4 个真实 BidKV materialization/轨迹回放测试 | 缺在线模型 serving 的 disable→新进程→内置策略回退；官方 vLLM 上游契约未冻结 | vLLM-HUST supported；官方 vLLM unsupported；在线回退仍阻塞 alpha |
+| vLLM-HUST / BidKV | vLLM-HUST `0.23.x` typed `vllm.scheduler.policy.v1`；91 Ascend/Qwen3-0.6B | 契约测试；真实加载；KV 100% 下 3 次 `UTILITY_ACTIVE`；3 请求完成；disable→新进程→内置策略回退 | 需从干净 release image/wheel 重复；官方 vLLM 上游契约未冻结 | vLLM-HUST supported；官方 vLLM unsupported；发布载体仍阻塞 alpha |
 | Mooncake standalone | 官方 non-CUDA `0.3.12.post1`，A100 host、CPU DRAM/TCP | 两进程 1 MiB TransferEngine；Store REST put/exist/get/lease-aware remove | 未覆盖跨节点、RDMA、CUDA wheel 与版本回归 | 固定点通过，范围仍 experimental |
 | Mooncake + vLLM Ascend | NPU wheel `0.3.11.post1`；vLLM `0.23.0`；vLLM Ascend `0.19.1.post1.dev474+g4edbc9258`；Ascend 910B，NPU 4 | `MooncakeStoreConnector` 9-key save/load；master 中断降级及原 vLLM 进程恢复 | 此路径要求 `transport_protocol=ascend`、`load_async=true`；未覆盖声明范围 `>=0.3.11.post1,<0.4` 的全部版本 | healthy（固定组合），矩阵未冻结 |
 | LMCache MP | 官方 `0.5.4` 固定摘要镜像；A100 host、CPU POSIX-SHM | LOOKUP/STORE/warm LOOKUP/RETRIEVE/CHECKSUM；远端版本/健康；中断恢复 | 尚未通过真实 vLLM MP connector 在线数据面；未覆盖 0.5.x 全范围 | standalone 数据面 healthy，connector 支持仍 experimental |
@@ -38,8 +38,9 @@
 
 阻塞项按优先级为：
 
-1. BidKV 在 vLLM-HUST 0.23 上已有受支持的 typed scheduler contract；仍需完成
-   在线模型 serving 的进程重启回退。官方 vLLM 继续明确为 unsupported。
+1. BidKV 在 vLLM-HUST 0.23 上已有受支持的 typed scheduler contract，在线模型
+   抢占和进程重启回退已通过；仍需从干净发布镜像/wheel 重复。官方 vLLM 继续明确
+   为 unsupported。
 2. Production Stack v0.1.12 缺少 arm64 官方 Router image；源码构建通过不能替代
    release artifact 支持矩阵。
 3. Mooncake/LMCache/Production Stack 目前是固定版本点验证，不是跨版本、跨架构、
@@ -48,6 +49,6 @@
    的真实 in-process 命中，但仍缺 controlled backend outage/recompute/recovery，
    且必须继续作为独立 adapter/profile，不得借用 CPU-SHM 结论。
 
-满足以下条件后才能重新评估：BidKV 在线 EngineCore 重启回退通过；每个
+满足以下条件后才能重新评估：BidKV 在线结果由干净发布载体重复；每个
 拟支持宿主至少有一个官方发布载体；固定矩阵可重复；缺权限、冲突、不可达、部分
 失败、升级和回滚均有机器可判定结果；clean install/uninstall 不留下 enabled intent。

@@ -40,7 +40,9 @@ BidKV 是 `scheduler_policy`，运行在 vLLM scheduler 进程中，生命周期
 
 2026-09-01 已从 legacy HUST 实现恢复显式选择、重复检测、API 版本校验和来源日志，
 并与新的 typed admission 合并。91 上 8 个核心契约测试及 4 个真实 BidKV
-materialization/轨迹回放测试通过。官方 vLLM 上游已有
+materialization/轨迹回放测试通过。随后真实 Qwen3-0.6B 服务在 KV 100% 压力下
+产生 3 次 `UTILITY_ACTIVE`，三个请求均完成；disable 后的新进程未加载 BidKV 并
+成功返回 completion。官方 vLLM 上游已有
 [Scheduler Plugin RFC #51608](https://github.com/vllm-project/vllm/issues/51608)
 和 [draft PR #51601](https://github.com/vllm-project/vllm/pull/51601)，目标是
 `vllm.scheduler_plugins`、只读 feature 和独立 PreemptionScore。新 fork 不应再

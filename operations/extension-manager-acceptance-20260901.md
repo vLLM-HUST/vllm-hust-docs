@@ -8,7 +8,7 @@
 | 范围 | 结果 | 证据 |
 |---|---:|---|
 | Extension Manager | 通过 | 56 个 pytest；包含 vLLM 原生 manifest 生成及 Host Provider 兼容性投影 |
-| BidKV typed 宿主边界 | 通过 | 379 个 pytest；91 上另通过 8 个核心契约测试及 4 个真实 materialization/轨迹回放测试 |
+| BidKV typed 宿主边界 | 通过 | 379 个 pytest；91 上契约/materialization 测试及真实 Qwen3-0.6B 三次抢占、请求完成、停用重启回退 |
 | 网站多维分类 | 通过 | `tests/test_plugins_page.py` 11 个 pytest |
 | LMCache profile metadata | 通过 | wheel 精确依赖 `vllm-hust-ext==0.2.0.dev0` |
 | LMCache-Ascend adapter metadata | 通过 | 独立 profile wheel；动态 connector/module 精确配对 |
@@ -91,8 +91,9 @@ ServiceAccount。该步骤只做本地渲染，没有 kube context，也没有�
 
 以下项目没有真实证据，因此不能发布 alpha 或冻结 Manifest v1：
 
-1. BidKV 已在真实 vLLM-HUST Python/Ascend 环境中加载、调用并回放；尚缺在线模型
-   serving 的 disable、进程重启和内置策略回退；
+1. BidKV 已在真实 vLLM-HUST Python/Ascend 环境中加载，并在在线模型 serving 中
+   完成抢占、请求完成、disable、进程重启和内置策略回退；尚需从干净发布镜像与
+   wheel 重复同一结果；
 2. Mooncake 官方 NPU master、non-CUDA TransferEngine/Store，以及真实 vLLM
    connector save/load 命中均已通过；仍需扩充跨版本/跨节点支持矩阵；
 3. Production Stack 官方 controller 业务 reconciliation、Router 到外部后端转发、
