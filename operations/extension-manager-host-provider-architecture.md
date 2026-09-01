@@ -131,6 +131,9 @@ Router 到既有 GLM-4-32B 的 500→200 数据面恢复也已通过。Productio
 维护，只包含 arm64 构建/发布和极少必要集成补丁。BidKV scheduler 的干净发布
 载体验收也尚未完成。
 
+两个 HUST 薄 fork 均不维护 self-hosted GitHub Actions runner。可移植构建使用
+GitHub-hosted runner；Ascend/NPU 与真实集群验收在 91/180 按需运行并形成外部证据。
+
 逐项执行证据见 [2026-09-01 验收记录](extension-manager-acceptance-20260901.md)。
 
 > 注：首期范围不包含 LMCache。
