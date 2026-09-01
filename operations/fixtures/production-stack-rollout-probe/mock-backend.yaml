@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vllmhust-e2e-backend
+  namespace: vllmhust-production-stack-e2e
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vllmhust-e2e-backend
+  template:
+    metadata:
+      labels:
+        app: vllmhust-e2e-backend
+    spec:
+      containers:
+        - name: backend
+          image: vllmhust/production-stack-mock-backend:20260901-arm64
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8000
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+          resources:
+            requests:
+              cpu: 20m
+              memory: 32Mi
+            limits:
+              cpu: "1"
+              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vllmhust-e2e-backend
+  namespace: vllmhust-production-stack-e2e
+spec:
+  selector:
+    app: vllmhust-e2e-backend
+  ports:
+    - name: http
+      port: 8000
+      targetPort: http

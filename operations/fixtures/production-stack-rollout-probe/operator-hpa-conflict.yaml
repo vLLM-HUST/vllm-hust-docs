@@ -1,0 +1,22 @@
+# Negative acceptance fixture: do not deploy this in production. The HPA owns
+# Deployment.spec.replicas while VLLMRouter.spec.replicas is also reconciled by
+# the operator, deliberately demonstrating the two-writer conflict.
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: vllmhust-e2e-router-ownership-conflict
+  namespace: vllmhust-production-stack-e2e
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: vllmhust-e2e-router
+  minReplicas: 2
+  maxReplicas: 2
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 50

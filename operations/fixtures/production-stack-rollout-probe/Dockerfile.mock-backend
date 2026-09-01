@@ -1,0 +1,5 @@
+FROM python:3.12-slim
+WORKDIR /app
+COPY mock_backend.py /app/mock_backend.py
+USER 65532:65532
+ENTRYPOINT ["python", "/app/mock_backend.py"]

@@ -1,0 +1,45 @@
+servingEngineSpec:
+  enableEngine: false
+
+routerSpec:
+  enableRouter: true
+  repository: vllmhust/production-stack-rollout-probe
+  tag: v1
+  imagePullPolicy: IfNotPresent
+  replicaCount: 1
+  serviceDiscovery: static
+  staticBackends: http://127.0.0.1:18000
+  staticModels: rollout-probe
+  resources:
+    requests:
+      cpu: 10m
+      memory: 16Mi
+    limits:
+      memory: 32Mi
+  startupProbe:
+    initialDelaySeconds: 0
+    periodSeconds: 1
+    failureThreshold: 30
+    httpGet:
+      path: /health
+      port: 8000
+  readinessProbe:
+    initialDelaySeconds: 0
+    periodSeconds: 1
+    failureThreshold: 3
+    httpGet:
+      path: /health
+      port: 8000
+  livenessProbe:
+    initialDelaySeconds: 0
+    periodSeconds: 2
+    failureThreshold: 3
+    httpGet:
+      path: /health
+      port: 8000
+
+kube-prometheus-stack:
+  enabled: false
+
+prometheus-adapter:
+  enabled: false

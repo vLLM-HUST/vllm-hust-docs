@@ -1,0 +1,21 @@
+FROM docker.io/golang:1.24 AS builder
+
+WORKDIR /workspace
+ENV GOPROXY=https://goproxy.cn,direct
+COPY go.mod go.mod
+COPY go.sum go.sum
+RUN go mod download
+
+COPY cmd/main.go cmd/main.go
+COPY api/ api/
+COPY internal/ internal/
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -a -o manager cmd/main.go
+
+# The official Dockerfile uses gcr.io/distroless/static:nonroot. The isolated
+# acceptance host cannot reach that registry, so keep the exact static binary
+# and numeric non-root identity while using an empty test-only carrier.
+FROM scratch
+WORKDIR /
+COPY --from=builder /workspace/manager /manager
+USER 65532:65532
+ENTRYPOINT ["/manager"]

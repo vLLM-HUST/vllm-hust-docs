@@ -24,6 +24,7 @@ This repository contains vllm-hust documentation, sync notes, and fork-specific 
 
 ## Key Documents
 
+- `operations/extension-author-guide.md` — 从分类、manifest、实现和打包，到安装、启停、卸载、测试、发布及回滚的完整扩展作者指南。
 - `operations/optimization-repository-playbook.md` — a reusable playbook for optimization repositories that pin runtime dependencies with submodules, manage feature branches, preserve experiment provenance, and decide when upstream PRs are appropriate.
 - `architecture/vllm-hust-source-deconstruction.md` — a layered source walkthrough of the `vllm-hust` fork, including request flow, engine structure, execution path, and fork-specific extension surfaces.
 - `architecture/vllm-hust-engine-execution-chain.md` — a deeper walkthrough of the request-to-engine-to-worker execution path.

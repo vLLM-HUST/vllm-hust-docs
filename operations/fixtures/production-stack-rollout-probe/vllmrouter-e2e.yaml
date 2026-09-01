@@ -1,0 +1,31 @@
+apiVersion: production-stack.vllm.ai/v1alpha1
+kind: VLLMRouter
+metadata:
+  name: vllmhust-e2e-router
+  namespace: vllmhust-production-stack-e2e
+  labels:
+    app.kubernetes.io/name: vllmhust-e2e-router
+    app.kubernetes.io/part-of: vllmhust-production-stack-e2e
+spec:
+  enableRouter: true
+  replicas: 1
+  serviceDiscovery: static
+  # The upstream Router URL validator rejects single-label Kubernetes service
+  # names, so use the service FQDN.
+  staticBackends: http://vllmhust-e2e-backend.vllmhust-production-stack-e2e.svc.cluster.local:8000
+  staticModels: vllmhust-e2e-model
+  routingLogic: roundrobin
+  engineScrapeInterval: 5
+  requestStatsWindow: 10
+  port: 8000
+  serviceAccountName: vllmhust-e2e-router
+  image:
+    registry: vllmhust
+    name: production-stack-router:1b87c11-arm64
+    pullPolicy: IfNotPresent
+  resources:
+    cpu: "1"
+    memory: 256Mi
+  env:
+    - name: LOG_LEVEL
+      value: info

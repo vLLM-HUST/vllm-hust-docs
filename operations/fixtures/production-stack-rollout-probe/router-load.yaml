@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: vllmhust-e2e-router-load
+  namespace: vllmhust-production-stack-e2e
+spec:
+  restartPolicy: Never
+  containers:
+    - name: load
+      image: vllmhust/production-stack-mock-backend:20260901-arm64
+      imagePullPolicy: IfNotPresent
+      command: ["python", "-c"]
+      args:
+        - |
+          import concurrent.futures
+          import json
+          import time
+          import urllib.request
+
+          url = "http://vllmhust-e2e-router-hpa/v1/completions"
+          payload = json.dumps({"model": "vllmhust-e2e-model", "prompt": "hpa"}).encode()
+
+          def request():
+              req = urllib.request.Request(url, data=payload, headers={"content-type": "application/json"})
+              with urllib.request.urlopen(req, timeout=10) as response:
+                  return response.status
+
+          end = time.monotonic() + 180
+          with concurrent.futures.ThreadPoolExecutor(max_workers=48) as pool:
+              while time.monotonic() < end:
+                  statuses = list(pool.map(lambda _: request(), range(96)))
+                  assert all(status == 200 for status in statuses), statuses
