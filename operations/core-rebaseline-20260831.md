@@ -29,7 +29,7 @@
 `vllm-hust` 必须可持续同步官方 vLLM。核心补丁必须同时满足：
 
 1. 外部组件没有该 hook 就无法实现；
-2. hook 属于通用机制，不包含 BidKV、Mooncake、LMCache、PegaFlow 等系统名称；
+2. hook 属于通用机制，不包含具体扩展或外部系统名称；
 3. 未启用时与官方行为一致，且不扫描、不 import 插件实现；
 4. 接口有版本、明确输入输出和 fail-closed 验证；
 5. 补丁可单独向官方上游提交；
@@ -65,7 +65,7 @@ vllm.victim_selector (API version 1)
 - 通过 Host Provider 承载 plan/render/check、health、rollback evidence 和诊断。
 
 2026-09-01 起，Manager 不再按单一 vLLM/Python Bundle 建模。Core 负责发现、
-兼容性、配置、状态和委托；vLLM、Mooncake/LMCache、Production Stack/Kubernetes
+兼容性、配置、状态和委托；vLLM、Mooncake、Production Stack/Kubernetes
 分别由自己的 Host Provider 管理运行时边界。当前 schema 为
 `0.2-experimental`，旧 Bundle v1 仅作为未承诺兼容的迁移输入。Manager 默认不
 启停共享外部服务、不修改驱动、不删除 KV 数据，也不 apply 生产集群资源。
@@ -89,7 +89,7 @@ unverified/incompatible 的进程内 scheduler policy。
 
 ### 2.6 KV 系统与 connector
 
-Mooncake、LMCache、PegaFlow 是外部 KV 状态/传输/存储系统，不是 vLLM 插件本体：
+Mooncake、PegaFlow 是外部 KV 状态/传输/存储系统，不是 vLLM 插件本体：
 
 ```text
 external KV system
@@ -124,7 +124,7 @@ control plane 负责跨实例 admission、placement、routing 和全局策略，
 2. 静态 manifest 发现不 import 实现；
 3. 状态区分 compatible/configured/enabled/reachable/healthy/degraded；
 4. vLLM enable 后真实 hook 被调用，而非仅解析 manifest；
-5. Mooncake/LMCache 服务不可达进入 degraded，但不隐式变更服务；
+5. Mooncake 服务不可达进入 degraded，但不隐式变更服务；
 6. Production Stack 只做 plan/render/check 和 server dry-run，不默认 apply；
 7. 配置冲突、宿主/API/协议不兼容和缺失 hook fail closed；
 8. health、disable、uninstall、baseline restart 和 operator rollback 均有记录；
@@ -137,7 +137,7 @@ control plane 负责跨实例 admission、placement、routing 和全局策略，
 2. 在 `feature/unified-plugin-api-v1` 逐个重写必需薄 hook；
 3. 完成 Extension Manager Core、实验 schema 和 Provider 协议；
 4. 用 BidKV 验证 vLLM 宿主链；
-5. 分别用 Mooncake 与 LMCache 验证外部 KV service + 官方 connector 链；
+5. 用 Mooncake 验证外部 KV service + 官方 connector 链；
 6. 用 Production Stack 验证 Helm/CRD/controller/router/autoscaler/OCI 链；
 7. 完成冲突、降级、不可达、回滚和无隐式外部变更测试；
 8. 更新网站 registry、文档、CI 和兼容矩阵；

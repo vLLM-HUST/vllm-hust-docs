@@ -59,7 +59,7 @@ materialization/轨迹回放测试通过。随后真实 Qwen3-0.6B 服务在 KV 
 之后。BidKV 首期只映射“核心已批准候选后的 victim ranking”；主动触发抢占、修改
 waiting queue、KV cleanup 和 reinsertion 仍归核心，不能通过 monkey patch 带回。
 
-### 3.2 Mooncake / LMCache
+### 3.2 Mooncake
 
 Mooncake 本体是外部 KV 状态、传输和存储系统；`MooncakeConnector` 与
 `MooncakeStoreConnector` 是 vLLM connector。无侵入 Provider 只生成官方
@@ -75,28 +75,9 @@ TCP/P2PHANDSHAKE 写入并逐字节校验 1 MiB，以及隔离 Master、内置 H
 `kv_transfer_config` 单独发布协议 semver，实验 manifest 将其明确标为 unversioned，
 不再虚构 `1.0`；兼容性由 Mooncake package/host 范围和可执行验收证据约束。
 
-LMCache 采用独立的无侵入 Provider，而不是 Mooncake Provider 的别名。它优先生成
-官方 `LMCacheMPConnector`（也可显式选择 `LMCacheConnectorV1Dynamic`）配置，读取
-外部 MP HTTP 服务的 `/lmc_version` 并检查 `/healthcheck`，且可输出 Production Stack 所需的 LMCache
-values。LMCache 内部 backend、transport、runtime plugin、controller 以及 KV 数据
-仍由 LMCache 管理；Manager 不调用 clear、evict 或 delete 接口。
-
-LMCache Provider 内部还必须区分两个 profile：`LMCacheMPConnector` 对应由 LMCache
-operator 管理的外部 MP service；`LMCacheAscendConnector*` 对应加载到
-vLLM-Ascend 进程内的 adapter，并由 vLLM 进程生命周期承载。后者没有虚构的
-`health_url`，而是分别检查 vLLM-Ascend、LMCache、LMCache-Ascend 版本以及真实
-store/hit/retrieve 证据。两种 profile 的 evidence mode 不可互换。
-
-实现以 LMCache 官方的 [MP 配置说明](https://docs.lmcache.ai/mp/configuration.html)
-和 [vLLM dynamic connector 说明](https://docs.lmcache.ai/api_reference/dynamic_connector.html)
-为准；0.5.x 的动态路径是 `LMCacheConnectorV1Dynamic`，新增 CUDA/x86 部署默认使用
-MP 模式。Ascend 当前正式验收路径仍是 LMCache-Ascend in-process；不能因为顶层都
-叫 LMCache 就假定 Ascend MP 已实现。
-
-Mooncake 与 LMCache Provider 都可把标准 `kv_transfer_config` 委托给 `vllm-hust-ext
-run`。单个 vLLM 进程只能接受一份该配置；若两者同时 enabled，Manager 必须报告
-冲突并拒绝启动，不能按 Provider 名称硬编码优先级。实验 profile 精确依赖同版本
-Manager，冻结兼容契约后再改为稳定的版本范围。
+Mooncake Provider 可把标准 `kv_transfer_config` 委托给 `vllm-hust-ext run`。
+单个 vLLM 进程只能接受一份该配置；冲突时 Manager 必须拒绝启动，不能硬编码
+优先级。实验 profile 精确依赖同版本 Manager，冻结兼容契约后再改为稳定范围。
 
 ### 3.3 Production Stack / Kubernetes
 
@@ -127,16 +108,16 @@ Kubernetes manifest、CRD 或 controller。非官方注册不得占用新 `vllm.
 alpha：
 
 1. BidKV 安装、发现、配置、启用、真实 vLLM 加载、回退；
-2. Mooncake 与 LMCache 各自使用官方 connector，完成真实外部服务
-   健康/中断/恢复，且无隐式服务或 KV 数据变更；
+2. Mooncake 使用官方 connector，完成真实外部服务健康/中断/恢复，且无隐式
+   服务或 KV 数据变更；
 3. Production Stack 对官方 chart 渲染、server dry-run、rollout 检查，且无
    apply/uninstall；
 4. 冲突、版本不兼容、缺服务、不可达、部分健康、降级、禁用、重启回退；
 5. 112 与 91 clean environment 安装/卸载和宿主一致性。
 
 当前已完成 Provider 原型、静态 schema、单元测试、clean-environment
-plan/render/check smoke、LMCache 0.5.4 官方 CPU-SHM MP 数据路径，以及官方
-Mooncake 0.3.12.post1 TransferEngine TCP 与 Store 对象数据路径，以及官方
+plan/render/check smoke、官方 Mooncake 0.3.12.post1 TransferEngine TCP 与 Store
+对象数据路径，以及官方
 Production Stack chart 的本地 Helm template 和隔离 kind API server dry-run。
 已在隔离 Kubernetes 1.34.11 中完成 Production Stack 官方 controller 调谐、官方
 Router 到外部测试后端的真实转发，以及真实 Metrics API 驱动的 1→3 扩容；同时验证
@@ -146,3 +127,5 @@ v0.1.12 Router image 没有 arm64 manifest，因此发布镜像矩阵与 BidKV s
 验收仍未完成。
 
 逐项执行证据见 [2026-09-01 验收记录](extension-manager-acceptance-20260901.md)。
+
+> 注：首期范围不包含 LMCache。
