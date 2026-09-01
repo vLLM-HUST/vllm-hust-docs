@@ -8,8 +8,13 @@
 
 | 角色 | 当前仓库 | 关系 | 验证状态 |
 | --- | --- | --- | --- |
-| vLLM 规范 fork | `vLLM-HUST/vllm-hust` | fork of `vllm-project/vllm` | `main` 与上游逐 SHA 一致 |
-| Ascend 规范 fork | `vLLM-HUST/vllm-ascend-hust` | fork of `vllm-project/vllm-ascend` | `main` 与上游逐 SHA 一致 |
+| vLLM 规范 fork | `vLLM-HUST/vllm-hust` | fork of `vllm-project/vllm` | 以官方 `main` 为同步基线 |
+| Ascend 规范 fork | `vLLM-HUST/vllm-ascend-hust` | fork of `vllm-project/vllm-ascend` | 以官方 `main` 为同步基线 |
+| Metal 规范 fork | `vLLM-HUST/vllm-metal-hust` | fork of `vllm-project/vllm-metal` | 上游跟踪的平台发行分支 |
+| Triton Ascend 规范 fork | `vLLM-HUST/triton-ascend-hust` | fork of `triton-lang/triton-ascend` | 上游跟踪的编译/算子系统分支 |
+| SGLang 规范 fork | `vLLM-HUST/sglang-hust` | fork of `sgl-project/sglang` | 上游跟踪的同级推理系统分支 |
+| Mooncake 规范 fork | `vLLM-HUST/mooncake-hust` | fork of `kvcache-ai/Mooncake` | 上游优先，只保留必要薄补丁 |
+| Production Stack 规范 fork | `vLLM-HUST/production-stack-hust` | fork of `vllm-project/production-stack` | 上游优先，只保留必要薄补丁 |
 | 旧 vLLM-HUST | `intellistream/vllm-hust-legacy-20260831` | 保留原 fork network | 已归档、只读 |
 | 旧 Ascend 主线 | `intellistream/vllm-ascend-hust-legacy-20260831` | 保留原 network | 已归档、只读 |
 | 扩展发现与启用管理 | `vLLM-HUST/extension-manager` | 独立 Python distribution `vllm-hust-ext` | 已建立可运行基线 |
@@ -21,6 +26,11 @@
 ```
 
 旧 Issue、PR、fork 和提交历史保留在 legacy 仓库。历史证据链接必须直接指向 legacy 地址；新 fork 不承接旧 PR 编号语义。
+
+上述七个规范 fork 是跟随官方上游的完整系统或平台发行分支，不是插件，也不得因其
+可与 Extension Manager 协作而登记为插件 Bundle。网站必须把它们放在独立的
+“上游同步 HUST 系统分支”分类，并同时标明 HUST 仓库、官方上游仓库和同步关系。
+插件、connector、Provider 或 bridge 应另有独立制品和生命周期。
 
 ## 2. 强制架构分层
 
@@ -133,7 +143,7 @@ control plane 负责跨实例 admission、placement、routing 和全局策略，
 
 ## 5. 修订版执行顺序
 
-1. 保持两个新 fork 的 `main` 与官方同步；
+1. 保持七个规范 fork 与各自官方上游同步，并记录必要薄补丁；
 2. 在 `feature/unified-plugin-api-v1` 逐个重写必需薄 hook；
 3. 完成 Extension Manager Core、实验 schema 和 Provider 协议；
 4. 用 BidKV 验证 vLLM 宿主链；
