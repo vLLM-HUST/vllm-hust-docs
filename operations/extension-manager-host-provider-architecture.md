@@ -33,19 +33,21 @@ enabled 的扩展，防止重装后意外恢复陈旧状态。
 ### 3.1 vLLM / BidKV
 
 BidKV 是 `scheduler_policy`，运行在 vLLM scheduler 进程中，生命周期由 vLLM
-进程持有。Manager 只在宿主和协议兼容证据明确时生成启动配置，实际加载仍由
-vLLM 执行。新的官方基线核心不保留 `vllm.victim_selector` 私有 hook。
+进程持有。Manager 只在宿主和协议兼容证据明确时生成宿主原生 manifest 与启动
+配置，实际加载仍由 vLLM 执行。vLLM-HUST 0.23 提供最小、通用且不含 BidKV
+名称的 `vllm.scheduler.policy.v1` typed materializer；不恢复私有
+`vllm.victim_selector` 自动发现。
 
-2026-09-01 实机审计确认：fresh vLLM-HUST 0.23 不包含上述旧 HUST hook，远端也
-不存在此前文档假设的 `feature/unified-plugin-api-v1`。上游已有
+2026-09-01 已从 legacy HUST 实现恢复显式选择、重复检测、API 版本校验和来源日志，
+并与新的 typed admission 合并。91 上 8 个核心契约测试及 4 个真实 BidKV
+materialization/轨迹回放测试通过。官方 vLLM 上游已有
 [Scheduler Plugin RFC #51608](https://github.com/vllm-project/vllm/issues/51608)
 和 [draft PR #51601](https://github.com/vllm-project/vllm/pull/51601)，目标是
 `vllm.scheduler_plugins`、只读 feature 和独立 PreemptionScore。新 fork 不应再
-创建竞争的私有接口。BidKV 主发行包已停止注册该非官方 entry point，旧 selector
-仅作为 import-only 模块保留给固定旧 fork 做历史回放。当前 manifest 必须保持
-legacy experimental，只有宿主提供协议存在和版本证据时才能报告 compatible，
-Manager 的 `run` 会拒绝 unverified/incompatible scheduler policy；后续应作为
-上游框架消费者迁移，而不是把整个策略写进核心。
+创建竞争的私有接口。BidKV 主发行包不注册该非官方 entry point；当前 manifest
+声明 `vllm.scheduler.policy.v1` 和 active Python carrier。Manager 只在宿主实际
+导出该契约时报告 compatible，并拒绝 unverified/incompatible scheduler policy。
+官方 vLLM 继续明确为 unsupported。
 
 截至 draft PR #51601 head
 `f8b7db61e446911e0d62fcb8220f863d6098c471`，代码仍是单一
@@ -77,9 +79,17 @@ LMCache 采用独立的无侵入 Provider，而不是 Mooncake Provider 的别�
 values。LMCache 内部 backend、transport、runtime plugin、controller 以及 KV 数据
 仍由 LMCache 管理；Manager 不调用 clear、evict 或 delete 接口。
 
+LMCache Provider 内部还必须区分两个 profile：`LMCacheMPConnector` 对应由 LMCache
+operator 管理的外部 MP service；`LMCacheAscendConnector*` 对应加载到
+vLLM-Ascend 进程内的 adapter，并由 vLLM 进程生命周期承载。后者没有虚构的
+`health_url`，而是分别检查 vLLM-Ascend、LMCache、LMCache-Ascend 版本以及真实
+store/hit/retrieve 证据。两种 profile 的 evidence mode 不可互换。
+
 实现以 LMCache 官方的 [MP 配置说明](https://docs.lmcache.ai/mp/configuration.html)
 和 [vLLM dynamic connector 说明](https://docs.lmcache.ai/api_reference/dynamic_connector.html)
-为准；0.5.x 的动态路径是 `LMCacheConnectorV1Dynamic`，新增部署默认使用 MP 模式。
+为准；0.5.x 的动态路径是 `LMCacheConnectorV1Dynamic`，新增 CUDA/x86 部署默认使用
+MP 模式。Ascend 当前正式验收路径仍是 LMCache-Ascend in-process；不能因为顶层都
+叫 LMCache 就假定 Ascend MP 已实现。
 
 Mooncake 与 LMCache Provider 都可把标准 `kv_transfer_config` 委托给 `vllm-hust-ext
 run`。单个 vLLM 进程只能接受一份该配置；若两者同时 enabled，Manager 必须报告

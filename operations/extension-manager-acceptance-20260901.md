@@ -7,8 +7,8 @@
 
 | 范围 | 结果 | 证据 |
 |---|---:|---|
-| Extension Manager | 通过 | 53 个 pytest；新增 Production Stack 真实模型、5xx→2xx 和 arm64 发布缺口投影 |
-| BidKV 历史接口边界 | 通过 | 379 个 pytest；主包不注册私有 selector；旧 adapter 仅 import-only |
+| Extension Manager | 通过 | 56 个 pytest；包含 vLLM 原生 manifest 生成及 Host Provider 兼容性投影 |
+| BidKV typed 宿主边界 | 通过 | 379 个 pytest；91 上另通过 8 个核心契约测试及 4 个真实 materialization/轨迹回放测试 |
 | 网站多维分类 | 通过 | `tests/test_plugins_page.py` 11 个 pytest |
 | LMCache profile metadata | 通过 | wheel 精确依赖 `vllm-hust-ext==0.2.0.dev0` |
 | LMCache-Ascend adapter metadata | 通过 | 独立 profile wheel；动态 connector/module 精确配对 |
@@ -17,12 +17,13 @@
 | Mooncake Store/vLLM/Ascend connector | 通过 | NPU 4；9 keys save、9 keys load，故障降级及原进程恢复 |
 | Mooncake 0.3.12.post1 data paths | 通过 | A100 官方 non-CUDA wheel；1 MiB TransferEngine TCP + Store REST put/get/remove |
 | LMCache 0.5.4 MP data path | 通过 | A100 官方固定摘要镜像；CPU-SHM LOOKUP/STORE/RETRIEVE/CHECKSUM 100% |
+| LMCache-Ascend in-process data path | 固定组合通过 | 91；Qwen3-0.6B；独立 producer/consumer；2236 token store/hit/retrieve，0 请求失败 |
 | Production Stack chart render | 通过 | 官方 commit `1b87c11a24c144f6b63a64dbae4fc8c875059731`，Helm `v4.2.4` |
 | Production Stack server dry-run | 通过 | 临时 kind `v0.33.0`、Kubernetes `v1.34.11`，8/8 资源通过 |
 | Production Stack Helm rollout/rollback | 通过 | 实际 install/upgrade/rollback/failure rollback/uninstall |
 | Production Stack controller/Router/HPA | 通过 | 官方 controller 调谐、真实 GLM Router 转发、Metrics API 1→3；双写冲突已验证 |
 | Production Stack v0.1.12 arm64 release image | 未通过 | 官方 GHCR manifest 无 `linux/arm64/v8`；同提交源码构建可运行但投影 degraded |
-| vLLM 0.23/BidKV compatibility | 正确拒绝 | 真实容器报告 `installed + discovered + incompatible` |
+| vLLM-HUST 0.23/BidKV compatibility | 通过 | typed `vllm.scheduler.policy.v1` 加载真实 `BidkvVictimSelector`；官方 vLLM 仍正确拒绝 |
 
 本轮未发布的构建物 SHA-256：
 
@@ -90,17 +91,20 @@ ServiceAccount。该步骤只做本地渲染，没有 kube context，也没有�
 
 以下项目没有真实证据，因此不能发布 alpha 或冻结 Manifest v1：
 
-1. BidKV 在真实 vLLM scheduler 中被加载、调用并完成进程重启回退；
+1. BidKV 已在真实 vLLM-HUST Python/Ascend 环境中加载、调用并回放；尚缺在线模型
+   serving 的 disable、进程重启和内置策略回退；
 2. Mooncake 官方 NPU master、non-CUDA TransferEngine/Store，以及真实 vLLM
    connector save/load 命中均已通过；仍需扩充跨版本/跨节点支持矩阵；
 3. Production Stack 官方 controller 业务 reconciliation、Router 到外部后端转发、
    真实 GLM 模型请求和实际 autoscaling 决策已通过；官方 release image 的 arm64
    支持仍缺失，发布支持矩阵仍待完成；
-4. 真实宿主版本/API/协议矩阵和权限拒绝。
+4. LMCache MP 的真实在线 vLLM connector 数据面；LMCache-Ascend 的受控 backend
+   outage/recompute/recovery、确定性跨进程 hash 和 Prometheus 冲突关闭；
+5. 真实宿主版本/API/协议矩阵和权限拒绝。
 
 112 没有可用的上述宿主环境且 Docker socket 无访问权限。91 宿主全局环境没有
-LMCache、Mooncake、Helm 或 kubectl；其现有 vLLM 容器不能提供 BidKV 所需协议。
-必须在可访问的真实环境重复验收后才能解除发布冻结。
+LMCache、Mooncake、Helm 或 kubectl；BidKV typed 契约已通过隔离容器注入验收，
+但必须在在线模型 serving 中重复重启回退后才能解除相应发布门禁。
 
 上游契约审计进一步确认：draft PR #51601 的代码 head
 `f8b7db61e446911e0d62fcb8220f863d6098c471` 只有 registry-only 的单一
@@ -109,13 +113,11 @@ LMCache、Mooncake、Helm 或 kubectl；其现有 vLLM 容器不能提供 BidKV 
 放在接口稳定以后。BidKV 首期迁移只接受“核心批准候选后的 victim ranking”，
 不恢复主动抢占、waiting queue 修改或私有 scheduler 方法调用。
 
-补充审计：91 实际存在空闲 Ascend 910B2 和一个属于 shuhao 的 vLLM-HUST 0.23
-容器，但其源码和已安装分发都没有 `vllm.victim_selector`。Manager 已取消“按版本
-默认假定协议存在”的错误逻辑。BidKV 真正端到端验收需等待/跟踪上游 #51601 的
-可评审契约，或由人审明确固定一个临时上游 commit；不能靠恢复私有 hook 绕过门禁。
-未发布 Manager 与 BidKV wheel 已通过容器内 `/tmp` 隔离前缀实际检查，检测到
-`vllm 0.23.0+empty` 位于 BidKV 声明的 `>=0.18,<0.20` 范围之外并返回
-`incompatible`；没有启动模型或占用 NPU，临时目录随后已清理。
+补充审计：91 的隔离 Ascend 容器已加载新的 typed core 文件与真实 BidKV 包。
+Manager 不再按版本猜测协议，而是检查宿主实际导出的
+`vllm.scheduler.policy.v1`，并把通用 extension manifest 转成宿主原生 manifest。
+BidKV 声明范围已修正为 `>=0.23,<0.24`。本轮没有启动模型或占用 NPU，临时容器
+和测试目录均已清理。
 
 ## 5. 91 上 LMCache / LMCache-Ascend 实探结论
 
@@ -146,13 +148,23 @@ CuPy stub 或把 legacy CPU/ZMQ server 冒充 MP `/healthcheck`。
   `requires_services`，不再把它错误声明为 MP 服务；
 - 通用与 Ascend dynamic connector 只允许各自官方精确模块路径。
 
-发布门禁保持不变：应在 CUDA LMCache MP 支持环境完成真实
-healthy → outage/degraded → recovery/healthy，再在 Ascend 环境分别完成
-LMCache-Ascend in-process connector 的真实 KV 命中验证。
+其中 CUDA/CPU-SHM standalone 门禁已随后在 A100 主机使用官方 0.5.4 固定摘要
+镜像通过，但真实在线 `LMCacheMPConnector` 仍未通过。91 的 MP 结论仍然有效：
+Ascend MP 未完成，不能被 CUDA 侧证据替代。
 
-其中 CUDA/CPU-SHM MP 门禁已随后在 A100 主机使用官方 0.5.4 固定摘要镜像通过；
-91 的结论仍然有效，它说明 Ascend MP 与 LMCache-Ascend in-process 数据路径不能被
-CUDA 侧证据替代。
+随后对 91 的既有 `20260826-b2-native-lmcache-serving-r5` 现场记录进行只读审计，
+确认另一条**独立的 in-process 路径**已经真实通过。Qwen3-0.6B producer 分别存储
+1228 和 1008 token；consumer 对两次请求均报告 engine computed tokens 为 0，
+LMCache hit 并完整取回 1228 和 1008 token，总计 2236，0 请求失败。固定来源为
+LMCache `v0.4.3` commit `7f326118…` 与 LMCache-Ascend
+`v0.4.3-4-gc86fa99`。后者是比 tag 多 4 个提交的 CANN 9/kvcache-ops 固定分支，
+并非未修改上游 release，因此只能投影为 pinned pass。
+
+该通过记录仍含 experimental KVConnector、builtin hash 可能跨进程不一致以及
+Prometheus logger metadata 冲突警告；r1/r2/r4 还分别出现 provenance、脚本路径与
+启动失败。它们不能替代受控 backend outage/recompute/recovery。Manager 因此把
+`vllm_mp_connector` 与 `vllm_ascend_in_process` 证据模式强制分开；HTTP healthy 或
+standalone benchmark 不再足以把在线 MP connector 投影为 healthy。
 
 ## 6. 180 上 Mooncake NPU 实际健康生命周期
 
@@ -261,8 +273,8 @@ Manager 从 profile wheel 完成 discovery/configure/enable，运行态投影为
 disable/forget，外部 operator 单独删除临时容器；没有 clear、evict、删除 KV 或
 隐式服务启停。临时 SHM 与目录已清理，官方镜像仅作为缓存保留。
 
-这使 LMCache 0.5.4 MP gate 通过，但不解除 alpha 冻结：BidKV 上游 scheduler
-契约、Production Stack 发布支持矩阵，
+这使 LMCache 0.5.4 MP gate 通过，但不解除 alpha 冻结：BidKV 在线重启回退、
+Production Stack 发布支持矩阵，
 以及更完整的宿主与权限矩阵仍未完成。
 
 ## 9. 91 上 Production Stack 官方 controller、Router 与 Metrics HPA
@@ -355,7 +367,7 @@ vLLM-HUST 分支 `feature/mooncake-store-ascend-kv-cache` 的提交 `aa2781f7bc`
 
 完整固定输入和结果同时记录在 Extension Manager 的
 `docs/evidence/mooncake-store-vllm-ascend-180-2026-09-01.md`。Mooncake 这一宿主门
-已经通过，但 BidKV scheduler 的上游稳定 hook、Production Stack 发布镜像支持矩阵
+已经通过，但 BidKV 在线重启回退、Production Stack 发布镜像支持矩阵
 及整体跨版本矩阵仍阻塞 alpha 发布。
 
 ## 12. 180 上 Production Stack Router 真实 GLM 数据面

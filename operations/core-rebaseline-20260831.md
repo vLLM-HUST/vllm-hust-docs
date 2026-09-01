@@ -49,9 +49,9 @@ manifest、安装状态、enable/disable、配置持久化、进程管理、side
 vllm.victim_selector (API version 1)
 ```
 
-该私有 hook 只属于归档实验基线，不进入新的官方 fork。新的 scheduler 扩展必须
-跟踪上游 RFC #51608 / PR #51601，在 Preemption 等契约冻结后以最窄改动接入；
-不能因旧回放通过就宣称当前核心兼容。
+新 vLLM-HUST 0.23 不恢复该私有 entry point，而是提供最小通用 typed
+`vllm.scheduler.policy.v1` materializer，并从 legacy 吸收显式选择、重复检测、API
+版本校验和来源日志。官方 vLLM 支持仍需跟踪 RFC #51608 / PR #51601。
 
 ### 2.4 vLLM-HUST Extension Manager（Core + Host Provider）
 
@@ -83,8 +83,9 @@ vllm-hust-ext extension list
 vllm-hust-ext extension status org.vllm-hust.bidkv
 ```
 
-当前 BidKV 主包只静态注册实验 manifest，不注册私有 `vllm.victim_selector`；
-Manager `run` 会拒绝 unverified/incompatible 的进程内 scheduler policy。
+当前 BidKV 主包静态注册 typed manifest，不注册私有 `vllm.victim_selector`；
+Manager 在 vLLM-HUST 0.23 上生成宿主原生 manifest，并拒绝
+unverified/incompatible 的进程内 scheduler policy。
 
 ### 2.6 KV 系统与 connector
 

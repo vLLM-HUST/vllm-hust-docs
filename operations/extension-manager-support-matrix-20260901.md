@@ -12,11 +12,11 @@
 | 宿主/扩展 | 固定版本与环境 | 已通过 | 未通过或未验证 | 当前投影 |
 |---|---|---|---|---|
 | Extension Manager Core | `0.2.0.dev0`；Windows Python 3.12、112 Python 3.12、91 Python 3.10 | wheel 安装、静态发现、validate、configure/enable/disable/forget、非变更 plan/render/check | 尚未发布；Manifest `0.2-experimental` 未冻结 | experimental，发布冻结 |
-| vLLM / BidKV | fresh vLLM-HUST `0.23.0`；上游 RFC #51608、draft PR #51601 head `f8b7db61…` | fresh fork 正确拒绝私有 `vllm.victim_selector`；旧 adapter 仅 import/replay | 上游只承诺首期 in-tree registry；out-of-tree 未稳定，无真实 scheduler load/online/rollback | installed/discovered/incompatible；阻塞 alpha |
+| vLLM-HUST / BidKV | vLLM-HUST `0.23.x` typed `vllm.scheduler.policy.v1`；91 Ascend 宿主 | 8 个核心契约测试；4 个真实 BidKV materialization/轨迹回放测试 | 缺在线模型 serving 的 disable→新进程→内置策略回退；官方 vLLM 上游契约未冻结 | vLLM-HUST supported；官方 vLLM unsupported；在线回退仍阻塞 alpha |
 | Mooncake standalone | 官方 non-CUDA `0.3.12.post1`，A100 host、CPU DRAM/TCP | 两进程 1 MiB TransferEngine；Store REST put/exist/get/lease-aware remove | 未覆盖跨节点、RDMA、CUDA wheel 与版本回归 | 固定点通过，范围仍 experimental |
 | Mooncake + vLLM Ascend | NPU wheel `0.3.11.post1`；vLLM `0.23.0`；vLLM Ascend `0.19.1.post1.dev474+g4edbc9258`；Ascend 910B，NPU 4 | `MooncakeStoreConnector` 9-key save/load；master 中断降级及原 vLLM 进程恢复 | 此路径要求 `transport_protocol=ascend`、`load_async=true`；未覆盖声明范围 `>=0.3.11.post1,<0.4` 的全部版本 | healthy（固定组合），矩阵未冻结 |
 | LMCache MP | 官方 `0.5.4` 固定摘要镜像；A100 host、CPU POSIX-SHM | LOOKUP/STORE/warm LOOKUP/RETRIEVE/CHECKSUM；远端版本/健康；中断恢复 | 尚未通过真实 vLLM MP connector 在线数据面；未覆盖 0.5.x 全范围 | standalone 数据面 healthy，connector 支持仍 experimental |
-| LMCache Ascend | 91 上 `0.4.3` 与独立 in-process adapter 预检 | 正确区分 platform backend、vLLM adapter 与外部 MP service | `/healthcheck` 不可达、`NPUCacheContext` 未实现、MP 测试缺失 | unsupported/unverified，不并入 LMCache MP 结论 |
+| LMCache Ascend in-process | 91；Qwen3-0.6B；vLLM/vLLM-Ascend 0.23；LMCache `v0.4.3`；LMCache-Ascend `v0.4.3-4-gc86fa99` | 独立 producer/consumer 完成 2236 token store、hit、retrieve，0 请求失败 | adapter 是 CANN 9 固定分支而非未修改上游 tag；缺 controlled backend outage/recompute/recovery；builtin hash 与 Prometheus 警告未关闭 | healthy + degraded（固定组合），不并入 LMCache MP 结论 |
 | Production Stack 控制面 | 官方 commit `1b87c11…`、chart `0.1.12`、Helm `4.2.4`、Kubernetes `1.34.11`、metrics-server `0.9.0` | template/server dry-run；Helm install/upgrade/explicit+automatic rollback/uninstall；controller reconciliation；独立所有权 HPA 1→3；双写冲突 | 只验证一个 Kubernetes/Helm 组合；controller/HPA 不能共同写 replicas | integration-tested，矩阵未冻结 |
 | Production Stack Router + 真实模型 | 同 commit 源码构建 arm64 Router；180 既有 GLM-4-32B vLLM | 不可达后端 500；只重建测试 Router 后真实模型 200/`ROUTER_OK`；生产 vLLM 未重启 | 官方 `router:v0.1.12` 无 `linux/arm64/v8`；未验证官方 amd64 release image | healthy + degraded；发布载体阻塞 |
 
@@ -38,15 +38,16 @@
 
 阻塞项按优先级为：
 
-1. BidKV 没有稳定、受支持的 vLLM out-of-tree scheduler contract；这是唯一不能靠
-   增加本地测试关闭的契约阻塞。
+1. BidKV 在 vLLM-HUST 0.23 上已有受支持的 typed scheduler contract；仍需完成
+   在线模型 serving 的进程重启回退。官方 vLLM 继续明确为 unsupported。
 2. Production Stack v0.1.12 缺少 arm64 官方 Router image；源码构建通过不能替代
    release artifact 支持矩阵。
 3. Mooncake/LMCache/Production Stack 目前是固定版本点验证，不是跨版本、跨架构、
    权限拒绝与升级矩阵。
-4. LMCache MP 仍缺真实 vLLM connector 在线数据面；LMCache Ascend 必须继续作为
-   独立 adapter/profile，不得借用 CPU-SHM 结论。
+4. LMCache MP 仍缺真实 vLLM connector 在线数据面；LMCache Ascend 已有固定组合
+   的真实 in-process 命中，但仍缺 controlled backend outage/recompute/recovery，
+   且必须继续作为独立 adapter/profile，不得借用 CPU-SHM 结论。
 
-满足以下条件后才能重新评估：BidKV 上游接口冻结且真实 EngineCore 验收通过；每个
+满足以下条件后才能重新评估：BidKV 在线 EngineCore 重启回退通过；每个
 拟支持宿主至少有一个官方发布载体；固定矩阵可重复；缺权限、冲突、不可达、部分
 失败、升级和回滚均有机器可判定结果；clean install/uninstall 不留下 enabled intent。
