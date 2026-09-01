@@ -203,6 +203,24 @@ BidKV 的现行实现可参考
 - `activation`：只放宿主启动所需的 entry point、环境变量和
   `additional_config`。不要在这里放密钥；密钥应由部署环境注入。
 
+`additional_config` 只对应 vLLM 的 `--additional-config`。如果扩展需要
+`--speculative-config`，不要把字段塞进 `additional_config`；应在用户配置文件中
+使用 Provider 支持的动态启动项：
+
+```json
+{
+  "launch_options": {
+    "speculative_config": {
+      "method": "eagle3",
+      "model": "/models/draft",
+      "draft_context_policy": "diffspec"
+    }
+  }
+}
+```
+
+模型路径、端点、密钥等部署值属于用户配置，不属于可发布的静态 manifest。
+
 ### 5.2 Manifest 的关键一致性条件
 
 - `extension_id` 必须与 entry-point 注册名完全相同；
@@ -337,6 +355,12 @@ export VLLM_HUST_EXT_CONFIG="$PWD/.tmp/manager-config.json"
 ```json
 {"threshold": 0.95, "mode": "conservative"}
 ```
+
+对于 DiffSpec 这类 speculative-decoding 扩展，配置文件应包含完整
+`launch_options.speculative_config`。Manager 会把它安全合并为
+`--speculative-config`，若用户命令已经包含不同值则 fail closed。普通
+`vllm.general_plugins` 扩展不会被伪装成 vLLM-HUST typed host manifest；只有明确
+声明 `host.api_range` 的扩展才生成宿主原生 manifest。
 
 然后执行：
 
@@ -574,8 +598,9 @@ distribution 前必须检查隔离配置文件，避免恢复陈旧意图。
 ## 19. 参考实现
 
 - [Extension Manager](https://github.com/vLLM-HUST/extension-manager)
-- [BidKV 插件实现](https://github.com/vLLM-HUST/vllm-hust-bidkv/tree/feature/host-provider-v0)
-- [Manifest 0.2 说明](https://github.com/vLLM-HUST/extension-manager/blob/feature/host-provider-v0/docs/manifest-0.2-experimental.md)
+- [BidKV 插件实现](https://github.com/vLLM-HUST/vllm-hust-bidkv)
+- [DiffSpec 插件实现](https://github.com/vLLM-HUST/vllm-ascend-hust-diffspec)
+- [Manifest 0.2 说明](https://github.com/vLLM-HUST/extension-manager/blob/main/docs/manifest-0.2-experimental.md)
 - [Host Provider 架构](extension-manager-host-provider-architecture.md)
 - [支持矩阵](extension-manager-support-matrix-20260901.md)
 - [验收记录](extension-manager-acceptance-20260901.md)
