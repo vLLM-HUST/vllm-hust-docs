@@ -64,8 +64,10 @@ waiting queue、KV cleanup 和 reinsertion 仍归核心，不能通过 monkey pa
 Mooncake 本体是外部 KV 状态、传输和存储系统；`MooncakeConnector` 与
 `MooncakeStoreConnector` 是 vLLM connector。无侵入 Provider 只生成官方
 `kv_transfer_config`、检查服务 API，并把服务不可达投影为 `degraded`。它不启动、
-停止、升级 Mooncake，不删除 KV 数据，也不立即引入自维护 Mooncake Fork 或 C++
-动态插件 ABI。
+停止、升级 Mooncake，也不删除 KV 数据。[`vLLM-HUST/mooncake-hust`](https://github.com/vLLM-HUST/mooncake-hust)
+是 `kvcache-ai/Mooncake` 的上游优先薄 fork：官方已经提供 Ascend NPU CI、aarch64
+NPU wheel、arm64 wheel 与多架构镜像，因此当前不维护核心实现差异，也不引入自有
+C++ 动态插件 ABI。只有在 HUST 主机复现明确缺口后才加入窄补丁，并优先回馈上游。
 
 `mooncake-transfer-engine-non-cuda==0.3.12.post1` 已在 A100 主机用无 GPU
 一次性容器完成两条相互独立的真实数据路径：两个 TransferEngine 进程通过
@@ -122,9 +124,12 @@ Production Stack chart 的本地 Helm template 和隔离 kind API server dry-run
 已在隔离 Kubernetes 1.34.11 中完成 Production Stack 官方 controller 调谐、官方
 Router 到外部测试后端的真实转发，以及真实 Metrics API 驱动的 1→3 扩容；同时验证
 controller/HPA 双写冲突。Mooncake 的真实 vLLM connector 命中和 Production Stack
-Router 到既有 GLM-4-32B 的 500→200 数据面恢复也已通过。官方 Production Stack
-Production Stack 仍需固化可复现的 vLLM-HUST arm64 发布载体；产品不要求 amd64。
-BidKV scheduler 的干净发布载体验收也尚未完成。
+Router 到既有 GLM-4-32B 的 500→200 数据面恢复也已通过。Production Stack 仍需
+固化可复现的 vLLM-HUST arm64 发布载体；产品不要求 amd64。
+该载体由官方仓库的薄 fork
+[`vLLM-HUST/production-stack-hust`](https://github.com/vLLM-HUST/production-stack-hust)
+维护，只包含 arm64 构建/发布和极少必要集成补丁。BidKV scheduler 的干净发布
+载体验收也尚未完成。
 
 逐项执行证据见 [2026-09-01 验收记录](extension-manager-acceptance-20260901.md)。
 
