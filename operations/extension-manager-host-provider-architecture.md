@@ -123,8 +123,8 @@ Production Stack chart 的本地 Helm template 和隔离 kind API server dry-run
 Router 到外部测试后端的真实转发，以及真实 Metrics API 驱动的 1→3 扩容；同时验证
 controller/HPA 双写冲突。Mooncake 的真实 vLLM connector 命中和 Production Stack
 Router 到既有 GLM-4-32B 的 500→200 数据面恢复也已通过。官方 Production Stack
-v0.1.12 Router image 没有 arm64 manifest，因此发布镜像矩阵与 BidKV scheduler
-验收仍未完成。
+Production Stack 仍需固化可复现的 vLLM-HUST arm64 发布载体；产品不要求 amd64。
+BidKV scheduler 的干净发布载体验收也尚未完成。
 
 逐项执行证据见 [2026-09-01 验收记录](extension-manager-acceptance-20260901.md)。
 

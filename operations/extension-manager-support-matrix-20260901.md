@@ -16,7 +16,7 @@
 | Mooncake standalone | 官方 non-CUDA `0.3.12.post1`，A100 host、CPU DRAM/TCP | 两进程 1 MiB TransferEngine；Store REST put/exist/get/lease-aware remove | 未覆盖跨节点、RDMA、CUDA wheel 与版本回归 | 固定点通过，范围仍 experimental |
 | Mooncake + vLLM Ascend | NPU wheel `0.3.11.post1`；vLLM `0.23.0`；vLLM Ascend `0.19.1.post1.dev474+g4edbc9258`；Ascend 910B，NPU 4 | `MooncakeStoreConnector` 9-key save/load；master 中断降级及原 vLLM 进程恢复 | 此路径要求 `transport_protocol=ascend`、`load_async=true`；未覆盖声明范围 `>=0.3.11.post1,<0.4` 的全部版本 | healthy（固定组合），矩阵未冻结 |
 | Production Stack 控制面 | 官方 commit `1b87c11…`、chart `0.1.12`、Helm `4.2.4`、Kubernetes `1.34.11`、metrics-server `0.9.0` | template/server dry-run；Helm install/upgrade/explicit+automatic rollback/uninstall；controller reconciliation；独立所有权 HPA 1→3；双写冲突 | 只验证一个 Kubernetes/Helm 组合；controller/HPA 不能共同写 replicas | integration-tested，矩阵未冻结 |
-| Production Stack Router + 真实模型 | 同 commit 源码构建 arm64 Router；180 既有 GLM-4-32B vLLM | 不可达后端 500；只重建测试 Router 后真实模型 200/`ROUTER_OK`；生产 vLLM 未重启 | 官方 `router:v0.1.12` 无 `linux/arm64/v8`；未验证官方 amd64 release image | healthy + degraded；发布载体阻塞 |
+| Production Stack Router + 真实模型 | 同 commit 源码构建 arm64 Router；180 既有 GLM-4-32B vLLM | 不可达后端 500；只重建测试 Router 后真实模型 200/`ROUTER_OK`；生产 vLLM 未重启 | 需发布并复现 vLLM-HUST arm64 载体；不要求 amd64 | healthy；发布载体待固化 |
 
 ## 2. 生命周期与回滚边界
 
@@ -39,8 +39,8 @@
 1. BidKV 在 vLLM-HUST 0.23 上已有受支持的 typed scheduler contract，在线模型
    抢占和进程重启回退已通过；仍需从干净发布镜像/wheel 重复。官方 vLLM 继续明确
    为 unsupported。
-2. Production Stack v0.1.12 缺少 arm64 官方 Router image；源码构建通过不能替代
-   release artifact 支持矩阵。
+2. Production Stack 需将固定源码构建固化为可复现的 vLLM-HUST arm64 发布载体；
+   不以 amd64 上游镜像作为门槛。
 3. Mooncake/Production Stack 目前是固定版本点验证，不是跨版本、跨架构、
    权限拒绝与升级矩阵。
 

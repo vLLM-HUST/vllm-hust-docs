@@ -29,8 +29,8 @@
 1. BidKV 需要从干净 release image/wheel 重复同一在线结果；官方 vLLM 在上游
    scheduler contract 冻结前仍不支持。
 2. Mooncake 需要补跨版本、跨节点和传输矩阵。
-3. Production Stack 官方 `router:v0.1.12` 没有 `linux/arm64/v8` manifest；同提交
-   源码构建通过不能替代官方发布载体。
+3. Production Stack 需要把已通过真实路由测试的固定源码构建固化为可复现、可发布
+   的 vLLM-HUST arm64 载体；产品不要求 amd64。
 4. 需要补齐权限拒绝、升级和干净安装/卸载矩阵。
 
 ## 发布判定
