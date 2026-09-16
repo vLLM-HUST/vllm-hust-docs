@@ -1,0 +1,403 @@
+{
+  "$schema": "../registry/release-record.schema.json",
+  "schema_version": "1.0",
+  "record_id": "ecosystem-reorganization-2026-08-28",
+  "status": "draft",
+  "record_date": "2026-08-28",
+  "repositories": [
+    {
+      "name": "vllm-hust",
+      "url": "https://github.com/vLLM-HUST/vllm-hust",
+      "branch": "codex/ecosystem-architecture-reorganization-20260828",
+      "commit": "d2c4f679cb9edf738374c18390d0be5e5657dbe8",
+      "role": "runtime_core"
+    },
+    {
+      "name": "vllm-hust-docs",
+      "url": "https://github.com/vLLM-HUST/vllm-hust-docs",
+      "branch": "codex/ecosystem-architecture-reorganization",
+      "commit": "35d22d4bd21af413607f7d7d1810138fe675c9e3",
+      "role": "documentation_source"
+    },
+    {
+      "name": "vllm-hust-website",
+      "url": "https://github.com/vLLM-HUST/vllm-hust-website",
+      "branch": "codex/ecosystem-architecture-reorganization-20260828",
+      "commit": "510f2c88219a57f2a8d4c32eeeaaefdf1ddf5b33",
+      "role": "public_registry_renderer"
+    },
+    {
+      "name": "vllm-hust-bidkv",
+      "url": "https://github.com/vLLM-HUST/vllm-hust-bidkv",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "2b03ec97d93c24274c7a1caf2fbbe3a169262baf",
+      "role": "scheduler_policy"
+    },
+    {
+      "name": "pegaflow-hust",
+      "url": "https://github.com/intellistream/pegaflow-hust",
+      "branch": "feat/ecosystem-role-metadata",
+      "commit": "8e951edc8a3f9bb9f755b6438ec1edab3dac5a18",
+      "role": "external_kv_subsystem_and_connectors"
+    },
+    {
+      "name": "LMCache-Ascend",
+      "url": "https://github.com/vLLM-HUST/LMCache-Ascend",
+      "branch": "feat/ecosystem-role-metadata",
+      "commit": "a124a5314f40d605db15b70c19dcfc293609294d",
+      "role": "lmcache_ascend_provider_and_adapter"
+    },
+    {
+      "name": "vllm-ascend-hust",
+      "url": "https://github.com/vLLM-HUST/vllm-ascend-hust",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "9276a3131f9ca49fc83b489f8684ac71a0a9fe8f",
+      "role": "platform_profile"
+    },
+    {
+      "name": "vllm-metal-hust",
+      "url": "https://github.com/vLLM-HUST/vllm-metal-hust",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "77e301df3f3a788871fdfa5f5596f059594a314e",
+      "role": "platform_profile"
+    },
+    {
+      "name": "vllm-ascend-kvcompress-hust",
+      "url": "https://github.com/vLLM-HUST/vllm-ascend-kvcompress-hust",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "84432405bd93a28a2dcdacdd443c6225ba317be0",
+      "role": "kv_compression_runtime_component"
+    },
+    {
+      "name": "vllm-ascend-hust-diffspec",
+      "url": "https://github.com/vLLM-HUST/vllm-ascend-hust-diffspec",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "8a32ea35e70448fef165493c8accc767f5161c22",
+      "role": "decoding_runtime_component"
+    },
+    {
+      "name": "vllm-ascend-hust-LatchMoE",
+      "url": "https://github.com/vLLM-HUST/vllm-ascend-hust-LatchMoE",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "6f70b69ab06be5b90d5e156dca1f15f27473c834",
+      "role": "operator_runtime_component"
+    },
+    {
+      "name": "vllm-hust-benchmark",
+      "url": "https://github.com/vLLM-HUST/vllm-hust-benchmark",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "d740c6e43f16f5673f9e9f0d2b6e4d5dbbbf8436",
+      "role": "benchmark_evidence_tool"
+    },
+    {
+      "name": "vllm-hust-dev-hub",
+      "url": "https://github.com/vLLM-HUST/vllm-hust-dev-hub",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "67b8d389521f3d17f963f980d48a9d09cda13bb2",
+      "role": "development_operations_tool"
+    },
+    {
+      "name": "llm-serving-workloads",
+      "url": "https://github.com/vLLM-HUST/llm-serving-workloads",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "cb515fad213bb34b8a0d98a71dadf32d3e9f12c2",
+      "role": "workload_evidence_tool"
+    },
+    {
+      "name": ".github",
+      "url": "https://github.com/vLLM-HUST/.github",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "1f2107e31be6e8fc8e686cf7dd5cf476c8886732",
+      "role": "organization_governance"
+    },
+    {
+      "name": "ascend-runtime-manager",
+      "url": "https://github.com/vLLM-HUST/ascend-runtime-manager",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "3bdc02c7b60b0dc9ec30db0e29a8fa048f802c3f",
+      "role": "deployment_operations_tool"
+    },
+    {
+      "name": "cccf-domestic-inference-engine-survey",
+      "url": "https://github.com/vLLM-HUST/cccf-domestic-inference-engine-survey",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "7564eff879612388fc51c24811cbb4ce12da4471",
+      "role": "research_publication"
+    },
+    {
+      "name": "claude-code-hust",
+      "url": "https://github.com/vLLM-HUST/claude-code-hust",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "2e0239c2a5817fb800c7a7fa0c88cba3ebce5aac",
+      "role": "adjacent_application"
+    },
+    {
+      "name": "demo-repository",
+      "url": "https://github.com/vLLM-HUST/demo-repository",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "e653bf9d16ff9103c76fece94e21813df97281ab",
+      "role": "sandbox_experiment"
+    },
+    {
+      "name": "EvoScientist",
+      "url": "https://github.com/vLLM-HUST/EvoScientist",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "5ccee79943804ae9084ebd491c710f0bec0fdc4b",
+      "role": "adjacent_application"
+    },
+    {
+      "name": "fcs-domestic-chip-llm-recsys",
+      "url": "https://github.com/vLLM-HUST/fcs-domestic-chip-llm-recsys",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "8299e012ee5af7e64b45c56bfbd22a5e3753e199",
+      "role": "research_publication"
+    },
+    {
+      "name": "sglang-hust",
+      "url": "https://github.com/vLLM-HUST/sglang-hust",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "376d0bac2d2d6b639cc0444e301f21921ec0c9d1",
+      "role": "sibling_inference_runtime"
+    },
+    {
+      "name": "statesys-2026",
+      "url": "https://github.com/vLLM-HUST/statesys-2026",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "1710ee0267ae2c4fb25816d7c2bedc274d8f4b35",
+      "role": "public_application"
+    },
+    {
+      "name": "triton-ascend-hust",
+      "url": "https://github.com/vLLM-HUST/triton-ascend-hust",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "3b224cbb774ce582e6ab4d6135ba5cd9844c77b1",
+      "role": "compiler_runtime_substrate"
+    },
+    {
+      "name": "vllm-ascend",
+      "url": "https://github.com/vLLM-HUST/vllm-ascend",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "1fe782119971e00c7a9c88c41462bd97182a7800",
+      "role": "platform_profile"
+    },
+    {
+      "name": "vllm-ascend-hust-bidkv",
+      "url": "https://github.com/vLLM-HUST/vllm-ascend-hust-bidkv",
+      "branch": "main",
+      "commit": "5ee80256d263d58b1e512d9d436d47e9bac564ba",
+      "role": "archival_record"
+    },
+    {
+      "name": "vllm-ascend-quant-hust",
+      "url": "https://github.com/vLLM-HUST/vllm-ascend-quant-hust",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "a0b06d926ab1bdc7b2c6b496163126d5839d3e96",
+      "role": "model_artifact_preparation_tool"
+    },
+    {
+      "name": "vllm-hust.github.io",
+      "url": "https://github.com/vLLM-HUST/vllm-hust.github.io",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "355a8eef9d80545929000619161730853581c6e1",
+      "role": "registry_redirect"
+    },
+    {
+      "name": "vllm-hust-maintenance",
+      "url": "https://github.com/vLLM-HUST/vllm-hust-maintenance",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "2021a203737805d9287d3b71a8103d8bb709a8c4",
+      "role": "deployment_operations_tool"
+    },
+    {
+      "name": "vllm-hust-perf-analyzer",
+      "url": "https://github.com/vLLM-HUST/vllm-hust-perf-analyzer",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "bd215938fd447f507fe452419550166fb9573fda",
+      "role": "profiling_analysis_tool"
+    },
+    {
+      "name": "vllm-hust-profiling",
+      "url": "https://github.com/vLLM-HUST/vllm-hust-profiling",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "c068d8ddcf6afafe7b9268aa1be7d19ef12fa052",
+      "role": "profiling_analysis_tool"
+    },
+    {
+      "name": "vllm-hust-workstation",
+      "url": "https://github.com/vLLM-HUST/vllm-hust-workstation",
+      "branch": "docs/ecosystem-role-metadata",
+      "commit": "926114df86838f6048573decf1e11128829256ab",
+      "role": "product_ui"
+    }
+  ],
+  "compatibility_sets": [
+    {
+      "id": "organization-catalog",
+      "maturity": "candidate",
+      "repository_refs": [
+        "vllm-hust-docs",
+        "vllm-hust-website",
+        "pegaflow-hust",
+        "LMCache-Ascend",
+        "vllm-ascend-hust",
+        "vllm-metal-hust",
+        "vllm-ascend-kvcompress-hust",
+        "vllm-ascend-hust-diffspec",
+        "vllm-ascend-hust-LatchMoE",
+        "vllm-hust-benchmark",
+        "vllm-hust-dev-hub",
+        "llm-serving-workloads",
+        ".github",
+        "ascend-runtime-manager",
+        "cccf-domestic-inference-engine-survey",
+        "claude-code-hust",
+        "demo-repository",
+        "EvoScientist",
+        "fcs-domestic-chip-llm-recsys",
+        "sglang-hust",
+        "statesys-2026",
+        "triton-ascend-hust",
+        "vllm-ascend",
+        "vllm-ascend-hust-bidkv",
+        "vllm-ascend-quant-hust",
+        "vllm-hust.github.io",
+        "vllm-hust-maintenance",
+        "vllm-hust-perf-analyzer",
+        "vllm-hust-profiling",
+        "vllm-hust-workstation"
+      ],
+      "validations": [
+        {"id": "registry", "status": "passed", "evidence": "21 ecosystem components and 32 organization repositories validated"},
+        {"id": "repository-profiles", "status": "passed", "evidence": "All 32 portfolio roles validated against the closed schema and canonical registry: 31 are published repository-local profiles; the GitHub-archived legacy BidKV repository is represented by its immutable main revision and a centrally validated read-only descriptor because the remote rejects writes."},
+        {"id": "website-tests", "status": "passed", "evidence": "273 website tests passed; 3 environment-dependent tests were skipped"},
+        {"id": "browser-desktop-mobile", "status": "passed", "evidence": "20 cards rendered at 1440px and 390px; zero horizontal overflow and zero console errors"},
+        {"id": "remote-branches", "status": "passed", "evidence": "All 31 writable portfolio repositories have isolated role/profile branches on their canonical GitHub repositories without overwriting an existing branch; the remaining legacy BidKV repository is already archived and read-only."}
+      ],
+      "blockers": [
+        "Canonical registry URLs still point to architecture branches rather than a tagged registry release."
+      ],
+      "rollback": [
+        "Restore the previous website registry mirror and asset version.",
+        "Keep repository README/profile commits isolated from runtime behavior."
+      ]
+    },
+    {
+      "id": "typed-scheduler-policy",
+      "maturity": "experimental",
+      "repository_refs": ["vllm-hust", "vllm-hust-bidkv", "vllm-hust-docs", "vllm-hust-website"],
+      "validations": [
+        {"id": "compile", "status": "passed", "evidence": "Core extension, scheduler-policy, and KV selection modules compile in the repository-managed Python 3.12 environment."},
+        {"id": "dependency-free-smoke", "status": "passed", "evidence": "Manifest admission, immutable snapshot, typed materialization, and BidKV manifest parsing passed."},
+        {"id": "extension-core-pytest", "status": "passed", "evidence": "43 manifest, admission, startup snapshot, KV selection/capability, and scheduler-policy compatibility tests passed in the repository-managed Python 3.12 environment."},
+        {"id": "extension-core-hooks", "status": "passed", "evidence": "All pre-commit hooks for the new KV selection files passed, including Ruff, formatting, mypy, forbidden imports, SPDX, and configuration checks."},
+        {"id": "api-plane-materializers", "status": "passed", "evidence": "Core revision 2d0e6550db0a63ee417fd08944c5ff31bc16b6c8 materializes an explicitly qualified API-plane IO processor without legacy fallback after typed selection, and fans out admitted typed stat loggers alongside distinct legacy providers while deduplicating a class published through both mechanisms. Import, protocol, and initialization boundaries fail closed. Thirteen focused IO/stat tests passed with one real-engine integration test deselected because host 112 cannot infer a CPU device; 26 manifest/startup regressions and every applicable pre-commit hook passed."},
+        {"id": "installed-extension-discovery", "status": "passed", "evidence": "Core revision d2c4f679cb9edf738374c18390d0be5e5657dbe8 adds static vllm.extension_bundles distribution discovery, lightweight vllm plugin list/inspect/validate commands, and repeated vllm serve --extension activation. No selection performs no installed-distribution scan; selected IDs are resolved without importing plugin code; explicit manifest paths take precedence; duplicate, mismatched, missing, or malformed registrations fail closed. Fifty affected core tests passed with one pre-existing real-engine integration test deselected, and every applicable pre-commit hook passed. BidKV, PegaFlow, and LMCache-Ascend now publish matching wheel metadata and packaged manifests; their focused contract tests passed, BidKV passed all 400 tests and built a verified wheel, while PegaFlow native wheel construction remains environment-blocked by missing libclang and LMCache-Ascend full provider construction remains environment-blocked by its existing generated-version and accelerator dependencies."},
+        {"id": "platform-runtime-design-gate", "status": "passed", "evidence": "The normative platform/operator/model-runner gate records that a platform entry point is a lazy probe factory, operator integrations span registration, dispatch, and native-artifact roles, and model runners are platform-worker-owned factories selected only after runner generation and topology are known. It prohibits generic implementation_ref materialization until probe/profile, operator-role, runner-factory, cross-process identity, rollback, failure, ABI, accuracy, and hardware-equivalence gates pass. This is a completed design boundary, not a materialization or support claim."},
+        {"id": "extension-permission-policy", "status": "passed", "evidence": "Configured startup defaults to no non-empty permissions and accepts only an explicit strict host allowlist; blank, duplicate, aliased, unknown, and undeclared permissions fail closed. All 48 affected Bundle and KV tests passed with relevant pre-commit hooks."},
+        {"id": "bidkv-unit", "status": "passed", "evidence": "All 400 BidKV tests passed with integration mode required against the editable core environment at BidKV revision 2b03ec97d93c24274c7a1caf2fbbe3a169262baf; its source distribution and wheel include the static extension-bundle registration and packaged manifest."},
+        {"id": "cpu-image-bootstrap-failure-propagation", "status": "passed", "evidence": "Core revision 81d084d1df8f6fb42a082a79a01cd335e8eadb6e downloads the CPU image's uv installer before execution, retries transient downloads, and verifies the installed binary by absolute path. This prevents a failed curl in a pipeline from being cached as a successful image layer. All repository pre-commit hooks applicable to docker/Dockerfile.cpu passed."},
+        {"id": "rust-build-minimal-profile", "status": "passed", "evidence": "Core revision 81d084d1df8f6fb42a082a79a01cd335e8eadb6e installs Rust with the minimal profile and retries the rustup bootstrap download, eliminating non-build components such as rust-docs from vLLM artifact image construction. Bash syntax and all available repository hooks passed; the same file passed shellcheck on the A100 host, with only the pre-existing informational dynamic-source diagnostic."},
+        {"id": "extension-wheel-contents", "status": "passed", "evidence": "At core revision 81d084d1df8f6fb42a082a79a01cd335e8eadb6e, an actual ARM64 CPython 3.12 VLLM_TARGET_DEVICE=empty wheel was built with the repository-managed environment and verified by tools/verify_extension_wheel.py. It carries both built-in Mooncake and LMCache Bundle manifests, all five plugin/selection/runtime/control schemas, the control-bridge host schema, vllm-rs, and a Rust extension; all required JSON parses successfully. Three positive, missing-member, and optional-Rust verifier tests passed with every applicable pre-commit hook."},
+        {"id": "isolated-worktree-cpu-versioning", "status": "passed", "evidence": "Core revision 0655213380cf5977867d4e42a18b1d537f158075 derives an explicit PEP 440 CPU image version from the checked-out commit and passes it into wheel construction. The official CPU image entry then progressed from an isolated Git worktree through Python packaging instead of trying to dereference the host-only .git worktree pointer inside the container. Bash syntax, setup.py version resolution, repository hooks, and external shellcheck passed."},
+        {"id": "public-cmake-dependency-transport", "status": "passed", "evidence": "Core revision 7c27f5aeca52531b1e6aff5d5d313df38db11ec8 preserves pinned oneDNN and Arm Compute Library revisions while changing their public CMake FetchContent transports from credentialed SSH to HTTPS. The official CPU image subsequently downloaded oneDNN, configured CMake, compiled all 481 CPU extension targets, linked the wheel, installed it, assembled the test image, and entered pytest. A repository test now rejects public CMake GitHub dependencies that require host SSH credentials."},
+        {"id": "cpu-torch-abi-alignment", "status": "passed", "evidence": "Core revision 718d5e1b0a1830b142889401aa8830b49536e8bb aligns CPU build, runtime, and generated test-lock PyTorch requirements on base version 2.11.0 after the official image exposed a 2.11-build/2.10-runtime undefined-symbol failure. Four build-requirement tests and every applicable pre-commit hook passed. The official image at revision 50746174f97c068e31fbc70ae807d2efeb022fae then built, installed, and loaded the CPU extension with PyTorch 2.11 throughout, so the ABI repair is verified end to end."},
+        {"id": "cpu-test-wheel-locked-install", "status": "passed", "evidence": "Core revision 50746174f97c068e31fbc70ae807d2efeb022fae installs the locally built CPU wheel into the already locked test environment with uv pip install --no-deps. The official image completed without asking the network resolver to reinterpret wheel dependencies, loaded version 0.0.0+cpu.ci.g50746174f97c, and entered all five kernel suites. The regression assertion is included in the four passing build-requirement tests."},
+        {"id": "official-cpu-kernel-ci", "status": "failed", "evidence": "At core revision 50746174f97c068e31fbc70ae807d2efeb022fae, the official CPU image and wheel completed and the kernel suites produced: oneDNN 200 passed; attention 1206 passed and 1350 architecture-dependent skipped; activation 50 passed and 8 skipped; GDN 74 passed and 5 skipped. The full fused-MoE parameter matrix produced 79 passed and 17 failed, and a second official-file pytest run against the same installed wheel reproduced the same 17 case identities. Its first SILU BF16 vec failure also repeated three times and once with OMP_NUM_THREADS=1 and MKL_NUM_THREADS=1 with the same two elements, indexes, and maximum absolute difference 0.0015869140625 against atol 0.001, excluding random or thread-order fluctuation. A separate 96-shape diagnostic measured the error profile, and focused SILU/SWIGLUOAI comparisons showed that transcribing the kernel's fast-exp approximation into the reference did not eliminate failures; a sequential FP32 accumulation reference was element-for-element equal to the existing PyTorch reference in the audited failing shapes. These diagnostics exclude fast-exp alone and reference GEMM accumulation order as root causes, but do not establish a replacement accuracy contract. After refreshing origin/main to 5eca5cd55147f36e5951f3cb7992cd45356fda20, the branch has no diff from upstream in cpu_fused_moe.cpp, this test, or the default tolerance helper; only CPU dependency alignment differs among those audited paths. No kernel or tolerance was changed and this support gate remains failed as an upstream-baseline-equivalent issue, not an ecosystem-reorganization regression."},
+        {"id": "full-core-ci", "status": "not_run", "evidence": "The complete vLLM CPU test matrix has not been run. HF_TOKEN was intentionally absent, so the official script skipped model, offline-serving, and online-serving tests even though the reproducible CPU image and all five kernel files were exercised. A host-112 repository-wide collection was separately stopped after it initiated an unexpected multi-gigabyte Phi-4 Multimodal model download. The failed official-cpu-kernel-ci validation records the executed subset and must be resolved independently before this broader validation can pass."},
+        {"id": "legacy-selector-explicit-selection", "status": "passed", "evidence": "Core revision b819e5a3e2c2c4322e3aa72cd028f82fc25605b1 preserves unspecified legacy auto-discovery while making an explicit additional_config.victim_selector_plugin select exactly one named entry point. Missing, duplicate, discovery, load, factory, and protocol failures fail closed instead of silently choosing another provider. Eleven focused selector tests and all applicable pre-commit hooks passed; 26 combined startup and selector tests passed."},
+        {"id": "legacy-typed-equivalence", "status": "passed", "evidence": "BidKV revision 703108492cf3f1681fd0b5b8ccb116cfc778f1e8 installs real vllm.victim_selector metadata and replays one versioned four-step scheduler contract trace through both the exact legacy entry point and the admitted real Bundle manifest. Victim sequence, exported metrics, and decision snapshots match exactly; invalid configuration preserves the same ValueError root cause through both fail-closed materializers; removing typed manifests on the next start resolves the same legacy class; and the emergency disable flag resolves NoOpVictimSelector. Four installed-distribution integration tests passed. This is deterministic contract replay, not a real online serving or hardware-performance claim."}
+      ],
+      "blockers": [
+        "The reproducible official CPU kernel gate fails 17 of 96 fused-MoE BF16 vec cases under the aligned PyTorch 2.11 environment. Exact upstream file comparison and focused diagnostics classify this as an upstream-baseline-equivalent support blocker rather than an ecosystem-reorganization regression; fast-exp alone and reference accumulation order are not sufficient explanations. Do not change the kernel or widen tolerance without matched accuracy and performance analysis. Full model and serving CI additionally requires controlled model artifacts and credentials rather than side-effectful collection-time downloads."
+      ],
+      "rollback": [
+        "Remove every --extension selection and unset VLLM_EXTENSION_MANIFESTS and VLLM_EXTENSION_BUNDLES, retain additional_config.victim_selector_plugin=bidkv, then restart to resolve the exact legacy vllm.victim_selector entry point.",
+        "Set additional_config.victim_selector_plugin_disabled=true and restart to bypass typed and legacy providers with NoOpVictimSelector."
+      ]
+    },
+    {
+      "id": "kv-system-boundaries",
+      "maturity": "concept",
+      "repository_refs": ["vllm-hust", "vllm-hust-docs", "vllm-hust-website", "pegaflow-hust", "LMCache-Ascend", "vllm-ascend-kvcompress-hust"],
+      "validations": [
+        {"id": "catalog-separation", "status": "passed", "evidence": "Mooncake, LMCache, PegaFlow, and LMCache-Ascend systems/providers are separate from their connector bridges."},
+        {"id": "core-builtin-kv-bundles", "status": "passed", "evidence": "Core packages separate six-component Mooncake direct/store and LMCache v1/multiprocess bridge bundles with scheduler, worker, and API telemetry roles. Dedicated telemetry modules import no connector implementation. Five new bundle tests plus 67 affected typed-factory, config, Mooncake stats, and LMCache connector tests passed; all relevant core pre-commit hooks and the repository-profile schema passed."},
+        {"id": "core-builtin-kv-materialization-equivalence", "status": "passed", "evidence": "At core revision 92f17aa124cd70ff9b0e919a856c0a41e062cc27, seven focused tests verify that Mooncake direct/store and LMCache v1/multiprocess typed scheduler and worker roles resolve to the exact legacy implementation class, legacy next-start rollback names resolve back to that class, loadable telemetry codecs preserve stats type and payload, and a missing optional lmcache dependency fails closed with the same ModuleNotFoundError root cause. The focused and affected typed-factory, config, bundle, and LMCache suites passed 64 tests with all pre-commit hooks; this does not claim real service or hardware equivalence."},
+        {"id": "mooncake-example-process-ownership", "status": "passed", "evidence": "Core revision 5734f0a4ea748d7b21464519a9b08081259b61a0 removes name-based pkill and whole-caller-process-group termination from the Mooncake disaggregated example. Prefill, decode, and proxy services run in separately retained child process groups; cleanup uses bounded TERM then KILL only for those groups. Two safety tests plus the seven built-in equivalence tests passed, bash syntax validation passed, and every available pre-commit hook passed; shellcheck was unavailable on host 112 and was the only skipped hook."},
+        {"id": "mooncake-real-run-readiness", "status": "passed", "evidence": "Core revision 01ddb821dca26a424da104af8fd46f9e7e80f71e provides topology-aware fail-closed preflight plus a direct-mode process-owned runner for mutually exclusive legacy, typed, and fresh-process rollback states. It checks exact source/CLI/runtime, roles, model, revision, GPUs/free memory, ports, and fresh evidence; repeats volatile gates; uses deterministic requests; detects child death; probes the proxy's actual OpenAPI readiness route; and maps HUP, INT, TERM, and USR1 to bounded cleanup of retained groups. Nineteen focused tests, relevant hooks, and external shellcheck passed. In one A100 window both real 7B prefiller and decoder reached healthy state, but no benchmark ran because the former harness expected a nonexistent proxy /health route. SSH interruption exposed the missing HUP path; the three exact process groups were subsequently terminated without touching other services, and both defects were fixed. A later audit briefly observed both 80 GiB A100s and required ports free, but an externally managed GLM-4 32B service automatically restarted roughly one minute later; final-revision preflight observed 9062 MiB free on each GPU and port 18000 occupied, correctly launched nothing, and touched no external process. Other connected GPU hosts do not provide the required two-device local topology. Host 112 remains dependency-blocked. No real-online, equivalence, hardware-performance, or Mooncake-failure result is claimed."},
+        {"id": "pegaflow-typed-bundle", "status": "passed", "evidence": "PegaFlow publishes split scheduler, worker, and API telemetry Bundle v1 components with explicit device, IPC, and egress permissions. Its lazy package facade preserves the legacy module export while API telemetry imports no worker facade. Typed and legacy config builders, manifest admission, safety logic, and connector regressions passed all 74 focused tests."},
+        {"id": "pegaflow-real-run-readiness", "status": "passed", "evidence": "PegaFlow revision 9d7070d4202487848e1f65750699d0229c45619b vendors protoc for reproducible protobuf generation, builds the ARM Ascend server against the selected controlled Python, materializes that interpreter's virtual-environment and shared-library paths into the PyO3 server process, and makes exact Python ABI plus available torch.npu runtime explicit preflight gates. It retains exact core/provider source, runnable CLI, model, port, eight-device, manifest, unique-output, and owned-process-group checks. Five controlled-runtime tests, Python compilation, cargo fmt, pegaflow-proto tests, and the Ascend server build passed. A host-112 server smoke initialized ACL and detected Ascend runtime 1.17.0, then correctly failed before health because the controlled core environment is CUDA-only. A later read-only audit found all eight 910B2 devices idle with about 62 GiB free HBM each, but the CANN package set identifies as cann-9.0.0/26.0.rc1 and exposes HCCL v2 libraries without libhccl.so, while installed torch-npu 2.10.0 and 2.10.0.post2 binaries require libhccl.so. With CANN and Torch library paths configured, that is the sole unresolved extension dependency. The final typed preflight therefore correctly fails platform_npu_runtime. No connector, real-online, or hardware equivalence is claimed, and no ad-hoc compatibility symlink was created."},
+        {"id": "lmcache-ascend-typed-bundle", "status": "passed", "evidence": "LMCache-Ascend publishes a wheel-carried split scheduler, worker, and lightweight API telemetry Bundle v1 manifest with explicit trusted-process permissions. Its dynamic adapter now accepts the host kv_cache_config constructor argument while remaining compatible with legacy two-argument callers. Six manifest, admission, packaging, constructor, and import-boundary tests passed with Ruff and format checks; the repository profile passed the closed organization schema."},
+        {"id": "lmcache-ascend-real-run-readiness", "status": "passed", "evidence": "LMCache-Ascend revision 754bbb0d3efcc876fbbe6f88100fa08a8c4252e1 binds its fail-closed preflight to the exact selected core and provider source trees, requires an engine-level vLLM import and runnable service CLI, tolerates runtime logs before the final JSON record, and retains the matched legacy/typed/fresh-process-rollback runbook. Eight preflight tests plus six bundle, admission, packaging, and import-boundary tests passed with Ruff and format checks. A host-112 rerun launched no service: model, ports, eight NPUs, bundle roles, revisions, exact core source, engine import, and CLI construction passed; exact provider import and LMCache 0.4.4/torch-npu version gates failed because the generated provider version module, lmcache, and torch_npu were absent. No real-online or hardware result is claimed."},
+        {"id": "kv-selection-topology", "status": "passed", "evidence": "Closed single/ordered-multi schema and immutable-snapshot resolver preserve explicit order, validate exact scheduler/worker/API-telemetry providers plus declared HMA, piecewise, and cache-layout capabilities, reject role crossing, conflicting layouts, and unknown fields, and import no implementation."},
+        {"id": "kv-split-role-contracts", "status": "passed", "evidence": "The API-plane vllm.kv_connector.telemetry.v1 contract prevents logger-side code from depending on worker imports; 54 affected extension and KVTransferConfig tests passed with all relevant pre-commit hooks."},
+        {"id": "kv-transfer-config", "status": "passed", "evidence": "Typed selection dictionaries normalize into immutable profiles, are mutually exclusive with legacy connector names/module paths, and participate in transfer-instance role flags; all 17 affected config tests passed."},
+        {"id": "multi-connector-lifecycle", "status": "passed", "evidence": "MultiConnector now delegates recovery requeue, first-compute observation, and reclaimable-block collection; 22 non-gated tests passed and 1 conditional test skipped."},
+        {"id": "kv-single-materializer", "status": "passed", "evidence": "Typed single selection materializes scheduler, worker, and API telemetry classes only in their owning process; configuration-time HMA, piecewise, and cache-layout checks import no implementation; declaration mismatch fails closed."},
+        {"id": "kv-affected-regression", "status": "passed", "evidence": "94 affected extension, config, HMA, cache-layout, typed factory, and non-gated MultiConnector tests passed; 1 conditional test skipped and 1 gated-model test deselected."},
+        {"id": "kv-ordered-materializer", "status": "passed", "evidence": "Typed ordered_multi constructs scheduler and worker children in declared order with connector-ID-scoped configuration; API telemetry composes by the same logical IDs and rejects unknown IDs without legacy registry lookup."},
+        {"id": "kv-runtime-config-schema", "status": "passed", "evidence": "The closed typed_connectors host envelope is validated by a packaged Draft 2020-12 schema; all plugin schemas are included through plugins/*.schema.json package data."},
+        {"id": "kv-config-rollback", "status": "passed", "evidence": "A typed import failure stops without consulting legacy discovery; replacing the next-start configuration with the existing external module-path form successfully resolves the legacy connector. All 34 typed factory, config, HMA, module-path, and rollback tests passed."},
+        {"id": "bidkv-post-factory-regression", "status": "passed", "evidence": "All 400 BidKV tests passed with required installed-distribution integration against the editable core after typed single/ordered factory and explicit legacy selector changes."},
+        {"id": "kvcompress-static-validation", "status": "passed", "evidence": "KVCompress source and test modules compile, and its repository profile validates against the organization schema."},
+        {"id": "kvcompress-pytest", "status": "passed", "evidence": "All 44 KVCompress tests passed against the editable core after typed single/ordered factory changes."}
+      ],
+      "blockers": [
+        "Typed single and ordered_multi paths still lack matched real Mooncake, LMCache, PegaFlow, and LMCache-Ascend service behavior, failure recovery, shutdown, and accelerator evidence. The four built-in names now have factory-level class, role, codec, rollback-name, and missing-dependency equivalence, and Mooncake, PegaFlow, and LMCache-Ascend have safe preflight evidence. Mooncake direct mode has a controlled A100 runtime and three-mode runner, but the selected host is currently resource-blocked by an unrelated service; host 112 still lacks the Transfer Engine package, and store additionally requires its executable/config topology. Host 112's eight 910B2 devices are currently idle, but PegaFlow real startup remains blocked by the controlled environment's CUDA-only Torch and by an incompatible/incomplete CANN-HCCL and torch-npu package set: CANN exposes HCCL v2 libraries without the libhccl.so required by both installed torch-npu 2.10 variants. LMCache-Ascend additionally lacks lmcache 0.4.4 and the generated provider version module in the controlled environment. Matched failure, shutdown, and hardware runs remain required.",
+        "Configuration-level external module-path rollback and built-in next-start name rollback are verified, but rollback during matched real connector failure and restart scenarios is still pending."
+      ],
+      "rollback": [
+        "Continue using KVTransferConfig with current built-in connector names or kv_connector_module_path.",
+        "Do not configure typed KV bundle providers until the domain design gate passes.",
+        "Keep KVCompress on its current vllm.general_plugins bootstrap and provider/lifecycle surfaces; the profile commit changes no runtime behavior."
+      ]
+    },
+    {
+      "id": "external-control-plane-bridge",
+      "maturity": "concept",
+      "repository_refs": ["vllm-hust", "vllm-hust-docs", "vllm-hust-website"],
+      "validations": [
+        {"id": "catalog-separation", "status": "passed", "evidence": "External RIDE control plane, separately built remote runtime sidecar, and core-delivered local control host are three separate catalog components with independent topology, lifecycle, and authority."},
+        {"id": "wire-contracts", "status": "passed", "evidence": "Closed packaged action/receipt schemas, strict read-only health-probe parsing, and side-effect-free target, issuer-policy, scope, expiry, epoch, precondition, duplicate, and idempotency decisions remain covered."},
+        {"id": "authentication-replay-foundation", "status": "passed", "evidence": "Exact-wire-byte HMAC-SHA256 verification precedes strict parsing; a mode-0600 SQLite ledger binds idempotency key, action ID, and semantic fingerprint, restores in-progress actions and immutable correlated terminal receipts after restart, and rejects tampering, conflicts, nonterminal completion, and receipt identity mismatches. All 42 focused control-bridge tests and relevant pre-commit hooks passed."},
+        {"id": "fixed-process-executor", "status": "passed", "evidence": "A core-owned spawn worker materializes only for exact action/receipt v1, bridge-plane, process-isolated, IPC-only descriptors; it imports no bundle code and implements ready handshake, a single bounded request slot, timeout/failure cleanup, drain/stop, explicit restart, and runtime/epoch/state/receipt rechecks."},
+        {"id": "local-orchestration", "status": "passed", "evidence": "A transport-agnostic local service composes authentication, admission, durable lookup/reservation, and execution. Terminal retries after expiry restore the prior receipt; in-progress duplicates, semantic conflicts, executor failures, and unauthenticated inputs remain non-mutating and do not re-execute. All 24 affected security/service tests and relevant pre-commit hooks passed."},
+        {"id": "runtime-health-observation", "status": "passed", "evidence": "The host adapter reuses EngineClient.check_health, distinguishes healthy, EngineDeadError, and unavailable outcomes, strips exception detail, and passes only a closed source/timestamp/state observation to the child. Future or older-than-five-second observations fail closed, and missing observations remain RUNTIME_HEALTH_UNAVAILABLE. All 23 affected health, executor, and service tests plus relevant pre-commit hooks passed."},
+        {"id": "versioned-key-lifecycle", "status": "passed", "evidence": "Canonical v1 signatures select exact issuer/key IDs from immutable monotonic generations with activation, expiry, revocation, overlap, atomic replacement, and rollback prevention. Versioned mode rejects unknown IDs and legacy downgrade; explicit legacy mappings remain compatible. The same action re-signed by a new key restores its terminal receipt after the old key is removed without re-execution. All 32 affected key, security, and service tests plus relevant pre-commit hooks passed."},
+        {"id": "local-authenticated-transport", "status": "passed", "evidence": "A Linux same-UID Unix-domain-socket host uses SO_PEERCRED, mode-0600 sockets, secure pre-existing parent ownership, exact bounded frames, HMAC message authentication, bounded concurrent ingress, one serialized authority lane, generic error envelopes, timeout-to-pending recovery, and inode-safe cleanup. A timed-out operation retains its slot until durable completion, preventing an unbounded executor queue. All 31 affected transport, security, and service tests plus relevant pre-commit hooks passed."},
+        {"id": "opt-in-runtime-lifecycle", "status": "passed", "evidence": "The OpenAI server accepts an absolute --control-bridge-config only when explicitly supplied. Its closed v1 configuration references separate host-owned mode-private base64 key files, grants exactly runtime.read, bounds all limits, rejects multi-API-process ambiguity, and lets FastAPI lifespan own startup and reverse-order cleanup of the fixed executor, ledger, service, health adapter, and socket. All 51 combined control-bridge tests and 38 existing CLI/server-lifecycle tests passed with relevant pre-commit hooks."},
+        {"id": "remote-mtls-sidecar", "status": "passed", "evidence": "A separately built pure-Python sidecar terminates TLS 1.3 with mandatory client certificates, enforces an exact certificate SHA-256 allowlist, preserves bounded VLCB1 frames, and forwards them to the same-UID local host without parsing actions or importing vLLM. Seven tests include a real ephemeral-CA mTLS-to-UDS round trip; Ruff, formatting, mypy, SPDX, markdown, and relevant pre-commit hooks passed."},
+        {"id": "bridge-integration", "status": "blocked", "evidence": "The fixed read-only action is now runnable through an experimental local mTLS-to-UDS path. Production certificate issuance/rotation/revocation, secret backend and audit integration, high availability/reconnect policy, a general or mutating runtime operation API, and OS capability confinement for non-core code remain absent."}
+      ],
+      "blockers": [
+        "Only the read-only health-probe contract is defined; no general or mutating runtime action exists.",
+        "The experimental sidecar provides TLS 1.3 mutual authentication and certificate-fingerprint admission, but production certificate issuance, rotation, revocation, secret distribution, audit, high availability, and reconnect policy remain undefined.",
+        "The fixed core worker and local socket do not provide OS capability confinement for future non-core bridge code.",
+        "Generic Bundle v1 startup still rejects process isolation. Non-empty permissions require an explicit host allowlist but remain admission metadata rather than OS confinement; the explicit local host can materialize only the fixed core health-probe descriptor and cannot run bundle-supplied bridge code."
+      ],
+      "rollback": [
+        "Keep the bridge unconfigured; default runtime behavior remains independent of the external control plane."
+      ]
+    }
+  ],
+  "publication_order": [
+    {"sequence": 1, "status": "passed", "gate": "Publish opt-in core admission and scheduler materializer branches without changing default runtime behavior.", "repository_refs": ["vllm-hust"]},
+    {"sequence": 2, "status": "passed", "gate": "Publish architecture, schemas, registries, design gates, and this draft record.", "repository_refs": ["vllm-hust-docs"]},
+    {"sequence": 3, "status": "passed", "gate": "Publish repository-local profiles across every writable portfolio repository; retain a central-only classification for the read-only archived BidKV snapshot and do not mark experimental runtime paths recommended.", "repository_refs": ["vllm-hust-bidkv", "pegaflow-hust", "LMCache-Ascend", "vllm-ascend-hust", "vllm-metal-hust", "vllm-ascend-kvcompress-hust", "vllm-ascend-hust-diffspec", "vllm-ascend-hust-LatchMoE", "vllm-hust-benchmark", "vllm-hust-dev-hub", "llm-serving-workloads", ".github", "ascend-runtime-manager", "cccf-domestic-inference-engine-survey", "claude-code-hust", "demo-repository", "EvoScientist", "fcs-domestic-chip-llm-recsys", "sglang-hust", "statesys-2026", "triton-ascend-hust", "vllm-ascend", "vllm-ascend-hust-bidkv", "vllm-ascend-quant-hust", "vllm-hust.github.io", "vllm-hust-maintenance", "vllm-hust-perf-analyzer", "vllm-hust-profiling", "vllm-hust-workstation"]},
+    {"sequence": 4, "status": "passed", "gate": "Publish the website mirror only from the exact docs registry and keep all experimental labels.", "repository_refs": ["vllm-hust-website"]},
+    {"sequence": 5, "status": "passed", "gate": "Keep the completed BidKV legacy/typed contract replay green, preserve default-off and experimental labels, and record the fused-MoE failure as an unchanged upstream-baseline support blocker rather than silently altering its kernel or tolerance.", "repository_refs": ["vllm-hust", "vllm-hust-bidkv"]},
+    {"sequence": 6, "status": "blocked", "gate": "Resolve or formally disposition the upstream-baseline fused-MoE accuracy contract, run controlled full CPU model/serving CI and real platform/hardware gates, and update this record from draft to candidate only when evidence is attached.", "repository_refs": ["vllm-hust", "vllm-ascend-hust", "vllm-ascend-kvcompress-hust", "LMCache-Ascend", "pegaflow-hust"]},
+    {"sequence": 7, "status": "pending", "gate": "Tag the canonical docs registry, replace branch URLs in repository profiles, and then consider supported labels.", "repository_refs": ["vllm-hust-docs", "vllm-hust-website"]}
+  ],
+  "known_limitations": [
+    "The documentation repository revision records the parent snapshot because a release record cannot contain the hash of the commit that contains itself; the published branch head is the authoritative record revision.",
+    "All listed writable branches exist on GitHub, but no pull request is merged and no registry tag is published.",
+    "The legacy vllm-ascend-hust-bidkv repository is GitHub-archived and rejects branch writes; its immutable main revision is classified centrally, while new BidKV integration belongs to vllm-hust-bidkv.",
+    "BidKV legacy/typed equivalence is proven for a versioned deterministic scheduler contract trace, metrics, snapshots, initialization failure, and next-start rollback; no real online workload, accelerator behavior, or performance equivalence is inferred from that replay.",
+    "One MultiConnector consistency test requires authenticated access to the gated meta-llama/Llama-3.2-1B-Instruct model and was not run.",
+    "Typed single and ordered_multi KV materialization are experimental; real-system equivalence is not claimed, and the local same-UID control transport is not a production remote RIDE bridge.",
+    "The official CPU image is reproducible and ABI-aligned, but its fused-MoE BF16 vec matrix currently has 17 reproducible numerical failures out of 96 cases. The audited implementation, test, and tolerance files are identical to upstream main, and focused diagnostics exclude fast-exp alone and reference accumulation order as sufficient causes. This does not block publishing the opt-in ecosystem reorganization with experimental labels, but no supported or candidate label may rely on the CPU gate until the upstream kernel/reference contract is resolved and rerun.",
+    "No completed serving request or benchmark was executed on NPU, GPU, or Apple Silicon for this draft. Accelerator startup evidence is limited to healthy real-model Mooncake prefiller/decoder processes before the corrected matrix, plus PegaFlow ACL/runtime initialization before its torch_npu gate failed; neither is connector-equivalence or performance evidence.",
+    "This draft authorizes no legacy entry-point deprecation or removal."
+  ]
+}

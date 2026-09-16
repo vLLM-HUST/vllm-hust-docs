@@ -1,0 +1,41 @@
+\definecolor{DiagramBlue}{HTML}{E6F0FA}
+\definecolor{DiagramGreen}{HTML}{E9F5EE}
+\definecolor{DiagramOrange}{HTML}{FCEFE3}
+\definecolor{DiagramGray}{HTML}{F2F3F5}
+\begin{tikzpicture}[
+    node distance=9mm and 12mm,
+    scale=1.0,
+    transform shape,
+    block/.style={draw=black!70, line width=0.85pt, rounded corners=2.4pt, align=center, minimum height=11.5mm, inner sep=4.5pt, font=\normalsize\sffamily},
+    group/.style={draw=black!55, line width=0.8pt, rounded corners=3pt, inner sep=7pt},
+    note/.style={font=\small\sffamily, align=center, fill=white, inner sep=1.8pt, text=black!75},
+    flow/.style={-{Latex[length=3.2mm,width=2.1mm]}, line width=0.9pt, draw=black!75}
+]
+\node[block, fill=DiagramGray, minimum width=3.3cm] (ingress) {\textbf{复杂请求入口}\\文本/长上下文/多模态/工具调用};
+\node[block, fill=DiagramBlue, minimum width=3.1cm, right=of ingress] (service) {\textbf{服务入口}\\OpenAI 兼容/API/监控};
+\node[block, fill=DiagramBlue, minimum width=3.1cm, right=of service] (scheduler) {\textbf{请求调度}\\批处理组织/SLO/回退};
+
+\node[block, fill=DiagramGreen, minimum width=2.8cm, below=12mm of service, xshift=-8mm] (execute) {\textbf{模型执行}\\prefill/decode/并行策略};
+\node[block, fill=DiagramGreen, minimum width=2.8cm, right=of execute] (cache) {\textbf{KV 状态管理}\\前缀复用/迁移/驱逐};
+\node[block, fill=DiagramGreen, minimum width=2.8cm, right=of cache] (backend) {\textbf{平台后端接口}\\图模式/算子/能力门控};
+\node[group, fit=(execute)(cache)(backend), label={[font=\small\sffamily\bfseries, fill=white, inner sep=1.5pt]below:运行时核心}] (runtime) {};
+
+\node[block, fill=DiagramOrange, minimum width=3.0cm, below=12mm of cache, xshift=-8mm] (compiler) {\textbf{平台运行时}\\CANN/插件栈/通信};
+\node[block, fill=DiagramOrange, minimum width=2.7cm, below=10mm of compiler] (device) {\textbf{国产硬件平台}\\NPU/GPU/驱动};
+\node[group, fit=(compiler)(device), label={[font=\small\sffamily\bfseries, fill=white, inner sep=1.5pt]below:平台边界}] (platform) {};
+
+\draw[flow] (ingress) -- (service);
+\draw[flow] (service) -- (scheduler);
+\draw[flow] (scheduler) -- (execute);
+\draw[flow] (scheduler) -- (cache);
+\draw[flow] (scheduler) -- (backend);
+\draw[flow] (execute) -- (cache);
+\draw[flow] (cache) -- (backend);
+\draw[flow] (backend) -- (compiler);
+\draw[flow] (compiler) -- (device);
+\draw[flow] (device.east) -| ([xshift=12mm]backend.east) -- (backend.east);
+\draw[flow, dashed, line width=0.8pt, draw=black!65] (cache.south) -- ++(0,-8mm) -| ([xshift=-10mm]execute.west) -- ++(0,12mm) -| ([yshift=-6mm]service.south) -- (service.south);
+
+\node[note, text width=4.0cm, right=10mm of scheduler] {复杂请求首先考验入口编排与调度策略};
+\node[note, text width=4.0cm, right=10mm of device] {硬件差异应尽量收敛在平台接口与运行时边界};
+\end{tikzpicture}

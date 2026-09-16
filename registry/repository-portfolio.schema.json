@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vllm-hust.sage.org.ai/schemas/repository-portfolio-v1.schema.json",
+  "title": "vLLM-HUST organization repository portfolio",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "canonical_owner", "repositories"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "canonical_owner": {"const": "vLLM-HUST/vllm-hust-docs"},
+    "repositories": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/repository"}
+    }
+  },
+  "$defs": {
+    "repository": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name", "url", "portfolio_domain", "repository_role",
+        "relation_to_runtime", "lifecycle", "canonical_artifacts",
+        "component_ids", "public_surface"
+      ],
+      "properties": {
+        "name": {"type": "string", "pattern": "^[A-Za-z0-9._-]+$"},
+        "url": {"type": "string", "format": "uri"},
+        "portfolio_domain": {
+          "enum": [
+            "runtime_platform", "kv_state_data_path", "compiler_runtime",
+            "development_operations", "evidence_analysis",
+            "documentation_product", "applications_research"
+          ]
+        },
+        "repository_role": {
+          "enum": [
+            "runtime_core", "platform_profile", "sibling_runtime",
+            "external_subsystem", "integration_provider", "runtime_component",
+            "runtime_substrate", "benchmark_tool", "analysis_tool",
+            "development_tool", "operations_tool", "documentation_source",
+            "public_application", "organization_governance", "application",
+            "research_publication", "sandbox", "archive"
+          ]
+        },
+        "relation_to_runtime": {
+          "enum": [
+            "owns_core_contracts", "implements_core_contracts",
+            "integrates_external_system", "provides_external_subsystem",
+            "extends_runtime_behavior", "provides_runtime_substrate",
+            "sibling_runtime", "supports_runtime_delivery",
+            "produces_runtime_evidence", "documents_runtime",
+            "presents_canonical_registry", "organization_wide",
+            "adjacent_research", "historical_only"
+          ]
+        },
+        "lifecycle": {
+          "enum": [
+            "core", "supported", "certified_external", "incubating",
+            "community", "deprecated", "archived"
+          ]
+        },
+        "canonical_artifacts": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "component_ids": {
+          "type": "array",
+          "items": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+          "uniqueItems": true
+        },
+        "public_surface": {"type": "boolean"},
+        "successor": {"type": ["string", "null"]},
+        "notes": {"type": "string"}
+      }
+    }
+  }
+}
