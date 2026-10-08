@@ -34,6 +34,12 @@ Every supported or incubating component MUST declare these axes:
 | `ownership` | Maintenance responsibility | HUST-owned, upstream-owned, jointly maintained, certified third-party |
 | `maturity` | Evidence-backed lifecycle state | concept, incubating, experimental, supported, verified, deprecated, archived |
 
+A component record MAY additionally carry optional identity metadata:
+`maintainers` (GitHub logins), `maintainer_profiles` (a `login` plus the display
+`name` the website renders on the card) and `advisors` (`name_zh`, `name_en`,
+`relationship`). These fields are display metadata only: they do not affect
+compatibility, lifecycle state, or admission.
+
 A repository MAY contain multiple components. A component MUST NOT be assigned
 only a repository-wide `plugin` label when its runtime and service artifacts
 have different roles or execution planes.

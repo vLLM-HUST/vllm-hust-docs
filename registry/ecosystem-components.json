@@ -390,6 +390,27 @@
       "summary_en": "Standalone timeline analysis and an opt-in vLLM runtime plugin. Organize profiler events into reusable structures, join supplied scheduler steps, and query or visualize the captured execution.",
       "summary_zh": "独立时间线分析工具与可选的 vLLM 运行时插件。将 profiler 事件组织成可复用结构，关联采集到的 scheduler step，以查询和可视化理解推理执行。",
       "evidence_level": "hardware_verified"
+    },
+    {
+      "id": "quality-bounded-inference",
+      "name": "Quality-Bounded Inference",
+      "artifact_type": "runtime_component",
+      "system_role": "control_plane",
+      "integration_contracts": [],
+      "integration_surfaces": ["vllm.general_plugins", "vllm.request-pre-action-observer"],
+      "execution_planes": ["api"],
+      "deployment_topology": "in_process",
+      "delivery_model": "plugin_bundle",
+      "ownership": "hust_owned_subsystem",
+      "maintainers": ["Tkhkrnx"],
+      "maintainer_profiles": [{"login": "Tkhkrnx", "name": "Pharos Peng"}],
+      "advisors": [{"name_zh": "张书豪", "name_en": "Shuhao Zhang", "relationship": "internal"}],
+      "maturity": "incubating",
+      "canonical_repository": "https://github.com/vLLM-HUST/quality-bounded-inference-plugin",
+      "upstream_repository": null,
+      "summary_en": "Task-aware control plane that admits quality-bounded inference mechanisms per model invocation and delivers an admitted mechanism as a request-local parameter through an extension bundle; it fails closed when the host does not expose the request-entry reading point.",
+      "summary_zh": "按每次模型调用逐次裁决“质量有界推理”机制的任务感知控制面，以扩展 bundle 把被准入的机制作为请求级参数投递；宿主未暴露请求入口读取点时故障关闭。",
+      "evidence_level": "integration_tested"
     }
   ]
 }

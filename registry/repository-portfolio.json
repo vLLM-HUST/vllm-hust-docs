@@ -362,6 +362,18 @@
       "canonical_artifacts": ["Metal platform profile", "Apple Silicon native runtime integration"],
       "component_ids": ["vllm-metal-hust"],
       "public_surface": true
+    },
+    {
+      "name": "quality-bounded-inference-plugin",
+      "url": "https://github.com/vLLM-HUST/quality-bounded-inference-plugin",
+      "portfolio_domain": "applications_research",
+      "repository_role": "runtime_component",
+      "relation_to_runtime": "extends_runtime_behavior",
+      "lifecycle": "incubating",
+      "canonical_artifacts": ["vLLM-HUST Extension Bundle (0.2-experimental) wheel", "quality-bounded inference control-plane runtime"],
+      "component_ids": ["quality-bounded-inference"],
+      "public_surface": false,
+      "notes": "Organization-hosted copy of the project repository; it is private and is the canonical home of the component. Integration was verified against a real vLLM 0.19.1 carrier: extension manager acceptance, in-process materialization in every engine process, and a request-bound pre-action read. No performance or quality claim is made."
     }
   ]
 }

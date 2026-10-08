@@ -27,6 +27,34 @@
       "properties": {
         "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
         "name": {"type": "string", "minLength": 1},
+        "maintainers": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "maintainer_profiles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["login", "name"],
+            "properties": {
+              "login": {"type": "string", "minLength": 1},
+              "name": {"type": "string", "minLength": 1}
+            }
+          }
+        },
+        "advisors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name_zh", "name_en", "relationship"],
+            "properties": {
+              "name_zh": {"type": "string", "minLength": 1},
+              "name_en": {"type": "string", "minLength": 1},
+              "relationship": {"type": "string", "minLength": 1}
+            }
+          }
+        },
         "artifact_type": {
           "enum": ["runtime_core", "platform_profile", "runtime_component", "external_system", "bridge", "tool", "application"]
         },
