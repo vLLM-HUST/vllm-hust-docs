@@ -1,7 +1,7 @@
 # vLLM-HUST 扩展制作、打包、安装与发布指南
 
 > 适用基线：vLLM-HUST Extension Manager `0.2.0.dev0`、Manifest
-> `0.2-experimental`。本接口尚未冻结为稳定 v1；插件作者必须声明并测试精确的宿主
+> `0.3-experimental`。本接口尚未冻结为稳定 v1；插件作者必须声明并测试精确的宿主
 > 兼容范围，不能把“manifest 能被读取”写成“运行时已经兼容”。
 
 本文面向准备给 vLLM-HUST 生态贡献扩展的同学。BidKV 是进程内 scheduler policy
@@ -51,7 +51,7 @@ example-policy/
 │       ├── __init__.py
 │       ├── policy.py
 │       └── manifests/
-│           └── vllm-hust-extension-v0.2.json
+│           └── vllm-hust-extension-v0.3.json
 └── tests/
     ├── test_manifest.py
     ├── test_packaging.py
@@ -114,14 +114,14 @@ class ExamplePolicy:
 BidKV 的现行实现可参考
 [`bidkv.adapters.vllm_hust.selector`](https://github.com/vLLM-HUST/vllm-hust-bidkv/tree/feature/host-provider-v0/src/bidkv/adapters/vllm_hust)。
 
-## 5. 编写 Manifest 0.2
+## 5. 编写 Manifest 0.3
 
-文件名必须是 `vllm-hust-extension-v0.2.json`。下面是 scheduler policy 的最小完整
+文件名必须是 `vllm-hust-extension-v0.3.json`。下面是 scheduler policy 的最小完整
 示例：
 
 ```json
 {
-  "schema_version": "0.2-experimental",
+  "schema_version": "0.3-experimental",
   "extension_id": "org.vllm-hust.example-policy",
   "extension_version": "0.1.0",
   "kind": "scheduler_policy",
@@ -152,6 +152,14 @@ BidKV 的现行实现可参考
     }
   ],
   "requires_services": [],
+  "requires_extensions": [],
+  "resource_claims": [
+    {
+      "resource": "vllm.scheduler.preemption-policy",
+      "scope": "vllm-process",
+      "mode": "exclusive"
+    }
+  ],
   "components": [
     {
       "component_id": "victim-selector",
@@ -197,6 +205,10 @@ BidKV 的现行实现可参考
   `kubernetes_manifest`、`crd` 或 `controller` 等载体。
 - `requires_services`：每项需写 `service_id`、`protocol`、`version_range`、
   `endpoint_config` 和可选的 `optional`。进程内纯 policy 应为空数组。
+- `requires_extensions`：声明其他扩展的 ID 和版本范围；没有依赖时写 `[]`。
+- `resource_claims`：声明扩展占用的宿主资源、作用域及 `shared`/`exclusive`
+  模式。会替换调度策略、算子或 KV 路径的 MOD 通常必须使用 `exclusive`，避免多个
+  扩展同时改写同一运行路径。
 - `components[].permissions`：只声明实际需要的最小集合：`device_access`、
   `filesystem_read`、`filesystem_write`、`ipc`、`network_egress`、
   `shared_memory`、`subprocess`。空权限写 `[]`。
@@ -305,7 +317,7 @@ from zipfile import ZipFile
 wheel = next(Path("dist").glob("*.whl"))
 with ZipFile(wheel) as archive:
     names = archive.namelist()
-assert any(name.endswith("manifests/vllm-hust-extension-v0.2.json") for name in names)
+assert any(name.endswith("manifests/vllm-hust-extension-v0.3.json") for name in names)
 print(wheel, "contains the manifest")
 PY
 ```
@@ -569,7 +581,7 @@ PyPI 文件不可覆盖，发布错误必须增加新版本或按发布策略 ya
 
 检查 distribution 是否安装在运行 CLI 的同一 Python 环境、entry-point group 是否为
 `vllm_hust.extension_bundles`、注册名是否与 `extension_id` 相同，以及 wheel 是否包含
-`manifests/vllm-hust-extension-v0.2.json`。
+`manifests/vllm-hust-extension-v0.3.json`。
 
 ### `validate` 报 manifest 数量不是 1
 
@@ -600,7 +612,7 @@ distribution 前必须检查隔离配置文件，避免恢复陈旧意图。
 - [Extension Manager](https://github.com/vLLM-HUST/extension-manager)
 - [BidKV 插件实现](https://github.com/vLLM-HUST/vllm-hust-bidkv)
 - [DiffSpec 插件实现](https://github.com/vLLM-HUST/vllm-ascend-hust-diffspec)
-- [Manifest 0.2 说明](https://github.com/vLLM-HUST/extension-manager/blob/main/docs/manifest-0.2-experimental.md)
+- [Manifest 0.3 说明](https://github.com/vLLM-HUST/extension-manager/blob/main/docs/manifest-0.3-experimental.md)
 - [Host Provider 架构](extension-manager-host-provider-architecture.md)
 - [支持矩阵](extension-manager-support-matrix-20260901.md)
 - [验收记录](extension-manager-acceptance-20260901.md)
