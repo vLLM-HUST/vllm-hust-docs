@@ -14,9 +14,9 @@
 
 制作其他插件时，把示例中的名称换成自己项目的值即可。
 
-插件由 [vLLM-HUST Extension Manager](https://github.com/vLLM-HUST/extension-manager)（命令 `vllm-hust-ext`）统一管理发现、准入、启用与启动渲染，manifest 使用 `0.2-experimental` schema。
+插件由 [vLLM-HUST Extension Manager](https://github.com/vLLM-HUST/extension-manager)（命令 `vllm-hust-ext`）统一管理发现、准入、启用与启动渲染，manifest 使用 `0.3-experimental` schema。
 
-> `0.2-experimental` 尚非稳定 API，端到端验收通过前不发布 alpha 包。
+> `0.3-experimental` 尚非稳定 API，端到端验收通过前不发布 alpha 包。
 
 ## 1. 项目结构
 
@@ -36,7 +36,7 @@ vllm-hust-bidkv/
 │       │       └── selector.py
 │       └── manifests/
 │           ├── __init__.py
-│           └── vllm-hust-extension-v0.2.json
+│           └── vllm-hust-extension-v0.3.json
 └── tests/
 ```
 
@@ -94,18 +94,18 @@ BidKV 不再注册 legacy `vllm.victim_selector` entry point；`VLLM_EXTENSION_M
 
 ## 3. 编写 manifest
 
-BidKV 的 manifest 位于 `src/bidkv/manifests/vllm-hust-extension-v0.2.json`：
+BidKV 的 manifest 位于 `src/bidkv/manifests/vllm-hust-extension-v0.3.json`：
 
 ```json
 {
-  "schema_version": "0.2-experimental",
+  "schema_version": "0.3-experimental",
   "extension_id": "org.vllm-hust.bidkv",
-  "extension_version": "0.1.1",
+  "extension_version": "0.2.1",
   "kind": "scheduler_policy",
   "host": {
     "provider": "vllm",
     "name": "vllm",
-    "version_range": ">=0.23,<0.24",
+    "version_range": ">=0.28.1rc1.dev319,<0.29",
     "api_range": ">=1,<2"
   },
   "runtime": {
@@ -115,24 +115,32 @@ BidKV 的 manifest 位于 `src/bidkv/manifests/vllm-hust-extension-v0.2.json`：
   },
   "lifecycle_owner": "vllm",
   "protocols": [
-    {"name": "vllm.scheduler.policy", "version_range": ">=1,<2"}
+    {"name": "vllm.preemption-policy", "version_range": ">=1,<2"}
   ],
   "implementation": [
     {
       "type": "python_module",
       "module": "bidkv.adapters.vllm_hust.selector",
-      "object": "BidkvVictimSelector",
+      "object": "BidkvPreemptionPolicy",
       "status": "active"
     }
   ],
   "requires_services": [],
+  "requires_extensions": [],
+  "resource_claims": [
+    {
+      "resource": "vllm.scheduler.preemption-policy",
+      "scope": "vllm-process",
+      "mode": "exclusive"
+    }
+  ],
   "components": [
     {
       "component_id": "victim-selector",
-      "contracts": ["vllm.scheduler.policy.v1"],
+      "contracts": ["vllm.preemption-policy.v1"],
       "execution_planes": ["scheduler"],
       "isolation": "trusted_in_process",
-      "implementation_ref": "bidkv.adapters.vllm_hust.selector:BidkvVictimSelector",
+      "implementation_ref": "bidkv.adapters.vllm_hust.selector:BidkvPreemptionPolicy",
       "permissions": []
     }
   ],
@@ -153,7 +161,7 @@ BidKV 的 manifest 位于 `src/bidkv/manifests/vllm-hust-extension-v0.2.json`：
 
 | 字段 | 说明 |
 |---|---|
-| `schema_version` | `0.2-experimental`，当前实验性 schema |
+| `schema_version` | `0.3-experimental`，当前实验性 schema |
 | `extension_id` | 扩展的稳定标识 |
 | `extension_version` | 扩展版本，通常与 Python 发行版本一致 |
 | `kind` | 域角色，如 `scheduler_policy`、`kv_service_adapter`、`control_plane_extension`、`runtime_bridge` |
@@ -163,6 +171,8 @@ BidKV 的 manifest 位于 `src/bidkv/manifests/vllm-hust-extension-v0.2.json`：
 | `protocols` | 显式协议兼容范围，如 `vllm.scheduler.policy >=1,<2` |
 | `implementation` | 一个或多个 carrier，BidKV 用 `python_module`（`module`/`object`/`status`） |
 | `requires_services` | 依赖的外部服务：`service_id`、`protocol`、`version_range`、`endpoint_config`、`optional` |
+| `requires_extensions` | 依赖的其他扩展及其版本范围；没有依赖时为 `[]` |
+| `resource_claims` | 宿主资源、作用域及共享/独占模式；BidKV 独占 preemption policy |
 | `components` | 可选 typed 组件，沿用 v1 组件结构，用于生成宿主 native v1 manifest |
 | `activation` | 启动激活声明：`entry_points`、`environment`、`additional_config` |
 
@@ -292,7 +302,7 @@ BidKV wheel 中至少应有：
 bidkv/__init__.py
 bidkv/_version.py
 bidkv/manifests/__init__.py
-bidkv/manifests/vllm-hust-extension-v0.2.json
+bidkv/manifests/vllm-hust-extension-v0.3.json
 bidkv-0.1.1.dist-info/METADATA
 bidkv-0.1.1.dist-info/RECORD
 ```
@@ -621,7 +631,7 @@ vllm-hust-ext run --dry-run -- vllm serve meta-llama/Llama-3.1-8B-Instruct
 ## 参考资料
 
 - [vLLM-HUST Extension Manager](https://github.com/vLLM-HUST/extension-manager)
-- [Extension Manifest 0.2 — experimental](https://github.com/vLLM-HUST/extension-manager/blob/main/docs/manifest-0.2-experimental.md)
+- [Extension Manifest 0.3 — experimental](https://github.com/vLLM-HUST/extension-manager/blob/main/docs/manifest-0.3-experimental.md)
 - [Core and Host Provider architecture](https://github.com/vLLM-HUST/extension-manager/blob/main/docs/architecture.md)
 - [BidKV typed scheduler-policy 适配提交 `5c994cdc`](https://github.com/vLLM-HUST/vllm-hust/commit/5c994cdc029dfebe318ca745a39920473033038b)
 - [vLLM-HUST 核心运行时仓库](https://github.com/vLLM-HUST/vllm-hust)
