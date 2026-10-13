@@ -34,6 +34,14 @@ No throughput, latency or complete-task quality claim is made. Compatibility
 with a new host or manifest requires separate validation; absent the required
 request-entry reading point, the extension must fail closed.
 
+The original registration reported Extension Manager `0.2.0.dev0` at
+`00c9b336` and a vLLM `0.19.1+empty` carrier on Ascend 910B2. Its reported
+checks covered list/inspect/validate/enable/plan/render, loading in four processes
+(API server, EngineCore and two workers), pre-admission rejection of an
+unsupported mechanism or missing source receipt, and a matching receipt for a
+valid request binding. No model completion was consumed. These are historical
+reports retained for provenance, not checks rerun by this registration's CI.
+
 ## Validation
 
 Install the validation dependency and run:
