@@ -19,7 +19,7 @@
 
 | 入口                                                    | 类型与归属       | 维护位置                                                                      | 核对结果                                                                  |
 | ------------------------------------------------------- | ---------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| [vllm-hust.sage.org.ai](https://vllm-hust.sage.org.ai/) | 组织官网         | [Website](https://github.com/vLLM-HUST/vllm-hust-website)，Actions 构建发布   | HTTPS 可达；Pages 使用自定义域名                                          |
+| [vllm-hust.sage.org.ai](https://vllm-hust.sage.org.ai/) | 组织官网         | [Website](https://github.com/vLLM-HUST/vllm-hust-website)，Actions 构建发布   | HTTPS 可达；HTTP 经 Cloudflare 301 升级，保留路径及参数                                          |
 | [vllm-hust.github.io](https://vllm-hust.github.io/)     | 旧地址兼容跳转壳 | [旧组织站仓库](https://github.com/vLLM-HUST/vllm-hust.github.io)              | HTTP 返回 200 跳转页；真实浏览器会保留路径/参数跳往官网，不是第二套内容站 |
 | [组织 Wiki](https://github.com/vLLM-HUST/.github/wiki)  | 组织知识入口     | [源稿](https://github.com/vLLM-HUST/vllm-hust-docs/tree/main/wiki)与原生 Wiki | 源稿与原生页面分开维护，链接按目标形式转换                                |
 | [组织 GitHub](https://github.com/vLLM-HUST)             | 组织与仓库入口   | [.github/profile](https://github.com/vLLM-HUST/.github/tree/main/profile)     | 仓库、贡献、议题等以 GitHub 当时状态为准                                  |
@@ -100,7 +100,7 @@
 | 关联仓库                                                          | 地址                                                  | 核对结果                                                                          |
 | ----------------------------------------------------------------- | ----------------------------------------------------- | --------------------------------------------------------------------------------- |
 | [EvoScientist](https://github.com/vLLM-HUST/EvoScientist)         | [evoscientist.ai](https://evoscientist.ai/)           | 可达；README 的 evoscientist.github.io 跳到同一站                                 |
-| [claude-code-hust](https://github.com/vLLM-HUST/claude-code-hust) | [登记主页](https://claudecode-haha.relakkesyang.org/) | 可达；README 使用的 claudecode-hust.relakkesyang.org DNS 无法解析，两个字段不一致 |
+| [claude-code-hust](https://github.com/vLLM-HUST/claude-code-hust) | [登记主页](https://claudecode-haha.relakkesyang.org/) | 登记主页可达；本页已补充同版本仓库指南；README 修复 PR 待门禁通过，外部文档域名仍无法解析 |
 
 ## 上游及第三方参考
 
@@ -121,15 +121,20 @@
 公开 README 中的 api.sage.org.ai、ws.sage.org.ai 是接口/实时连接相关地址，不作为普通内容网页；本轮没有发送业务请求或验证鉴权。
 vllm-hust.example.com 是文档示例域名，不列为上线网站。仓库 Wiki 的 has_wiki 标志只表示功能可用，不能证明 Wiki 已初始化。
 
-## 当前维护清单
+## 修复与维护记录
 
-| 优先级 | 项目                  | 已确认事实                                                         | 建议后续处理                                           |
-| ------ | --------------------- | ------------------------------------------------------------------ | ------------------------------------------------------ |
-| P2     | 官网强制 HTTPS        | Pages API 的 https_enforced 为 false；HTTP 响应 200 且未升级 HTTPS | 配置 HTTPS 强制跳转，并复核下载、旧地址和路径兼容      |
-| P2     | Claude 项目入口不一致 | 登记主页可达；README 另一域名 DNS 失败                             | 由仓库维护者确认主域名后统一 README 和主页字段         |
-| P3     | 历史及模板入口        | 历史 B0/B1、兼容页和播放器模板仍在部署产物内                       | 按用途保留；不要把旧资料、模板和当前产品页混为一个入口 |
+2026-11-19 修复后重新核验：
 
-本轮整理的是目录和归属，未调整域名、HTTPS、转向或应用服务配置。旧 github.io 的前端跳转已经确认正常，不计为重复内容问题。
+| 状态 | 项目 | 已确认结果 | 后续维护 |
+| --- | --- | --- | --- |
+| 已修复 | 官网强制 HTTPS | Cloudflare 为官网域名单独执行 301 跳转；首页、B0/B1、组件子目录和 wheel 索引均保留路径及查询参数，HTTPS 返回 200 | 在公开域名核对真实跳转；不能单凭 Pages 的标志判定公网行为 |
+| 已接入可用入口 | Claude 仓库指南 | 本页直接提供同版本仓库的中英文快速开始指南；README 文档徽章修复 PR 已提交，尚未合并 | PR 的策略及文档构建通过；应用层回归失败，保留合并门禁 |
+| 外部依赖 | Claude 项目文档域名 | claudecode-hust.relakkesyang.org 仍无法解析；可访问的登记主页是另一个外站地址 | 外部域名由其维护者恢复；当前阅读入口使用仓库指南 |
+| 例行维护 | 历史及模板入口 | 历史 B0/B1、兼容页和播放器模板仍在部署产物内 | 按用途保留并标明历史或模板身份 |
+
+官网前置 Cloudflare；本次只为 `vllm-hust.sage.org.ai` 添加 HTTP→HTTPS 规则。GitHub 因原站证书未就绪而拒绝启用 Pages 的 `https_enforced`，该标志仍为 false；公网强制升级已在 Cloudflare 生效，其他现存重定向规则保持原样。
+
+Claude 文档入口见[中文指南](https://github.com/vLLM-HUST/claude-code-hust/blob/main/docs/guide/quick-start.md)、[英文指南](https://github.com/vLLM-HUST/claude-code-hust/blob/main/docs/en/guide/quick-start.md)及[修复 PR](https://github.com/vLLM-HUST/claude-code-hust/pull/2)。PR 的应用层检查报告服务端 11 项失败、适配器 2 项失败及桌面 1 项超时，README 修复暂未合并。未修改外部域名 DNS 或文档站构建配置。旧 github.io 兼容跳转继续保留。
 
 ## 来源和更新方式
 

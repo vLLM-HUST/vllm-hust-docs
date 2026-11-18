@@ -1057,11 +1057,19 @@
     {
       "url": "http://vllm-hust.sage.org.ai/",
       "status": 200,
-      "final_url": "http://vllm-hust.sage.org.ai/",
+      "final_url": "https://vllm-hust.sage.org.ai/",
       "content_type": "text/html; charset=utf-8",
       "title": [
         "vLLM-HUST | Inference Engine for Domestic Compute"
-      ]
+      ],
+      "previous_observation": {
+        "initial_status": 200,
+        "final_url": "http://vllm-hust.sage.org.ai/"
+      },
+      "initial_status": 301,
+      "final_status": 200,
+      "redirect_location": "https://vllm-hust.sage.org.ai/",
+      "enforced_by": "Cloudflare host-scoped single redirect"
     },
     {
       "url": "https://vllm-hust.github.io/",
@@ -1108,5 +1116,91 @@
     "requested": "https://vllm-hust.github.io/?inventory=20261119",
     "browser_final_url": "https://vllm-hust.sage.org.ai/?inventory=20261119",
     "type": "client-side redirect"
+  },
+  "remediations": {
+    "checked_on": "2026-11-19",
+    "official_https": {
+      "public_http_redirect_status": 301,
+      "edge": "Cloudflare",
+      "scope": "vllm-hust.sage.org.ai only",
+      "github_pages_https_enforced": false,
+      "github_pages_update_result": "The certificate does not exist yet",
+      "verified_requests": [
+        {
+          "initial": {
+            "requested": "http://vllm-hust.sage.org.ai/?https-check=20261119&keep=1",
+            "status": 301,
+            "location": "https://vllm-hust.sage.org.ai/?https-check=20261119&keep=1",
+            "final_url": "http://vllm-hust.sage.org.ai/?https-check=20261119&keep=1",
+            "server": "cloudflare"
+          },
+          "https": {
+            "requested": "https://vllm-hust.sage.org.ai/?https-check=20261119&keep=1",
+            "status": 200,
+            "location": null,
+            "final_url": "https://vllm-hust.sage.org.ai/?https-check=20261119&keep=1",
+            "server": "cloudflare"
+          }
+        },
+        {
+          "initial": {
+            "requested": "http://vllm-hust.sage.org.ai/b0-b1.html?https-check=20261119&keep=1",
+            "status": 301,
+            "location": "https://vllm-hust.sage.org.ai/b0-b1.html?https-check=20261119&keep=1",
+            "final_url": "http://vllm-hust.sage.org.ai/b0-b1.html?https-check=20261119&keep=1",
+            "server": "cloudflare"
+          },
+          "https": {
+            "requested": "https://vllm-hust.sage.org.ai/b0-b1.html?https-check=20261119&keep=1",
+            "status": 200,
+            "location": null,
+            "final_url": "https://vllm-hust.sage.org.ai/b0-b1.html?https-check=20261119&keep=1",
+            "server": "cloudflare"
+          }
+        },
+        {
+          "initial": {
+            "requested": "http://vllm-hust.sage.org.ai/controlplane/?https-check=20261119&keep=1",
+            "status": 301,
+            "location": "https://vllm-hust.sage.org.ai/controlplane/?https-check=20261119&keep=1",
+            "final_url": "http://vllm-hust.sage.org.ai/controlplane/?https-check=20261119&keep=1",
+            "server": "cloudflare"
+          },
+          "https": {
+            "requested": "https://vllm-hust.sage.org.ai/controlplane/?https-check=20261119&keep=1",
+            "status": 200,
+            "location": null,
+            "final_url": "https://vllm-hust.sage.org.ai/controlplane/?https-check=20261119&keep=1",
+            "server": "cloudflare"
+          }
+        },
+        {
+          "initial": {
+            "requested": "http://vllm-hust.sage.org.ai/wheels/r8.html?https-check=20261119&keep=1",
+            "status": 301,
+            "location": "https://vllm-hust.sage.org.ai/wheels/r8.html?https-check=20261119&keep=1",
+            "final_url": "http://vllm-hust.sage.org.ai/wheels/r8.html?https-check=20261119&keep=1",
+            "server": "cloudflare"
+          },
+          "https": {
+            "requested": "https://vllm-hust.sage.org.ai/wheels/r8.html?https-check=20261119&keep=1",
+            "status": 200,
+            "location": null,
+            "final_url": "https://vllm-hust.sage.org.ai/wheels/r8.html?https-check=20261119&keep=1",
+            "server": "cloudflare"
+          }
+        }
+      ]
+    },
+    "claude_documentation_entrypoints": {
+      "status": "guides_available; README repair PR blocked by application checks",
+      "pull_request": "https://github.com/vLLM-HUST/claude-code-hust/pull/2",
+      "pull_request_head": "aad9377b0c66028275e2dd53efbce9df2d561c01",
+      "merged": false,
+      "chinese": "https://github.com/vLLM-HUST/claude-code-hust/blob/main/docs/guide/quick-start.md",
+      "english": "https://github.com/vLLM-HUST/claude-code-hust/blob/main/docs/en/guide/quick-start.md",
+      "external_docs_domain": "claudecode-hust.relakkesyang.org",
+      "external_docs_domain_state": "unresolved; usable repository guides indexed without external DNS changes"
+    }
   }
 }
