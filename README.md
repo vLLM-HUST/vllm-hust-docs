@@ -33,3 +33,8 @@ This repository contains vllm-hust documentation, sync notes, and fork-specific 
 - `architecture/vllm-hust-platform-plugin-chain.md` — a focused breakdown of platform detection, plugin activation, and fork-safe hardware extension points.
 - `architecture/vllm-hust-multimodal-agi4s-capabilities.md` — a focused map of multimodal, reasoning, tool-calling, and AGI4S-facing capability modules.
 - `architecture/vllm-hust-source-call-flow.md` — detailed source call-flow diagrams for CLI serve startup and OpenAI request handling.
+
+
+## 网站与网页入口
+
+[网站与网页总索引](wiki/Websites.md)整理官网完整页面、关联项目站、上游参考、兼容地址和维护待办；[公开仓库网页入口](wiki/Web-Repositories.md)覆盖公开仓库的 README 与主页。

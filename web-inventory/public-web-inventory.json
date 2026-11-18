@@ -1,0 +1,1112 @@
+{
+  "schema": "vllm-hust-public-web-inventory/v1",
+  "checked_on": "2026-11-19",
+  "scope": "Public repository metadata and README entrypoints, deployed official HTML routes, associated and upstream homepage fields. Not a crawl of all upstream documentation or private services.",
+  "production_presentation_revision": "8e1895afe5c1c3403220752d6d4904cac827011a",
+  "production_run": "https://github.com/vLLM-HUST/vllm-hust-website/actions/runs/44341568109",
+  "official_pages": [
+    {
+      "path": "demos/player-template.html",
+      "url": "https://vllm-hust.sage.org.ai/demos/player-template.html",
+      "title": "",
+      "description": "",
+      "status": 200
+    },
+    {
+      "path": "b0-b1-legacy.html",
+      "url": "https://vllm-hust.sage.org.ai/b0-b1-legacy.html",
+      "title": "历史 B0/B1 资料 · vLLM-HUST",
+      "description": "项目指定数据集测试、按测试大纲整理的 B0/B1 结果、服务产能与成本。",
+      "status": 200
+    },
+    {
+      "path": "ecosystem-archive.html",
+      "url": "https://vllm-hust.sage.org.ai/ecosystem-archive.html",
+      "title": "vLLM-HUST | Inference Engine for Domestic Compute",
+      "description": "An inference-engine MOD ecosystem spanning eight lifecycle phases, with explicit compatibility, activation evidence, and scoped performance results.",
+      "status": 200
+    },
+    {
+      "path": "news.html",
+      "url": "https://vllm-hust.sage.org.ai/news.html",
+      "title": "News | vLLM-HUST",
+      "description": "News from the vLLM-HUST community: people, engineering milestones, publications, and open-source impact.",
+      "status": 200
+    },
+    {
+      "path": "mod-results.html",
+      "url": "https://vllm-hust.sage.org.ai/mod-results.html",
+      "title": "MOD results moved into the catalog | vLLM-HUST",
+      "description": "",
+      "status": 200
+    },
+    {
+      "path": "index.html",
+      "url": "https://vllm-hust.sage.org.ai/index.html",
+      "title": "vLLM-HUST | Inference Engine for Domestic Compute",
+      "description": "An inference-engine MOD ecosystem spanning eight lifecycle phases, with explicit compatibility, activation evidence, and scoped performance results.",
+      "status": 200
+    },
+    {
+      "path": "dataset-introductions.html",
+      "url": "https://vllm-hust.sage.org.ai/dataset-introductions.html",
+      "title": "项目指定数据集测试 - vLLM-HUST",
+      "description": "冻结评测入口：快速测试使用 MMLU200；全量测试运行五项固定范围，提供预计时长与一键命令。",
+      "status": 200
+    },
+    {
+      "path": "versions.html",
+      "url": "https://vllm-hust.sage.org.ai/versions.html",
+      "title": "Versions - vLLM-HUST",
+      "description": "Release and repository version status for the vLLM-HUST runtime and integration stack.",
+      "status": 200
+    },
+    {
+      "path": "issues.html",
+      "url": "https://vllm-hust.sage.org.ai/issues.html",
+      "title": "Issues - vllm-hust",
+      "description": "A verified, curated snapshot of benchmark issues, with closed items archived separately from active work.",
+      "status": 200
+    },
+    {
+      "path": "members.html",
+      "url": "https://vllm-hust.sage.org.ai/members.html",
+      "title": "Organization members | vLLM-HUST",
+      "description": "Verified vLLM-HUST organization members and their public GitHub profiles.",
+      "status": 200
+    },
+    {
+      "path": "engine-r8-development.html",
+      "url": "https://vllm-hust.sage.org.ai/engine-r8-development.html",
+      "title": "r8 Development Evidence | vLLM-HUST",
+      "description": "Historical C15 r6-to-r8 development measurements, original paired outcomes and reproducible evidence.",
+      "status": 200
+    },
+    {
+      "path": "resources.html",
+      "url": "https://vllm-hust.sage.org.ai/resources.html",
+      "title": "Compute resources - vLLM-HUST",
+      "description": "Two private Ascend 910B2 clusters with 48 accelerator cards for vLLM-HUST development and evaluation.",
+      "status": 200
+    },
+    {
+      "path": "dataset-standard.html",
+      "url": "https://vllm-hust.sage.org.ai/dataset-standard.html",
+      "title": "标准测试执行指南 · vLLM-HUST",
+      "description": "按四步完成冻结标准测试：选择范围、准备环境、执行 B0/B1 配对、核对结果与交付证据。",
+      "status": 200
+    },
+    {
+      "path": "engine.html",
+      "url": "https://vllm-hust.sage.org.ai/engine.html",
+      "title": "vLLM-HUST Engine | Frozen r8",
+      "description": "vLLM-HUST Engine versions for Ascend. Download frozen r8, reproduce its measurements and develop further optimizations from a pinned MOD stack.",
+      "status": 200
+    },
+    {
+      "path": "achievements.html",
+      "url": "https://vllm-hust.sage.org.ai/achievements.html",
+      "title": "Achievements - vllm-hust",
+      "description": "vllm-hust publications, repositories, benchmarks, and community contributions.",
+      "status": 200
+    },
+    {
+      "path": "dataset-validation.html",
+      "url": "https://vllm-hust.sage.org.ai/dataset-validation.html",
+      "title": "Dataset evaluation - vLLM-HUST",
+      "description": "Dataset validation results produced by the independent vLLM-HUST validation service.",
+      "status": 200
+    },
+    {
+      "path": "controlplane/index.html",
+      "url": "https://vllm-hust.sage.org.ai/controlplane/index.html",
+      "title": "Request Throttling Controller | vLLM-HUST",
+      "description": "Request Throttling Controller: program-aware request scheduling, deployment and measured results on vLLM-HUST Engine.",
+      "status": 200
+    },
+    {
+      "path": "contributors.html",
+      "url": "https://vllm-hust.sage.org.ai/contributors.html",
+      "title": "Contributors - vllm-hust",
+      "description": "Core contributors across vllm-hust runtime, Ascend, benchmark, docs, website, and workstation repositories.",
+      "status": 200
+    },
+    {
+      "path": "serving-plan.html",
+      "url": "https://vllm-hust.sage.org.ai/serving-plan.html",
+      "title": "Serving Plan · 服务产能与成本",
+      "description": "从实测推理吞吐，到每卡服务产能与 API 等价产值。成本由你定义。",
+      "status": 200
+    },
+    {
+      "path": "courses.html",
+      "url": "https://vllm-hust.sage.org.ai/courses.html",
+      "title": "Courses - vllm-hust",
+      "description": "Course materials and practice pointers connected to vllm-hust development.",
+      "status": 200
+    },
+    {
+      "path": "report-history.html",
+      "url": "https://vllm-hust.sage.org.ai/report-history.html",
+      "title": "历史报告 · vLLM-HUST",
+      "description": "项目指定数据集测试、按测试大纲整理的 B0/B1 结果、服务产能与成本。",
+      "status": 200
+    },
+    {
+      "path": "continuum.html",
+      "url": "https://vllm-hust.sage.org.ai/continuum.html",
+      "title": "Continuum · vLLM-HUST",
+      "description": "面向 Agent 的持久记忆与任务数据底座，连接会话、决策与工作进度。",
+      "status": 200
+    },
+    {
+      "path": "control-plane.html",
+      "url": "https://vllm-hust.sage.org.ai/control-plane.html",
+      "title": "SAGE Control Plane · vLLM-HUST",
+      "description": "统一服务入口，协调模型与引擎，让每次推理各就其位。",
+      "status": 200
+    },
+    {
+      "path": "b0-b1.html",
+      "url": "https://vllm-hust.sage.org.ai/b0-b1.html",
+      "title": "B0/B1 大纲对比 · vLLM-HUST",
+      "description": "项目指定数据集测试、按测试大纲整理的 B0/B1 结果、服务产能与成本。",
+      "status": 200
+    },
+    {
+      "path": "wheels/r8.html",
+      "url": "https://vllm-hust.sage.org.ai/wheels/r8.html",
+      "title": "Frozen r8 native wheels",
+      "description": "",
+      "status": 200
+    },
+    {
+      "path": "plugins.html",
+      "url": "https://vllm-hust.sage.org.ai/plugins.html",
+      "title": "MOD catalog | vLLM-HUST",
+      "description": "MOD extensions for Engine, Control Plane and Continuum: execution optimization, service policies and persistent memory.",
+      "status": 200
+    },
+    {
+      "path": "leaderboard-runs.html",
+      "url": "https://vllm-hust.sage.org.ai/leaderboard-runs.html",
+      "title": "Performance tests - vLLM-HUST",
+      "description": "",
+      "status": 200
+    },
+    {
+      "path": "conferences.html",
+      "url": "https://vllm-hust.sage.org.ai/conferences.html",
+      "title": "Conferences - vllm-hust",
+      "description": "Conference and workshop pages connected to the vllm-hust community.",
+      "status": 200
+    }
+  ],
+  "repositories": [
+    {
+      "name": ".github",
+      "html_url": "https://github.com/vLLM-HUST/.github",
+      "description": "Organization profile for vLLM-HUST",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/.github/blob/main/README.md"
+    },
+    {
+      "name": "agentx-bench",
+      "html_url": "https://github.com/vLLM-HUST/agentx-bench",
+      "description": "Pinned official AgentX 256k replay: formal and 15-minute smoke profiles",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/agentx-bench/blob/main/README.md"
+    },
+    {
+      "name": "ascend-distributed-metadata",
+      "html_url": "https://github.com/vLLM-HUST/ascend-distributed-metadata",
+      "description": null,
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/ascend-distributed-metadata/blob/main/README.md"
+    },
+    {
+      "name": "ascend-runtime-manager",
+      "html_url": "https://github.com/vLLM-HUST/ascend-runtime-manager",
+      "description": "Ascend runtime doctor/setup manager for vllm-hust deployments",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": false,
+      "readme_url": "https://github.com/vLLM-HUST/ascend-runtime-manager/blob/main/README.md"
+    },
+    {
+      "name": "cccf-domestic-inference-engine-survey",
+      "html_url": "https://github.com/vLLM-HUST/cccf-domestic-inference-engine-survey",
+      "description": null,
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": false,
+      "readme_url": "https://github.com/vLLM-HUST/cccf-domestic-inference-engine-survey/blob/main/README.md"
+    },
+    {
+      "name": "claude-code-hust",
+      "html_url": "https://github.com/vLLM-HUST/claude-code-hust",
+      "description": "Claude Code 泄露源码 - 本地可运行版本，新增跨平台桌面端软件补齐Computer Use（附带核心模块解析）",
+      "fork": true,
+      "archived": false,
+      "homepage": "https://claudecode-haha.relakkesyang.org/",
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": false,
+      "readme_url": "https://github.com/vLLM-HUST/claude-code-hust/blob/main/README.md"
+    },
+    {
+      "name": "EvoScientist",
+      "html_url": "https://github.com/vLLM-HUST/EvoScientist",
+      "description": "🔬 Harness Vibe Research with Self-evolving AI Scientists",
+      "fork": true,
+      "archived": false,
+      "homepage": "https://EvoScientist.ai/",
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": false,
+      "readme_url": "https://github.com/vLLM-HUST/EvoScientist/blob/main/README.md"
+    },
+    {
+      "name": "extension-manager",
+      "html_url": "https://github.com/vLLM-HUST/extension-manager",
+      "description": "Extension discovery and activation manager for the vLLM-HUST ecosystem",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": false,
+      "readme_url": "https://github.com/vLLM-HUST/extension-manager/blob/main/README.md"
+    },
+    {
+      "name": "extension-template",
+      "html_url": "https://github.com/vLLM-HUST/extension-template",
+      "description": "Standard scaffolding for vLLM-HUST extensions and host providers",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/extension-template/blob/main/README.md"
+    },
+    {
+      "name": "gdn-state-codec",
+      "html_url": "https://github.com/vLLM-HUST/gdn-state-codec",
+      "description": "Bounded Ascend recurrent-state codec for Qwen3.5/Qwen3.8 gated-delta layers",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": false,
+      "readme_url": "https://github.com/vLLM-HUST/gdn-state-codec/blob/main/README.md"
+    },
+    {
+      "name": "hust-agentperf",
+      "html_url": "https://github.com/vLLM-HUST/hust-agentperf",
+      "description": "Benchmark local LLM serving by replaying real agent trajectories",
+      "fork": true,
+      "archived": false,
+      "homepage": "https://artificialanalysis.ai",
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/hust-agentperf/blob/main/README.md"
+    },
+    {
+      "name": "hust-eval-client-frontierscience",
+      "html_url": "https://github.com/vLLM-HUST/hust-eval-client-frontierscience",
+      "description": "FrontierScience solver, judge, benchmark and evidence client for existing OpenAI-compatible services",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/hust-eval-client-frontierscience/blob/main/README.md"
+    },
+    {
+      "name": "hust-eval-client-hle-verified",
+      "html_url": "https://github.com/vLLM-HUST/hust-eval-client-hle-verified",
+      "description": "HLE-Verified evaluation client: solver, judge, text/image serving benchmarks and SHA-256 evidence sealing",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/hust-eval-client-hle-verified/blob/main/README.md"
+    },
+    {
+      "name": "hust-eval-client-mmlu-pro",
+      "html_url": "https://github.com/vLLM-HUST/hust-eval-client-mmlu-pro",
+      "description": "MMLU-Pro client for an already-running OpenAI-compatible vLLM server: send requests, score, hash and seal evidence. Never starts a server.",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": false,
+      "readme_url": "https://github.com/vLLM-HUST/hust-eval-client-mmlu-pro/blob/main/README.md"
+    },
+    {
+      "name": "LMCache-Ascend",
+      "html_url": "https://github.com/vLLM-HUST/LMCache-Ascend",
+      "description": "LMCache on Ascend",
+      "fork": true,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/LMCache-Ascend/blob/main/README.md"
+    },
+    {
+      "name": "mooncake-hust",
+      "html_url": "https://github.com/vLLM-HUST/mooncake-hust",
+      "description": "Mooncake is the serving platform for Kimi, a leading LLM service provided by Moonshot AI.",
+      "fork": true,
+      "archived": false,
+      "homepage": "https://kvcache-ai.github.io/Mooncake/",
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/mooncake-hust/blob/main/README.md"
+    },
+    {
+      "name": "patch-plugin-template",
+      "html_url": "https://github.com/vLLM-HUST/patch-plugin-template",
+      "description": "Template for default-off, single-mechanism runtime-patch plugins for vLLM-HUST: guards, evidence events, spawn bootstrap, differential tests",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/patch-plugin-template/blob/main/README.md"
+    },
+    {
+      "name": "pegaflow-hust",
+      "html_url": "https://github.com/vLLM-HUST/pegaflow-hust",
+      "description": null,
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/pegaflow-hust/blob/main/README.md"
+    },
+    {
+      "name": "production-stack-hust",
+      "html_url": "https://github.com/vLLM-HUST/production-stack-hust",
+      "description": "vLLM’s reference system for K8S-native cluster-wide deployment with community-driven performance optimization",
+      "fork": true,
+      "archived": false,
+      "homepage": "https://docs.vllm.ai/projects/production-stack",
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/production-stack-hust/blob/main/README.md"
+    },
+    {
+      "name": "ride",
+      "html_url": "https://github.com/vLLM-HUST/ride",
+      "description": "Workspace-owned inference control plane with Ray controller lifecycle and Coder App UI",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/ride/blob/main/README.md"
+    },
+    {
+      "name": "ride-controller-demo",
+      "html_url": "https://github.com/vLLM-HUST/ride-controller-demo",
+      "description": "Independent Controller development template for the RIDE control plane",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/ride-controller-demo/blob/main/README.md"
+    },
+    {
+      "name": "sglang-hust",
+      "html_url": "https://github.com/vLLM-HUST/sglang-hust",
+      "description": "SGLang is a high-performance serving framework for large language models and multimodal models.",
+      "fork": true,
+      "archived": false,
+      "homepage": "https://sglang.io",
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": false,
+      "readme_url": "https://github.com/vLLM-HUST/sglang-hust/blob/main/README.md"
+    },
+    {
+      "name": "sglang-hust-prepared-dispatch",
+      "html_url": "https://github.com/vLLM-HUST/sglang-hust-prepared-dispatch",
+      "description": "Opt-in prepared typed FIA graph-update dispatch MOD for a pinned SGLang/TorchNPU stack on Ascend.",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": false,
+      "readme_url": "https://github.com/vLLM-HUST/sglang-hust-prepared-dispatch/blob/main/README.md"
+    },
+    {
+      "name": "stateaxis-prefix-cache-policy",
+      "html_url": "https://github.com/vLLM-HUST/stateaxis-prefix-cache-policy",
+      "description": "ECPA-owned activation policy for vLLM prefix caching in StateAxis workloads",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/stateaxis-prefix-cache-policy/blob/main/README.md"
+    },
+    {
+      "name": "statesys-2026",
+      "html_url": "https://github.com/vLLM-HUST/statesys-2026",
+      "description": "StateSys 2026 ACM SIGOPS ATC workshop website",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/statesys-2026/blob/main/README.md"
+    },
+    {
+      "name": "swe-prefix-reuse",
+      "html_url": "https://github.com/vLLM-HUST/swe-prefix-reuse",
+      "description": null,
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/swe-prefix-reuse/blob/main/README.md"
+    },
+    {
+      "name": "triton-ascend-hust",
+      "html_url": "https://github.com/vLLM-HUST/triton-ascend-hust",
+      "description": "Triton language and compiler for Ascend NPU",
+      "fork": true,
+      "archived": false,
+      "homepage": "https://triton-ascend.readthedocs.io",
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": false,
+      "readme_url": "https://github.com/vLLM-HUST/triton-ascend-hust/blob/main/README.md"
+    },
+    {
+      "name": "vllm-ascend-attention-optimizations",
+      "html_url": "https://github.com/vLLM-HUST/vllm-ascend-attention-optimizations",
+      "description": "Default-off Ascend attention-path optimization MOD family for vLLM-HUST.",
+      "fork": false,
+      "archived": false,
+      "homepage": "https://vllm-hust.sage.org.ai/plugins.html",
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": false,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-ascend-attention-optimizations/blob/main/README.md"
+    },
+    {
+      "name": "vllm-ascend-hust",
+      "html_url": "https://github.com/vLLM-HUST/vllm-ascend-hust",
+      "description": "Community maintained hardware plugin for vLLM on Ascend",
+      "fork": true,
+      "archived": false,
+      "homepage": "https://docs.vllm.ai/projects/ascend",
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": false,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-ascend-hust/blob/main/README.md"
+    },
+    {
+      "name": "vllm-ascend-hust-bidkv",
+      "html_url": "https://github.com/vLLM-HUST/vllm-ascend-hust-bidkv",
+      "description": "[SC26] Utility-guided KV-cache preemption scheduling framework.",
+      "fork": false,
+      "archived": true,
+      "homepage": "",
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": false,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-ascend-hust-bidkv/blob/main/README.md"
+    },
+    {
+      "name": "vllm-ascend-hust-diffspec",
+      "html_url": "https://github.com/vLLM-HUST/vllm-ascend-hust-diffspec",
+      "description": "[SC26] Differential Speculative Decoding Framework",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-ascend-hust-diffspec/blob/main/README.md"
+    },
+    {
+      "name": "vllm-ascend-kvcompress-hust",
+      "html_url": "https://github.com/vLLM-HUST/vllm-ascend-kvcompress-hust",
+      "description": "An extensible KV-cache compression plugin for the HUST-maintained vLLM Ascend stack. It connects compression methods to vLLM-HUST's transactional KV-cache lifecycle without modifying the vLLM-HUST or vLLM-Ascend-HUST source trees.",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "master",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-ascend-kvcompress-hust/blob/master/README.md"
+    },
+    {
+      "name": "vllm-ascend-layered-prefill-hust",
+      "html_url": "https://github.com/vLLM-HUST/vllm-ascend-layered-prefill-hust",
+      "description": "Owner-led layered-prefill integration for vLLM Ascend",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-ascend-layered-prefill-hust/blob/main/README.md"
+    },
+    {
+      "name": "vllm-ascend-mapped-kv-offload-hust",
+      "html_url": "https://github.com/vLLM-HUST/vllm-ascend-mapped-kv-offload-hust",
+      "description": "Owner-maintained Ascend mapped-host KV offload extension extracted from vLLM-HUST legacy work",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-ascend-mapped-kv-offload-hust/blob/main/README.md"
+    },
+    {
+      "name": "vllm-ascend-MuxPD-hust",
+      "html_url": "https://github.com/vLLM-HUST/vllm-ascend-MuxPD-hust",
+      "description": "MuxPD plugin for vLLM Ascend, maintained by the HUST team.",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-ascend-MuxPD-hust/blob/main/README.md"
+    },
+    {
+      "name": "vllm-ascend-pyramidkv-hust",
+      "html_url": "https://github.com/vLLM-HUST/vllm-ascend-pyramidkv-hust",
+      "description": "PyramidKV compression provider for the vLLM-HUST Ascend stack",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-ascend-pyramidkv-hust/blob/main/README.md"
+    },
+    {
+      "name": "vllm-ascend-quant-hust",
+      "html_url": "https://github.com/vLLM-HUST/vllm-ascend-quant-hust",
+      "description": "A repository for post-training quantization on Ascend NPUs, supporting 8-bit, 4-bit, and mixed-precision quantization for large language models.",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-ascend-quant-hust/blob/main/README.md"
+    },
+    {
+      "name": "vllm-ascend-simllm-hust",
+      "html_url": "https://github.com/vLLM-HUST/vllm-ascend-simllm-hust",
+      "description": "Owner-led SimLLM task-similarity KV reuse integration for vLLM Ascend",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-ascend-simllm-hust/blob/main/README.md"
+    },
+    {
+      "name": "vllm-ascend-split-batch-hust",
+      "html_url": "https://github.com/vLLM-HUST/vllm-ascend-split-batch-hust",
+      "description": "Owner-led Ascend split-batch and full-graph parallel execution research carrier",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-ascend-split-batch-hust/blob/main/README.md"
+    },
+    {
+      "name": "vllm-hust",
+      "html_url": "https://github.com/vLLM-HUST/vllm-hust",
+      "description": "A high-throughput and memory-efficient inference and serving engine for LLMs",
+      "fork": true,
+      "archived": false,
+      "homepage": "https://vllm.ai",
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": false,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-hust/blob/main/README.md"
+    },
+    {
+      "name": "vllm-hust-activation-sparsity",
+      "html_url": "https://github.com/vLLM-HUST/vllm-hust-activation-sparsity",
+      "description": "Owner-led TEAL and LaRoSA activation-sparsity research carrier for vLLM-HUST",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-hust-activation-sparsity/blob/main/README.md"
+    },
+    {
+      "name": "vllm-hust-benchmark",
+      "html_url": "https://github.com/vLLM-HUST/vllm-hust-benchmark",
+      "description": null,
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-hust-benchmark/blob/main/README.md"
+    },
+    {
+      "name": "vllm-hust-bidkv",
+      "html_url": "https://github.com/vLLM-HUST/vllm-hust-bidkv",
+      "description": null,
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-hust-bidkv/blob/main/README.md"
+    },
+    {
+      "name": "vllm-hust-cuda-mtp",
+      "html_url": "https://github.com/vLLM-HUST/vllm-hust-cuda-mtp",
+      "description": "Experimental fail-closed CUDA Qwen3.5 MTP activation and qualification MOD",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-hust-cuda-mtp/blob/main/README.md"
+    },
+    {
+      "name": "vllm-hust-dev-hub",
+      "html_url": "https://github.com/vLLM-HUST/vllm-hust-dev-hub",
+      "description": null,
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": false,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-hust-dev-hub/blob/main/README.md"
+    },
+    {
+      "name": "vllm-hust-docs",
+      "html_url": "https://github.com/vLLM-HUST/vllm-hust-docs",
+      "description": null,
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": false,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-hust-docs/blob/main/README.md"
+    },
+    {
+      "name": "vllm-hust-gdn-optimizations",
+      "html_url": "https://github.com/vLLM-HUST/vllm-hust-gdn-optimizations",
+      "description": "Default-off GDN execution optimization MOD family for vLLM-HUST on Ascend.",
+      "fork": false,
+      "archived": false,
+      "homepage": "https://vllm-hust.sage.org.ai/plugins.html",
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": false,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-hust-gdn-optimizations/blob/main/README.md"
+    },
+    {
+      "name": "vllm-hust-graph-coverage",
+      "html_url": "https://github.com/vLLM-HUST/vllm-hust-graph-coverage",
+      "description": "TraceLoom-guided vLLM graph capture coverage configuration MOD; explicit opt-in, qualified workload and rollback.",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": false,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-hust-graph-coverage/blob/main/README.md"
+    },
+    {
+      "name": "vllm-hust-knorm",
+      "html_url": "https://github.com/vLLM-HUST/vllm-hust-knorm",
+      "description": "KNorm KV-cache compression extension migrated from vLLM-HUST legacy contributions",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-hust-knorm/blob/main/README.md"
+    },
+    {
+      "name": "vllm-hust-kv-materialization-arrival-control",
+      "html_url": "https://github.com/vLLM-HUST/vllm-hust-kv-materialization-arrival-control",
+      "description": "vLLM-HUST MOD for arrival-time KV materialization policy research",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": false,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-hust-kv-materialization-arrival-control/blob/main/README.md"
+    },
+    {
+      "name": "vllm-hust-kv-tiering",
+      "html_url": "https://github.com/vLLM-HUST/vllm-hust-kv-tiering",
+      "description": "Tiered KV-cache residency provider migrated from vLLM-HUST legacy contributions",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-hust-kv-tiering/blob/main/README.md"
+    },
+    {
+      "name": "vllm-hust-kv-transfer-observability",
+      "html_url": "https://github.com/vLLM-HUST/vllm-hust-kv-transfer-observability",
+      "description": "Owner-led KV transfer and recovery observability extension for vLLM-HUST",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-hust-kv-transfer-observability/blob/main/README.md"
+    },
+    {
+      "name": "vllm-hust-opset",
+      "html_url": "https://github.com/vLLM-HUST/vllm-hust-opset",
+      "description": "OPset is a pluggable operator-optimization collection for the vLLM-HUST Ascend backend, delivering kernel replacements, vertical fusion, epilogue/prologue fusion, and the performance evidence for each change.",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-hust-opset/blob/main/README.md"
+    },
+    {
+      "name": "vllm-hust-pipeline-microbatch",
+      "html_url": "https://github.com/vLLM-HUST/vllm-hust-pipeline-microbatch",
+      "description": "Owner-led pipeline microbatch scheduling research carrier for vLLM-HUST",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-hust-pipeline-microbatch/blob/main/README.md"
+    },
+    {
+      "name": "vllm-hust-prefill-admission",
+      "html_url": "https://github.com/vLLM-HUST/vllm-hust-prefill-admission",
+      "description": "TraceLoom-guided vLLM prefill admission configuration MOD; preserve global step budget and improve short-request admission.",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": false,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-hust-prefill-admission/blob/main/README.md"
+    },
+    {
+      "name": "vllm-hust-prefill-microflow",
+      "html_url": "https://github.com/vLLM-HUST/vllm-hust-prefill-microflow",
+      "description": "Experimental default-off ECPA Prefill Microflow MOD for Qwen3.5 BF16 TP2; maintainer jingyuan / CubeLander.",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-hust-prefill-microflow/blob/main/README.md"
+    },
+    {
+      "name": "vllm-hust-prefix-router",
+      "html_url": "https://github.com/vLLM-HUST/vllm-hust-prefix-router",
+      "description": "Prefix-aware request-routing extension migrated from vLLM-HUST legacy contributions",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-hust-prefix-router/blob/main/README.md"
+    },
+    {
+      "name": "vllm-hust-profiling",
+      "html_url": "https://github.com/vLLM-HUST/vllm-hust-profiling",
+      "description": "To profiling the performance of vllm-hust and vllm-ascend-hust",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-hust-profiling/blob/main/README.md"
+    },
+    {
+      "name": "vllm-hust-qos-scheduler",
+      "html_url": "https://github.com/vLLM-HUST/vllm-hust-qos-scheduler",
+      "description": "Owner-led deadline-aware QoS scheduler research carrier for vLLM-HUST",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-hust-qos-scheduler/blob/main/README.md"
+    },
+    {
+      "name": "vllm-hust-request-lifecycle-profiler",
+      "html_url": "https://github.com/vLLM-HUST/vllm-hust-request-lifecycle-profiler",
+      "description": "vLLM-HUST MOD for request-scoped lifecycle tracing and causal bottleneck attribution",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": false,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-hust-request-lifecycle-profiler/blob/main/README.md"
+    },
+    {
+      "name": "vllm-hust-runtime-micro-optimizations",
+      "html_url": "https://github.com/vLLM-HUST/vllm-hust-runtime-micro-optimizations",
+      "description": "Default-off runtime metadata and micro-overhead optimization MOD family for vLLM-HUST.",
+      "fork": false,
+      "archived": false,
+      "homepage": "https://vllm-hust.sage.org.ai/plugins.html",
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": false,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-hust-runtime-micro-optimizations/blob/main/README.md"
+    },
+    {
+      "name": "vllm-hust-scheduler-policy-lab",
+      "html_url": "https://github.com/vLLM-HUST/vllm-hust-scheduler-policy-lab",
+      "description": "Owner-led experimental scheduler policy and runtime-transition research carrier",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-hust-scheduler-policy-lab/blob/main/README.md"
+    },
+    {
+      "name": "vllm-hust-slicegpt",
+      "html_url": "https://github.com/vLLM-HUST/vllm-hust-slicegpt",
+      "description": "SliceGPT offline toolkit and runtime extension for vLLM-HUST",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-hust-slicegpt/blob/main/README.md"
+    },
+    {
+      "name": "vllm-hust-unified-comm",
+      "html_url": "https://github.com/vLLM-HUST/vllm-hust-unified-comm",
+      "description": "Owner-led device-neutral communication runtime extracted from vLLM-HUST legacy work",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-hust-unified-comm/blob/main/README.md"
+    },
+    {
+      "name": "vllm-hust-vSpec",
+      "html_url": "https://github.com/vLLM-HUST/vllm-hust-vSpec",
+      "description": "Adaptive speculative decoding plugin for vLLM-HUST on Ascend NPU",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-hust-vSpec/blob/main/README.md"
+    },
+    {
+      "name": "vllm-hust-website",
+      "html_url": "https://github.com/vLLM-HUST/vllm-hust-website",
+      "description": "vllm-hust official website and benchmark-driven serving showcase",
+      "fork": false,
+      "archived": false,
+      "homepage": "https://vllm-hust.sage.org.ai",
+      "default_branch": "main",
+      "has_pages": true,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-hust-website/blob/main/README.md"
+    },
+    {
+      "name": "vllm-hust-weight-layout-research",
+      "html_url": "https://github.com/vLLM-HUST/vllm-hust-weight-layout-research",
+      "description": "Weight placement research and experimental results for Qwen3.5-35B-A3B on dual Ascend 910B2 NPUs with vLLM-HUST.",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-hust-weight-layout-research/blob/main/README.md"
+    },
+    {
+      "name": "vllm-hust-workstation",
+      "html_url": "https://github.com/vLLM-HUST/vllm-hust-workstation",
+      "description": "vllm-hust workstation - Private AI workstation with one-click local deployment and realtime metrics",
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-hust-workstation/blob/main/README.md"
+    },
+    {
+      "name": "vllm-hust.github.io",
+      "html_url": "https://github.com/vLLM-HUST/vllm-hust.github.io",
+      "description": "Organization Pages entry for vLLM-HUST",
+      "fork": false,
+      "archived": false,
+      "homepage": "https://vllm-hust.sage.org.ai",
+      "default_branch": "main",
+      "has_pages": true,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-hust.github.io/blob/main/README.md"
+    },
+    {
+      "name": "vllm-metal-hust",
+      "html_url": "https://github.com/vLLM-HUST/vllm-metal-hust",
+      "description": "Community maintained hardware plugin for vLLM on Apple Silicon",
+      "fork": true,
+      "archived": false,
+      "homepage": null,
+      "default_branch": "main",
+      "has_pages": false,
+      "has_wiki": true,
+      "readme_url": "https://github.com/vLLM-HUST/vllm-metal-hust/blob/main/README.md"
+    }
+  ],
+  "endpoint_checks": [
+    {
+      "url": "https://vllm-hust.sage.org.ai/",
+      "status": 200,
+      "final_url": "https://vllm-hust.sage.org.ai/",
+      "content_type": "text/html; charset=utf-8",
+      "title": [
+        "vLLM-HUST | Inference Engine for Domestic Compute"
+      ]
+    },
+    {
+      "url": "http://vllm-hust.sage.org.ai/",
+      "status": 200,
+      "final_url": "http://vllm-hust.sage.org.ai/",
+      "content_type": "text/html; charset=utf-8",
+      "title": [
+        "vLLM-HUST | Inference Engine for Domestic Compute"
+      ]
+    },
+    {
+      "url": "https://vllm-hust.github.io/",
+      "status": 200,
+      "final_url": "https://vllm-hust.github.io/",
+      "content_type": "text/html; charset=utf-8",
+      "title": [
+        "vLLM-HUST"
+      ]
+    },
+    {
+      "url": "https://EvoScientist.ai/",
+      "status": 200,
+      "final_url": "https://evoscientist.ai/",
+      "content_type": "text/html; charset=utf-8",
+      "title": [
+        "EvoScientist — Self-Evolving AI Scientists"
+      ]
+    },
+    {
+      "url": "https://evoscientist.github.io/",
+      "status": 200,
+      "final_url": "https://evoscientist.ai/",
+      "content_type": "text/html; charset=utf-8",
+      "title": [
+        "EvoScientist — Self-Evolving AI Scientists"
+      ]
+    },
+    {
+      "url": "https://claudecode-haha.relakkesyang.org/",
+      "status": 200,
+      "final_url": "https://claudecode-haha.relakkesyang.org/",
+      "content_type": "text/html; charset=utf-8",
+      "title": [
+        "Claude Code Token Free"
+      ]
+    },
+    {
+      "url": "https://claudecode-hust.relakkesyang.org/",
+      "error": "APIRequestContext.get: getaddrinfo ENOTFOUND claudecode-hust.relakkesyang.org\n"
+    }
+  ],
+  "legacy_redirect": {
+    "requested": "https://vllm-hust.github.io/?inventory=20261119",
+    "browser_final_url": "https://vllm-hust.sage.org.ai/?inventory=20261119",
+    "type": "client-side redirect"
+  }
+}

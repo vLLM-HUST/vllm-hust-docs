@@ -4,6 +4,7 @@ vLLM-HUST 维护面向国产算力、兼容上游 vLLM 的推理运行时、Asce
 
 | 要做的事 | 从这里开始 |
 | --- | --- |
+| 查组织网站、项目页面、文档与旧地址 | [网站与网页总索引](Websites.md) |
 | 找到问题归属，理解运行时、硬件后端、MOD 和部署层 | [技术架构与仓库分工](Architecture.md) |
 | 查询公开仓库的用途和归档状态 | [公开仓库目录](Repositories.md) |
 | 准备开发环境、找评审人、提 Issue 或 PR | [开发与协作](Collaboration.md) |

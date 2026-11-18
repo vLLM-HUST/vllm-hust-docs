@@ -5,3 +5,5 @@
 - [评测与发布](Validation.md)
 - [工作看板](Workboard.md)
 - [Wiki 维护](Maintenance.md)
+- [网站与网页总索引](Websites.md)
+- [公开仓库网页入口](Web-Repositories.md)
