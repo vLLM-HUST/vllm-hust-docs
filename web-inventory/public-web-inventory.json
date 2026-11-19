@@ -1193,14 +1193,62 @@
       ]
     },
     "claude_documentation_entrypoints": {
-      "status": "guides_available; README repair PR blocked by application checks",
+      "status": "merged; all required checks passed",
       "pull_request": "https://github.com/vLLM-HUST/claude-code-hust/pull/2",
-      "pull_request_head": "aad9377b0c66028275e2dd53efbce9df2d561c01",
-      "merged": false,
+      "pull_request_head": "45b0c5733f3cbe2565b8ab8041c281f76ab8ea32",
+      "merged": true,
       "chinese": "https://github.com/vLLM-HUST/claude-code-hust/blob/main/docs/guide/quick-start.md",
       "english": "https://github.com/vLLM-HUST/claude-code-hust/blob/main/docs/en/guide/quick-start.md",
       "external_docs_domain": "claudecode-hust.relakkesyang.org",
-      "external_docs_domain_state": "unresolved; usable repository guides indexed without external DNS changes"
+      "external_docs_domain_state": "unresolved; usable repository guides indexed without external DNS changes",
+      "merge_commit": "3db45472ca87e695292fb7896e6f546dea1b9154",
+      "checks": [
+        {
+          "name": "pr-quality-gate",
+          "conclusion": "success",
+          "url": "https://github.com/vLLM-HUST/claude-code-hust/actions/runs/44433212527/job/135258032770"
+        },
+        {
+          "name": "desktop-checks",
+          "conclusion": "success",
+          "url": "https://github.com/vLLM-HUST/claude-code-hust/actions/runs/44433212527/job/135255650460"
+        },
+        {
+          "name": "coverage-checks",
+          "conclusion": "success",
+          "url": "https://github.com/vLLM-HUST/claude-code-hust/actions/runs/44433212527/job/135255650447"
+        },
+        {
+          "name": "server-checks",
+          "conclusion": "success",
+          "url": "https://github.com/vLLM-HUST/claude-code-hust/actions/runs/44433212527/job/135255650356"
+        },
+        {
+          "name": "adapter-checks",
+          "conclusion": "success",
+          "url": "https://github.com/vLLM-HUST/claude-code-hust/actions/runs/44433212527/job/135255650324"
+        },
+        {
+          "name": "docs-checks",
+          "conclusion": "success",
+          "url": "https://github.com/vLLM-HUST/claude-code-hust/actions/runs/44433212527/job/135255650300"
+        },
+        {
+          "name": "desktop-native-checks",
+          "conclusion": "success",
+          "url": "https://github.com/vLLM-HUST/claude-code-hust/actions/runs/44433212527/job/135255650277"
+        },
+        {
+          "name": "change-policy",
+          "conclusion": "success",
+          "url": "https://github.com/vLLM-HUST/claude-code-hust/actions/runs/44433212527/job/135255514494"
+        },
+        {
+          "name": "label-and-summarize",
+          "conclusion": "success",
+          "url": "https://github.com/vLLM-HUST/claude-code-hust/actions/runs/44433209491/job/135255507166"
+        }
+      ]
     }
   }
 }
